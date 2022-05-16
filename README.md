@@ -3,3 +3,6 @@
 Project initialized using: expo init project-name
 
 1. To start project type: npm run start
+
+
+How to use .env file: https://github.com/goatandsheep/react-native-dotenv
