@@ -2,7 +2,7 @@
 
 Project initialized using: expo init project-name
 
-1. To start project type in CMD:    - expo start (after that open web browser and change connectio to Tunnel)
+1. To start project type in CMD:    - expo start (after that open web browser and change connection to Tunnel)
                                     OR
                                     - npm run start
 2. Use yarn to add new packages
