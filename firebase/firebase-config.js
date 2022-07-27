@@ -1,6 +1,8 @@
 
 import { initializeApp } from "firebase/app";
+
 import { getFirestore } from 'firebase/firestore/lite'
+import { getAuth } from 'firebase/auth'
 import { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID } from '@env'
 
 const firebaseConfig = {
@@ -14,5 +16,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app)
 export const db = getFirestore(app)
+
+

@@ -10,5 +10,15 @@ npm-debug.*
 *.orig.*
 web-build/
 
+# VSCode
+.history/
+
+# Expo web env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 # macOS
 .DS_Store
