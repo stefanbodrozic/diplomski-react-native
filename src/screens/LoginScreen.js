@@ -2,18 +2,30 @@ import { View, Text, Button, StyleSheet, TextInput } from "react-native"
 import React, { useState } from "react";
 import { auth } from "../../firebase/firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { login } from "../store/slices/usersSlice";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
+    const dispatch = useDispatch()
+    const navigation = useNavigation();
+
     const handleLoginButton = async () => {
         // check credentials and redirect to home screen
         try {
-            const user = await signInWithEmailAndPassword(auth, email, password)
-            if (user) {
+            const response = await signInWithEmailAndPassword(auth, email, password)
+            if (response) {
+                const user = {
+                    email: response.user.email,
+                    token: response.user.stsTokenManager.accessToken,
+                }
                 // redirect to home screen
+                dispatch(login(user))
+                navigation.navigate('Home')
             }
 
         } catch (error) {
