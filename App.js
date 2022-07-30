@@ -1,40 +1,75 @@
-import { View, StyleSheet } from 'react-native';
-import LoginScreen from './src/screens/LoginScreen';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Tabs from './src/navigation/tabs';
-import { Provider } from 'react-redux';
-import { store } from './src/store/store';
-import HomeScreen from './src/screens/HomeScreen';
+import { StyleSheet } from "react-native";
 
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+import { Provider } from "react-redux";
+import { store } from "./src/store/store";
+
+import LoginScreen from "./src/screens/LoginScreen";
+import HomeScreen from "./src/screens/HomeScreen";
+import ProfileScreen from "./src/screens/ProfileScreen";
+import ChatScreen from "./src/screens/ChatScreen";
+
+import Ionicons from "react-native-vector-icons/Ionicons";
+
+const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const App = () => {
+function BottomNavigation() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
 
+          if (route.name === "Home") {
+            iconName = focused ? "ios-home" : "ios-home-outline";
+          } else if (route.name === "Chat") {
+            iconName = focused ? "ios-chatbubbles" : "ios-chatbubbles-outline";
+          } else if (route.name === "Profile") {
+            iconName = focused ? "ios-person" : "ios-person-outline";
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "tomato",
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Chat" component={ChatScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
+  );
+}
+
+const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
-
-          <Stack.Screen name="Home" component={HomeScreen}></Stack.Screen>
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="BottomNavigation"
+            component={BottomNavigation}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
-        {/* <View styles={styles.root}>
-          <LoginScreen />
-        </View> */}
-        {/* if user is logged in redirect to home page */}
-        {/* <Tabs /> */}
-
       </NavigationContainer>
     </Provider>
   );
-}
+};
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#F9FBFC'
-  }
-})
+    backgroundColor: "#F9FBFC",
+  },
+});
 
 export default App;
