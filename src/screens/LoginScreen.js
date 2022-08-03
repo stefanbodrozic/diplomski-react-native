@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,11 +7,12 @@ import {
   TextInput,
   ToastAndroid,
 } from "react-native";
-import React, { useState } from "react";
 import { auth } from "../../firebase/firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
+
 import { useDispatch } from "react-redux";
 import { login } from "../store/slices/usersSlice";
+
 import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
