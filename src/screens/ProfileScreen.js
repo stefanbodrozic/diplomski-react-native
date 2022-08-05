@@ -17,13 +17,13 @@ const ProfileScreen = () => {
     try {
       // check if user is logged in
       if (auth.currentUser) {
-        await signOut(auth); // response will be undefined if user is successfully sign out
+        await signOut(auth); // response will be undefined if user is successfully signed out
         dispatch(logout);
 
         navigation.navigate("Login");
       }
     } catch (error) {
-      console.log("logout error", error);
+      console.error("logout error", error);
     }
   };
 

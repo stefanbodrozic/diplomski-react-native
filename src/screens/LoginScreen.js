@@ -37,7 +37,7 @@ const LoginScreen = () => {
         };
         // redirect to home screen
         dispatch(login(user));
-        navigation.navigate("BottomNavigation");
+        navigation.navigate("MainScreen");
       }
     } catch (error) {
       const errorCode = error.code;
@@ -53,7 +53,7 @@ const LoginScreen = () => {
   };
 
   const handleRegisterButton = () => {
-    // redirect to register screen
+    navigation.navigate("Register");
   };
 
   return (
@@ -77,7 +77,7 @@ const LoginScreen = () => {
 
       <View style={styles.buttonContainer}>
         <Button title="Login" onPress={handleLoginButton} />
-        <Button title="Register" onPress={() => {}} />
+        <Button title="Register" onPress={handleRegisterButton} />
       </View>
     </View>
   );

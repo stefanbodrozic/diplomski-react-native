@@ -11,6 +11,7 @@ import ProfileScreen from "./src/screens/ProfileScreen";
 import ChatScreen from "./src/screens/ChatScreen";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
+import RegisterScreen from "./src/screens/RegisterScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -53,7 +54,12 @@ const App = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="BottomNavigation"
+            name="Register"
+            component={RegisterScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="MainScreen"
             component={BottomNavigation}
             options={{ headerShown: false }}
           />
