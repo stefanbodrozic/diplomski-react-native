@@ -26,7 +26,7 @@ const options = [
   },
 ];
 
-const SelectCountryScreen = ({ onChangeRole }) => {
+const SelectUserRole = ({ onChangeRole }) => {
   const [role, setRole] = useState("1");
 
   return (
@@ -50,7 +50,7 @@ const SelectCountryScreen = ({ onChangeRole }) => {
   );
 };
 
-export default SelectCountryScreen;
+export default SelectUserRole;
 
 const styles = StyleSheet.create({
   dropdown: {
