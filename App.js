@@ -12,6 +12,8 @@ import ChatScreen from "./src/screens/ChatScreen";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import RegisterScreen from "./src/screens/RegisterScreen";
+import SaveProductScreen from "./src/screens/SaveProductScreen";
+import CheckoutScreen from "./src/screens/CheckoutScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -48,6 +50,16 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen
+            name="Checkout"
+            component={CheckoutScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SaveProduct"
+            component={SaveProductScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="Login"
             component={LoginScreen}
