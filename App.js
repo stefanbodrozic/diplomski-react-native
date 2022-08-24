@@ -38,8 +38,12 @@ function BottomNavigation() {
         tabBarActiveTintColor: "tomato",
       })}
     >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name="Profile" component={ProfileScreen} />
-      <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Chat" component={ChatScreen} />
     </Tab.Navigator>
   );
@@ -50,6 +54,11 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen
+            name="MainScreen"
+            component={BottomNavigation}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="Checkout"
             component={CheckoutScreen}
@@ -68,11 +77,6 @@ const App = () => {
           <Stack.Screen
             name="Register"
             component={RegisterScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MainScreen"
-            component={BottomNavigation}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
