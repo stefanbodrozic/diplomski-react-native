@@ -55,6 +55,17 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SaveProduct"
+            component={SaveProductScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
             name="MainScreen"
             component={BottomNavigation}
             options={{ headerShown: false }}
@@ -64,16 +75,7 @@ const App = () => {
             component={CheckoutScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="SaveProduct"
-            component={SaveProductScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
+
           <Stack.Screen
             name="Register"
             component={RegisterScreen}

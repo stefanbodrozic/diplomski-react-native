@@ -12,6 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 
 import SelectUserRole from "../components/SelectUserRole";
 
+import uuid from "react-native-uuid";
+
 const RegisterScreen = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -31,6 +33,7 @@ const RegisterScreen = () => {
 
   const handleRegisterButton = async () => {
     let user = {
+      id: uuid.v4(),
       firstname,
       lastname,
       username,
@@ -47,7 +50,7 @@ const RegisterScreen = () => {
 
       if (userCredential) {
         user.email = userCredential.user.email;
-        user.token = userCredential.user.stsTokenManager.accessToken;
+        user.token = userCredential.user.stsTokenManager.accessToken; // proveriti da li je ovo potrebno
       }
 
       let subcollection = "users/";
@@ -55,6 +58,7 @@ const RegisterScreen = () => {
         subcollection = "customers";
       } else if (role === "Seller") {
         subcollection = "sellers";
+        user.storeName = storeName;
       } else {
         subcollection = "deliverer";
       }
@@ -62,15 +66,7 @@ const RegisterScreen = () => {
       const userRoleRef = doc(db, "users", subcollection);
       const userRef = collection(userRoleRef, role);
 
-      const docRef = await addDoc(userRef, {
-        firstname,
-        lastname,
-        username,
-        email,
-        address,
-      });
-
-      user.id = docRef.id;
+      await addDoc(userRef, user);
 
       dispatch(loginRegisteredUser(user));
 

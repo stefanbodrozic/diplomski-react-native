@@ -6,22 +6,32 @@ const usersSlice = createSlice({
     id: "",
     email: "",
     token: "",
+    role: "",
+    storeName: "",
   },
   reducers: {
     login: (state, action) => {
-      const { email, token } = action.payload;
-      state.email = email;
-      state.token = token;
-    },
-    logout: (state, action) => {
-      state.email = "";
-      state.token = "";
-    },
-    loginRegisteredUser: (state, action) => {
-      const { id, email, token } = action.payload;
+      const { id, email, token, role, storeName } = action.payload;
       state.id = id;
       state.email = email;
       state.token = token;
+      state.role = role;
+      state.storeName = storeName;
+    },
+    logout: (state, action) => {
+      state.id = "";
+      state.email = "";
+      state.token = "";
+      state.role = "";
+      state.storeName = "";
+    },
+    loginRegisteredUser: (state, action) => {
+      const { id, email, token, role, storeName } = action.payload;
+      state.id = id;
+      state.email = email;
+      state.token = token;
+      state.role = role;
+      state.storeName = storeName;
     },
   },
 });

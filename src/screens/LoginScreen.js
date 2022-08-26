@@ -7,13 +7,14 @@ import {
   TextInput,
   ToastAndroid,
 } from "react-native";
-import { auth } from "../../firebase/firebase-config";
+import { auth, db } from "../../firebase/firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { useDispatch } from "react-redux";
 import { login } from "../store/slices/usersSlice";
 
 import { useNavigation } from "@react-navigation/native";
+import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -30,14 +31,17 @@ const LoginScreen = () => {
     // check credentials and redirect to home screen
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
+
       if (response) {
         const user = {
           email: response.user.email,
           token: response.user.stsTokenManager.accessToken,
         };
-        // redirect to home screen
+        
         dispatch(login(user));
-        navigation.navigate("MainScreen");
+
+        // navigation.navigate("MainScreen");
+        navigation.navigate("SaveProduct");
       }
     } catch (error) {
       const errorCode = error.code;
