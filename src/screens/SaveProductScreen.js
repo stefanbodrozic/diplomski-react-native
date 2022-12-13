@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SelectCategory from "../components/SelectCategory";
 
 import * as ImagePicker from "expo-image-picker";
@@ -30,7 +30,15 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import uuid from "react-native-uuid";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  getCategories,
+  getCategoriesStatus,
+  getCategoriesError,
+  fetchCategories,
+  selectAllCategories,
+} from "../store/slices/categoriesSlice";
 
 const SaveProductScreen = () => {
   const [title, setTitle] = useState("");
@@ -42,6 +50,24 @@ const SaveProductScreen = () => {
   const user = useSelector((state) => state.user);
 
   const productId = uuid.v4();
+
+  // deo za dobavljanje kategorija
+  const dispatch = useDispatch();
+
+  const categories = useSelector(getCategories);
+  const categoriesStatus = useSelector(getCategoriesStatus);
+  const error = useSelector(getCategoriesError);
+
+  console.log("save product CATEGORIES..", categories);
+  console.log("save product STATUS..", categoriesStatus);
+  console.log("save product ERROR..", error);
+
+  useEffect(() => {
+    if (categoriesStatus === "idle") {
+      console.log("idle..");
+      dispatch(fetchCategories());
+    }
+  }, [categoriesStatus, dispatch]);
 
   const product = {
     id: productId,
@@ -170,6 +196,12 @@ const SaveProductScreen = () => {
 
   return (
     <SafeAreaView style={styles.root}>
+      {categoriesStatus === "loading" && <div>LOADING..</div>}
+
+      {categoriesStatus === "succeeded" && <div>SUCCEEDDED</div>}
+
+      {categoriesStatus === "error" && <div>ERROR</div>}
+
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="title"

@@ -41,8 +41,8 @@ const LoginScreen = () => {
         dispatch(login(user));
 
         // navigation.navigate("MainScreen");
-        // navigation.navigate("SaveProduct");
-        navigation.navigate("Categories");
+        navigation.navigate("SaveProduct");
+        // navigation.navigate("Categories");
       }
     } catch (error) {
       const errorCode = error.code;
