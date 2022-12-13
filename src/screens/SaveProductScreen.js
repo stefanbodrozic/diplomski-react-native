@@ -2,7 +2,6 @@ import {
   Button,
   StyleSheet,
   TextInput,
-  Text,
   View,
   Image,
   ScrollView,
@@ -25,6 +24,7 @@ import {
   getDoc,
   updateDoc,
   arrayUnion,
+  serverTimestamp,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -51,6 +51,7 @@ const SaveProductScreen = () => {
     category,
     user: {},
     images: [],
+    timestamp: serverTimestamp(),
   };
 
   const pickImage = async () => {

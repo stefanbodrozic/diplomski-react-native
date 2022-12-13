@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { SelectCountry } from "react-native-element-dropdown";
 
+// napraviti da u store pokupi podatke iz baze i da se to radi svaki put kada se pozove selectcategory.js
+
 const options = [
   {
     value: "1",

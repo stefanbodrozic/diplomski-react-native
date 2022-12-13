@@ -5,13 +5,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Provider } from "react-redux";
 import { store } from "./src/store/store";
 
-import LoginScreen from "./src/screens/LoginScreen";
+import LoginScreen from "./src/screens/user/actions/LoginScreen";
 import HomeScreen from "./src/screens/HomeScreen";
-import ProfileScreen from "./src/screens/ProfileScreen";
+import ProfileScreen from "./src/screens/user/ProfileScreen";
 import ChatScreen from "./src/screens/ChatScreen";
+import CategoryScreen from "./src/screens/CategoryScreen";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
-import RegisterScreen from "./src/screens/RegisterScreen";
+import RegisterScreen from "./src/screens/user/actions/RegisterScreen";
 import SaveProductScreen from "./src/screens/SaveProductScreen";
 import CheckoutScreen from "./src/screens/CheckoutScreen";
 
@@ -73,6 +74,12 @@ const App = () => {
           <Stack.Screen
             name="Checkout"
             component={CheckoutScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Categories"
+            component={CategoryScreen}
             options={{ headerShown: false }}
           />
 
