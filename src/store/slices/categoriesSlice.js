@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { db } from "../../../firebase/firebase-config";
+import { collection, query, getDocs, orderBy } from "firebase/firestore";
 
 const initialState = {
   categories: [],
@@ -10,20 +12,25 @@ export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async () => {
     try {
-      // ovde ide query
-      console.log("fetch categories");
+      let categories = [];
 
-      //   return ODGOVOR
-      return [
-        {
-          id: 1,
-          name: "test",
-        },
-        {
-          id: 2,
-          name: "test2",
-        },
-      ];
+      const q = query(
+        collection(db, "categories"),
+        orderBy("timestamp", "desc")
+      );
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const { id, name } = doc.data();
+        const category = {
+          id,
+          name,
+        };
+
+        categories.push(category);
+      });
+
+      return categories;
     } catch (error) {
       return error.message;
     }
@@ -45,8 +52,7 @@ const categoriesSlice = createSlice({
         // ovde moze da se filtrira response
         // const categories = action.payload.map((category) => {...})
 
-        state.categories = "NESTO ";
-        // state.categories = action.payload; // ili categories ako se radi izmena
+        state.categories = action.payload; // ili categories ako se radi izmena
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.status = "failed";
@@ -55,14 +61,8 @@ const categoriesSlice = createSlice({
   },
 });
 
-// export const selectAllCategories = (state) => state.categories.categories;
 export const getCategories = (state) => state.categories.categories;
-export const getCategoriesStatus = (state) =>
-  state.categories.categories.status;
-export const getCategoriesError = (state) => state.categories.categories.error;
-
-// export const getByName = (state) => {};
-
-// export const getById = (state) => {};
+export const getCategoriesStatus = (state) => state.categories.status;
+export const getCategoriesError = (state) => state.categories.error;
 
 export default categoriesSlice.reducer;

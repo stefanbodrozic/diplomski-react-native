@@ -3,11 +3,9 @@ import {
   StyleSheet,
   TextInput,
   View,
-  Image,
   ScrollView,
   SafeAreaView,
   ImageBackground,
-  TouchableHighlight,
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -20,8 +18,6 @@ import {
   doc,
   collection,
   addDoc,
-  setDoc,
-  getDoc,
   updateDoc,
   arrayUnion,
   serverTimestamp,
@@ -37,7 +33,6 @@ import {
   getCategoriesStatus,
   getCategoriesError,
   fetchCategories,
-  selectAllCategories,
 } from "../store/slices/categoriesSlice";
 
 const SaveProductScreen = () => {
@@ -54,17 +49,12 @@ const SaveProductScreen = () => {
   // deo za dobavljanje kategorija
   const dispatch = useDispatch();
 
-  const categories = useSelector(getCategories);
+  // const categories = useSelector(getCategories); // ne koristi se
   const categoriesStatus = useSelector(getCategoriesStatus);
-  const error = useSelector(getCategoriesError);
-
-  console.log("save product CATEGORIES..", categories);
-  console.log("save product STATUS..", categoriesStatus);
-  console.log("save product ERROR..", error);
+  // const error = useSelector(getCategoriesError); // koristice se za loader
 
   useEffect(() => {
     if (categoriesStatus === "idle") {
-      console.log("idle..");
       dispatch(fetchCategories());
     }
   }, [categoriesStatus, dispatch]);
@@ -114,7 +104,9 @@ const SaveProductScreen = () => {
   };
 
   const updateProductWithImgURLs = (docId) => {
-    images.map((image) => uploadImageAsync(image, docId));
+    if (images.length > 0) {
+      images.map((image) => uploadImageAsync(image, docId));
+    }
   };
 
   const uploadImageAsync = async (image, docId) => {
@@ -170,6 +162,7 @@ const SaveProductScreen = () => {
     try {
       // sacuvati slike i iz response-a uzeti linkove do slika
 
+      console.log("handle save btn");
       const subcollection = "stores";
       const productsRef = doc(db, "products", subcollection);
       const storeRef = collection(
@@ -178,6 +171,8 @@ const SaveProductScreen = () => {
       );
       const docRef = await addDoc(storeRef, product, productId);
       if (docRef) {
+        console.log("handle save btn IF");
+
         // u ovom trenutku je dokument kreiran i mozemo da ga update-ujemo sa image urls
         await updateProductWithImgURLs(docRef.id);
       }
@@ -196,11 +191,7 @@ const SaveProductScreen = () => {
 
   return (
     <SafeAreaView style={styles.root}>
-      {categoriesStatus === "loading" && <div>LOADING..</div>}
-
-      {categoriesStatus === "succeeded" && <div>SUCCEEDDED</div>}
-
-      {categoriesStatus === "error" && <div>ERROR</div>}
+      {/* dodati loader dok se ucitavaju kategorije */}
 
       <View style={styles.inputContainer}>
         <TextInput
