@@ -3,10 +3,13 @@ import { View, Button, StyleSheet, TextInput } from "react-native";
 
 import { auth, db } from "../../../../firebase/firebase-config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, collection, addDoc } from "firebase/firestore";
+import { doc, collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 import { useDispatch } from "react-redux";
-import { loginRegisteredUser } from "../../../store/slices/usersSlice";
+import {
+  loginRegisteredUser,
+  getUserInfo,
+} from "../../../store/slices/usersSlice";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -38,7 +41,9 @@ const RegisterScreen = () => {
       lastname,
       username,
       email,
+      role,
       address,
+      timestamp: serverTimestamp(),
     };
 
     try {
@@ -53,22 +58,9 @@ const RegisterScreen = () => {
         user.token = userCredential.user.stsTokenManager.accessToken; // proveriti da li je ovo potrebno
       }
 
-      let subcollection = "users/";
-      if (role === "Customer") {
-        subcollection = "customers";
-      } else if (role === "Seller") {
-        subcollection = "sellers";
-        user.storeName = storeName;
-      } else {
-        subcollection = "deliverer";
-      }
+      await addDoc(collection(db, "users"), user);
 
-      const userRoleRef = doc(db, "users", subcollection);
-      const userRef = collection(userRoleRef, role);
-
-      await addDoc(userRef, user);
-
-      dispatch(loginRegisteredUser(user));
+      dispatch(loginRegisteredUser(getUserInfo));
 
       navigation.navigate("MainScreen");
     } catch (e) {

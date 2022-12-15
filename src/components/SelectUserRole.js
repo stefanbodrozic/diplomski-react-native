@@ -1,30 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { SelectCountry } from "react-native-element-dropdown";
-
-const options = [
-  {
-    value: "1",
-    label: "Customer",
-    // image: {
-    //   uri: "",
-    // },
-  },
-  {
-    value: "2",
-    label: "Seller",
-    // image: {
-    //   uri: "",
-    // },
-  },
-  {
-    value: "3",
-    label: "Deliveryman",
-    // image: {
-    //   uri: "",
-    // },
-  },
-];
+import roles from "../helpers/roles";
 
 const SelectUserRole = ({ onChangeRole }) => {
   const [role, setRole] = useState("1");
@@ -38,13 +15,13 @@ const SelectUserRole = ({ onChangeRole }) => {
       iconStyle={styles.iconStyle}
       maxHeight={200}
       value={role}
-      data={options}
-      valueField="value"
-      labelField="label"
+      data={roles}
+      valueField="id"
+      labelField="name"
       imageField="image"
       onChange={(e) => {
-        setRole(e.value);
-        onChangeRole(e.label);
+        setRole(e.id);
+        onChangeRole(e.name);
       }}
     />
   );

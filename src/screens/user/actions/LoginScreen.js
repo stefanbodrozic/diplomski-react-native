@@ -11,7 +11,7 @@ import { auth, db } from "../../../../firebase/firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { useDispatch } from "react-redux";
-import { login } from "../../../store/slices/usersSlice";
+import { getUserInfo } from "../../../store/slices/usersSlice";
 
 import { useNavigation } from "@react-navigation/native";
 import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
@@ -38,7 +38,7 @@ const LoginScreen = () => {
           token: response.user.stsTokenManager.accessToken,
         };
 
-        dispatch(login(user));
+        dispatch(getUserInfo(user));
 
         // navigation.navigate("MainScreen");
         navigation.navigate("SaveProduct");
