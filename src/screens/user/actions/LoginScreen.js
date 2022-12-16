@@ -17,8 +17,11 @@ import { useNavigation } from "@react-navigation/native";
 import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("user@user.com");
+  const [email, setEmail] = useState("user@user.com"); // admin
   const [password, setPassword] = useState("123456789");
+
+  // const [email, setEmail] = useState("prodavac@gmail.com"); // prodavac
+  // const [password, setPassword] = useState("prodavac12345");
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -33,15 +36,10 @@ const LoginScreen = () => {
       const response = await signInWithEmailAndPassword(auth, email, password);
 
       if (response) {
-        const user = {
-          email: response.user.email,
-          token: response.user.stsTokenManager.accessToken,
-        };
+        dispatch(getUserInfo());
 
-        dispatch(getUserInfo(user));
-
-        // navigation.navigate("MainScreen");
-        navigation.navigate("SaveProduct");
+        navigation.navigate("MainScreen");
+        // navigation.navigate("SaveProduct");
         // navigation.navigate("Categories");
       }
     } catch (error) {

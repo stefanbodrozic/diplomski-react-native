@@ -6,10 +6,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 import { useDispatch } from "react-redux";
-import {
-  loginRegisteredUser,
-  getUserInfo,
-} from "../../../store/slices/usersSlice";
+import { getUserInfo } from "../../../store/slices/usersSlice";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -58,9 +55,13 @@ const RegisterScreen = () => {
         user.token = userCredential.user.stsTokenManager.accessToken; // proveriti da li je ovo potrebno
       }
 
+      if (storeName) {
+        user.storeName = storeName;
+      }
+
       await addDoc(collection(db, "users"), user);
 
-      dispatch(loginRegisteredUser(getUserInfo));
+      dispatch(getUserInfo());
 
       navigation.navigate("MainScreen");
     } catch (e) {

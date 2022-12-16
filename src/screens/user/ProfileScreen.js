@@ -1,11 +1,10 @@
 import React from "react";
 import { StyleSheet, View, Image, Button } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { auth } from "../../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
 
-import { logout } from "../../store/slices/usersSlice";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -13,15 +12,12 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const user = useSelector((state) => state.users.user);
+  console.log("user sa profile screen-aAAA", user);
+
   const handleLogout = async () => {
     try {
-      // check if user is logged in
-      if (auth.currentUser) {
-        await signOut(auth); // response will be undefined if user is successfully signed out
-        dispatch(logout);
-
-        navigation.navigate("Login");
-      }
+      // logout user
     } catch (error) {
       console.error("logout error", error);
     }

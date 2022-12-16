@@ -4,7 +4,7 @@ import categoriesSlice from "./slices/categoriesSlice";
 
 export const store = configureStore({
   reducer: {
-    user: usersSlice,
+    users: usersSlice,
     categories: categoriesSlice,
   },
 });

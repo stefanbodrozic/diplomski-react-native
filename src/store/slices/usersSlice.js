@@ -11,10 +11,10 @@ const initialState = {
 
 export const getUserInfo = createAsyncThunk("users/getUserInfo", async () => {
   try {
+    var loggedInUser = null;
+
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log("user..", user);
-
         const q = query(
           collection(db, "users"),
           where("email", "==", user.email)
@@ -22,15 +22,37 @@ export const getUserInfo = createAsyncThunk("users/getUserInfo", async () => {
 
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
-          console.log("data", doc.data());
-          // setovati podatke u state
-          // koristiti za edit profila
+          const {
+            id,
+            username,
+            firstname,
+            lastname,
+            email,
+            address,
+            role,
+            storeName,
+          } = doc.data();
+
+          loggedInUser = {
+            id,
+            username,
+            firstname,
+            lastname,
+            email,
+            address,
+            role,
+          };
+
+          if (storeName) loggedInUser.storeName = storeName;
         });
-      } else {
-        // user is signed out
       }
+      // else {
+      //   // user is signed out
+      //   return loggedInUser;
+      // }
+      console.log("return user: ", loggedInUser);
+      return loggedInUser;
     });
-    return user;
   } catch (error) {
     return error.message;
   }
@@ -39,37 +61,8 @@ export const getUserInfo = createAsyncThunk("users/getUserInfo", async () => {
 const usersSlice = createSlice({
   name: "user",
   initialState,
-  // {
-  //   id: "",
-  //   email: "",
-  //   token: "",
-  //   role: "",
-  //   storeName: "",
-  // },
   reducers: {
-    // login: (state, action) => {
-    //   const { id, email, token, role, storeName } = action.payload;
-    //   state.id = id;
-    //   state.email = email;
-    //   state.token = token;
-    //   state.role = role;
-    //   state.storeName = storeName;
-    // },
-    // logout: (state, action) => {
-    //   state.id = "";
-    //   state.email = "";
-    //   state.token = "";
-    //   state.role = "";
-    //   state.storeName = "";
-    // },
-    // loginRegisteredUser: (state, action) => {
-    //   const { id, email, token, role, storeName } = action.payload;
-    //   state.id = id;
-    //   state.email = email;
-    //   state.token = token;
-    //   state.role = role;
-    //   state.storeName = storeName;
-    // },
+    updateUser(state, action) {},
   },
   extraReducers(builder) {
     builder
@@ -79,9 +72,9 @@ const usersSlice = createSlice({
       .addCase(getUserInfo.fulfilled, (state, action) => {
         state.status = "succeeded";
 
-        console.log("succeeded getUserInfo", action.payload);
+        console.log("fulfilled user", action.payload);
 
-        state.categories = action.payload;
+        state.user = action.payload;
       })
       .addCase(getUserInfo.rejected, (state, action) => {
         state.status = "failed";
@@ -90,5 +83,6 @@ const usersSlice = createSlice({
   },
 });
 
-// export const { login, logout, loginRegisteredUser } = usersSlice.actions;
+export const getLoggedInUser = (state) => state.user;
+
 export default usersSlice.reducer;

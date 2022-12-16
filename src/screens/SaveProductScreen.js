@@ -42,7 +42,7 @@ const SaveProductScreen = () => {
   const [category, setCategory] = useState("");
   const [images, setImages] = useState([]);
 
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user); // ovo mi verovatno ne treba, proveriti
 
   const productId = uuid.v4();
 
