@@ -50,7 +50,6 @@ export const getUserInfo = createAsyncThunk("users/getUserInfo", async () => {
       //   // user is signed out
       //   return loggedInUser;
       // }
-      console.log("return user: ", loggedInUser);
       return loggedInUser;
     });
   } catch (error) {
@@ -72,8 +71,6 @@ const usersSlice = createSlice({
       .addCase(getUserInfo.fulfilled, (state, action) => {
         state.status = "succeeded";
 
-        console.log("fulfilled user", action.payload);
-
         state.user = action.payload;
       })
       .addCase(getUserInfo.rejected, (state, action) => {
@@ -84,5 +81,6 @@ const usersSlice = createSlice({
 });
 
 export const getLoggedInUser = (state) => state.user;
+export const getLoggedInUserStatus = (state) => state.users.status;
 
 export default usersSlice.reducer;

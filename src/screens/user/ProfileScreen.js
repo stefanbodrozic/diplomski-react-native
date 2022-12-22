@@ -1,19 +1,26 @@
 import React from "react";
-import { StyleSheet, View, Image, Button } from "react-native";
+import { StyleSheet, View, Image, Button, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import { auth } from "../../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
 
-
 import { useNavigation } from "@react-navigation/native";
+import { useEffect } from "react";
+import {
+  getLoggedInUser,
+  getLoggedInUserStatus,
+} from "../../store/slices/usersSlice";
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const user = useSelector((state) => state.users.user);
-  console.log("user sa profile screen-aAAA", user);
+  const loggedInUserStatus = useSelector(getLoggedInUserStatus);
+
+  const user = useSelector(getLoggedInUser);
+
+
 
   const handleLogout = async () => {
     try {
@@ -21,6 +28,10 @@ const ProfileScreen = () => {
     } catch (error) {
       console.error("logout error", error);
     }
+  };
+
+  componentDidMount = () => {
+    console.log("component did mount...", user);
   };
 
   return (
@@ -31,6 +42,9 @@ const ProfileScreen = () => {
             uri: "https://reactnative.dev/docs/assets/p_cat2.png",
           }}
         />
+        <View>
+          <Text>TEKST {loggedInUserStatus}</Text>
+        </View>
       </View>
       <View style={styles.optionsContainer}>
         <Button title="Logout" onPress={handleLogout} />

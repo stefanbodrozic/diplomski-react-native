@@ -8,12 +8,40 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import CategoryItem from "../components/CategoryItem";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useEffect } from "react";
+import {
+  fetchProducts,
+  getProducts,
+  getProductsStatus,
+} from "../store/slices/productsSlice";
+import {
+  getCategories,
+  getCategoriesStatus,
+} from "../store/slices/categoriesSlice";
 
 const HomeScreen = () => {
-  const user = useSelector((state) => state.user);
+  // const user = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+
+  const categoriesStatus = useSelector(getCategoriesStatus);
+  console.log("categories status HOME SCREEN: ", categoriesStatus);
+
+  const categories = useSelector(getCategories);
+
+  // useEffect(() => {
+  //   console.log("sta ce sad da se desi??", categories);
+  // }, [categories]);
+
+  // const productsStatus = useSelector(getProductsStatus);
+
+  // useEffect(() => {
+  //   if (productsStatus === "idle") {
+  //     dispatch(fetchProducts());
+  //   }
+  // }, [productsStatus, dispatch]);
 
   const handleSearchTextChange = (text) => {
     console.log("text: ", text);
@@ -39,16 +67,13 @@ const HomeScreen = () => {
             onChangeText={(text) => handleSearchTextChange(text)}
           />
         </View>
-        <Text>Categories</Text>
-        {/* categories.map... */}
-        <Text>Category ONE</Text>
 
-        <ScrollView horizontal={true}>
+        <ScrollView horizontal={true} style={styles.scrollView}>
           {/* show 4 products and show more button */}
-          <CategoryItem />
-          <CategoryItem />
-          <CategoryItem />
-          <CategoryItem />
+          {categories.map((category) => {
+            return <CategoryItem name={category.name} />;
+          })}
+
           <TouchableOpacity
             style={styles.showMoreContainer}
             onPress={handleShowMore}
@@ -82,5 +107,8 @@ const styles = StyleSheet.create({
   },
   addIcon: {
     paddingLeft: 20,
+  },
+  scrollView: {
+    paddingTop: 20,
   },
 });

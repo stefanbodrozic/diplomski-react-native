@@ -1,18 +1,16 @@
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
-const CategoryItem = (item) => {
-  const { title, image, price } = item;
-
+const CategoryItem = ({ name }) => {
   const handleItem = () => {
-    console.log("redirect to product screen");
+    console.log("redirect to product screen", name);
   };
 
   return (
     <TouchableOpacity onPress={handleItem}>
       <View style={styles.root}>
         <View>
-          <Text style={styles.title}>Item Title {title}</Text>
+          <Text style={styles.name}>{name}</Text>
         </View>
         <View style={styles.imageContainer}>
           <Image
@@ -20,9 +18,6 @@ const CategoryItem = (item) => {
               uri: "https://reactnative.dev/docs/assets/p_cat2.png",
             }}
           />
-        </View>
-        <View>
-          <Text style={styles.price}>$100 {price}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -43,7 +38,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
-  title: {
+  name: {
     fontSize: 20,
     fontWeight: "bold",
   },
