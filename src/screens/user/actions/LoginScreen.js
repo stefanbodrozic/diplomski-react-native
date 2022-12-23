@@ -18,11 +18,14 @@ import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 import { fetchCategories } from "../../../store/slices/categoriesSlice";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("user@user.com"); // admin
-  const [password, setPassword] = useState("123456789");
+  // const [email, setEmail] = useState("user@user.com"); // admin
+  // const [password, setPassword] = useState("123456789");
 
   // const [email, setEmail] = useState("prodavac@gmail.com"); // prodavac
   // const [password, setPassword] = useState("prodavac12345");
+
+  const [email, setEmail] = useState("test6@gmail.con"); // prodavac
+  const [password, setPassword] = useState("Qwertyuiop");
 
   const dispatch = useDispatch();
   const navigation = useNavigation();

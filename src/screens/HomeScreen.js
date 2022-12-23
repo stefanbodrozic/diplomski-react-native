@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import CategoryItem from "../components/CategoryItem";
+import Item from "../components/Item";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useEffect } from "react";
 import {
@@ -21,6 +21,8 @@ import {
   getCategories,
   getCategoriesStatus,
 } from "../store/slices/categoriesSlice";
+import StoreContainer from "../components/StoreContainer";
+import { fetchStores, getStoresStatus } from "../store/slices/storesSlice";
 
 const HomeScreen = () => {
   // const user = useSelector((state) => state.users);
@@ -30,6 +32,14 @@ const HomeScreen = () => {
   console.log("categories status HOME SCREEN: ", categoriesStatus);
 
   const categories = useSelector(getCategories);
+
+  const storesStatus = useSelector(getStoresStatus);
+
+  useEffect(() => {
+    if (storesStatus === "idle") {
+      dispatch(fetchStores());
+    }
+  }, [storesStatus, dispatch]);
 
   // useEffect(() => {
   //   console.log("sta ce sad da se desi??", categories);
@@ -71,7 +81,7 @@ const HomeScreen = () => {
         <ScrollView horizontal={true} style={styles.scrollView}>
           {/* show 4 products and show more button */}
           {categories.map((category) => {
-            return <CategoryItem name={category.name} />;
+            return <Item name={category.name} key={category.id} />;
           })}
 
           <TouchableOpacity
@@ -82,6 +92,8 @@ const HomeScreen = () => {
             <Text>Show more</Text>
           </TouchableOpacity>
         </ScrollView>
+
+        <StoreContainer />
       </ScrollView>
     </SafeAreaView>
   );

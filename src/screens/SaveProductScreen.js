@@ -34,6 +34,7 @@ import {
   getCategoriesError,
   fetchCategories,
 } from "../store/slices/categoriesSlice";
+import { getLoggedInUser } from "../store/slices/usersSlice";
 
 const SaveProductScreen = () => {
   const [title, setTitle] = useState("");
@@ -42,7 +43,7 @@ const SaveProductScreen = () => {
   const [category, setCategory] = useState("");
   const [images, setImages] = useState([]);
 
-  const user = useSelector((state) => state.user); // ovo mi verovatno ne treba, proveriti
+  const loggedInUser = useSelector(getLoggedInUser); // ovo mi verovatno ne treba, proveriti
 
   const productId = uuid.v4();
 
@@ -89,7 +90,8 @@ const SaveProductScreen = () => {
   };
 
   const updateProduct = async (docId, imageUrl) => {
-    const subcollection = "stores";
+    // const subcollection = "stores"; // pronaci usera iz store-a
+    const subcollection = "Test store 6";
     const productsRef = doc(db, "products", subcollection);
     const storeRef = collection(
       productsRef,
@@ -137,6 +139,8 @@ const SaveProductScreen = () => {
       // naziv prodavnice / naziv proizvoda / naziv slike
     );
 
+    //TODO - izmeniti naziv prodavnice da uzme od logovanog usera
+
     const upload = await uploadBytes(storageRef, blob);
 
     // We're done with the blob, close and release it
@@ -154,6 +158,8 @@ const SaveProductScreen = () => {
         )
       );
 
+      //TODO - izmeniti naziv prodavnice da uzme od logovanog usera
+
       await updateProduct(docId, imageURL); // pronadji product i dodaj samo jedan url cim se slika uploaduje
     }
   };
@@ -163,12 +169,10 @@ const SaveProductScreen = () => {
       // sacuvati slike i iz response-a uzeti linkove do slika
 
       console.log("handle save btn");
-      const subcollection = "stores";
+      // const subcollection = "stores"; // TODO: izmeniti da uzme naziv logovanog usera
+      const subcollection = "Test store 6";
       const productsRef = doc(db, "products", subcollection);
-      const storeRef = collection(
-        productsRef,
-        "prodavnica 123 i njeni proizvodi" // ovo ce biti od prodavca - naziv prodavnice
-      );
+      const storeRef = collection(productsRef, "products");
       const docRef = await addDoc(storeRef, product, productId);
       if (docRef) {
         console.log("handle save btn IF");

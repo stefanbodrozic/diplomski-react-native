@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
-const CategoryItem = ({ name }) => {
+const Item = ({ name }) => {
   const handleItem = () => {
     console.log("redirect to product screen", name);
   };
@@ -24,7 +24,7 @@ const CategoryItem = ({ name }) => {
   );
 };
 
-export default CategoryItem;
+export default Item;
 const styles = StyleSheet.create({
   root: {
     backgroundColor: "white",
