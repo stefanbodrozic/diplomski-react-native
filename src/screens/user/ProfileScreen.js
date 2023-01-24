@@ -17,10 +17,12 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   const loggedInUserStatus = useSelector(getLoggedInUserStatus);
+  console.log("loggedInUserStatus", loggedInUserStatus);
 
   const user = useSelector(getLoggedInUser);
-
-
+  useEffect(() => {
+    console.log("promenjen status eo ga user: ", user);
+  }, [loggedInUserStatus]);
 
   const handleLogout = async () => {
     try {
@@ -28,10 +30,6 @@ const ProfileScreen = () => {
     } catch (error) {
       console.error("logout error", error);
     }
-  };
-
-  componentDidMount = () => {
-    console.log("component did mount...", user);
   };
 
   return (

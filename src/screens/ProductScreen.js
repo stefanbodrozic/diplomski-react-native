@@ -10,7 +10,7 @@ import React from "react";
 import Slider from "../components/Slider";
 
 const ProductScreen = ({ route, navigation }) => {
-  const { name, price } = route.params; // proslediti samo id product-a i pronaci ga iz store-a
+  const { product } = route.params;
 
   const handleAddToCartButton = () => {
     console.log("add to cart");
@@ -24,8 +24,8 @@ const ProductScreen = ({ route, navigation }) => {
         <Slider />
 
         <View style={styles.informations}>
-          <Text style={styles.title}>Apple product</Text>
-          <Text style={styles.price}>500$</Text>
+          <Text style={styles.title}>{product.name}</Text>
+          <Text style={styles.price}>{product.price}$</Text>
 
           <Text style={styles.description}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

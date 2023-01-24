@@ -40,7 +40,7 @@ const LoginScreen = () => {
       const response = await signInWithEmailAndPassword(auth, email, password);
 
       if (response) {
-        dispatch(getUserInfo());
+        dispatch(getUserInfo(email));
         dispatch(fetchCategories());
 
         navigation.navigate("MainScreen");

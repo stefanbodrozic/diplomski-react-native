@@ -9,7 +9,15 @@ import {
   FlatList,
 } from "react-native";
 import React from "react";
-import StoreItem from "../components/StoreItem";
+import Product from "../components/Product";
+import { useDispatch, useSelector } from "react-redux";
+import { getProductsStatus } from "../store/slices/productsSlice";
+import {
+  fetchProducts,
+  getStoreProducts,
+  getStoreProductsStatus,
+} from "../store/slices/storesSlice";
+import { useEffect } from "react";
 
 const DATA = [
   {
@@ -66,17 +74,37 @@ const DATA = [
   },
 ];
 
-const StoreScreen = () => {
+const StoreScreen = ({ route, navigation }) => {
+  const { id, storeName } = route.params; // proslediti samo id product-a i pronaci ga iz store-a
+
+  // pustiti query za dobavljanje podataka
+  const dispatch = useDispatch();
+
+  const productsStatus = useSelector(getStoreProductsStatus);
+  const products = useSelector(getStoreProducts);
+
+  useEffect(() => {
+    if (productsStatus === "idle") {
+      dispatch(fetchProducts(id, storeName));
+    }
+  }, [productsStatus, dispatch]);
+
+  useEffect(() => {
+    console.log("products..", products);
+  }, [productsStatus, products]);
+
   return (
     <SafeAreaView style={styles.root}>
-      <Text>Random store name</Text>
+      <Text>{storeName}</Text>
       {/* FlatList renders items lazily, when they are about to appear, and removes items that scroll way off screen to save memory and processing time. */}
       <FlatList
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ justifyContent: "space-between" }}
-        data={DATA} // DATA ce biti iz baze
+        data={products} // DATA ce biti iz baze
         numColumns={2}
-        renderItem={({ item }) => <StoreItem storeName="testname" />}
+        renderItem={({ item }) => (
+          <Product name={item.name} price={item.price} />
+        )}
       />
     </SafeAreaView>
   );

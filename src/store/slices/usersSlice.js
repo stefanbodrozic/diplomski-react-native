@@ -9,53 +9,46 @@ const initialState = {
   error: null,
 };
 
-export const getUserInfo = createAsyncThunk("users/getUserInfo", async () => {
-  try {
-    var loggedInUser = null;
+export const getUserInfo = createAsyncThunk(
+  "users/getUserInfo",
+  async (email) => {
+    try {
+      let loggedInUser = null;
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const q = query(
-          collection(db, "users"),
-          where("email", "==", user.email)
-        );
+      const q = query(collection(db, "users"), where("email", "==", email));
 
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          const {
-            id,
-            username,
-            firstname,
-            lastname,
-            email,
-            address,
-            role,
-            storeName,
-          } = doc.data();
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const {
+          id,
+          username,
+          firstname,
+          lastname,
+          email,
+          address,
+          role,
+          storeName,
+        } = doc.data();
 
-          loggedInUser = {
-            id,
-            username,
-            firstname,
-            lastname,
-            email,
-            address,
-            role,
-          };
+        loggedInUser = {
+          id,
+          username,
+          firstname,
+          lastname,
+          email,
+          address,
+          role,
+        };
 
-          if (storeName) loggedInUser.storeName = storeName;
-        });
-      }
-      // else {
-      //   // user is signed out
-      //   return loggedInUser;
-      // }
+        if (storeName) loggedInUser.storeName = storeName;
+      });
+
       return loggedInUser;
-    });
-  } catch (error) {
-    return error.message;
+    } catch (error) {
+      return error.message;
+    }
   }
-});
+);
 
 const usersSlice = createSlice({
   name: "user",
@@ -71,7 +64,7 @@ const usersSlice = createSlice({
       .addCase(getUserInfo.fulfilled, (state, action) => {
         state.status = "succeeded";
 
-        state.user = action.payload;
+        state.user.user = action.payload;
       })
       .addCase(getUserInfo.rejected, (state, action) => {
         state.status = "failed";

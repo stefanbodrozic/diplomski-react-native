@@ -9,18 +9,17 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { async } from "@firebase/util";
-import { useDispatch } from "react-redux";
 
 const initialState = {
   stores: [],
   status: "idle",
   error: null,
+  products: [],
+  productsStatus: "idle",
 };
 
 export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
   try {
-    const dispatch = useDispatch();
     let stores = [];
 
     const q = query(
@@ -37,14 +36,13 @@ export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
     });
 
     let storesWithProducts = [];
+    /* 
     if (stores.length > 0) {
       let storesWithProducts = [];
 
       stores.forEach(async (store) => {
-        dispatch(fetchProductsForStore(store));
-
+        // dispatch(fetchProductsForStore(store));
         // jedno od ova dva treba napraviti da radi
-
         // const productsQuery = query(
         //   collection(db, "products", store.storeName, "products")
         //   // where("storeId", "==", id)
@@ -58,12 +56,39 @@ export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
         // console.log(storesWithProducts);
       });
     }
+    */
 
     return stores;
   } catch (error) {
     return error.message;
   }
 });
+
+export const fetchProducts = createAsyncThunk(
+  "stores/fetchProducts", // for single store
+  async (storeId, storeName) => {
+    try {
+      let products = [];
+
+      const productsQuery = query(
+        collection(db, "products", "Prodavnica 01", "products")
+        // where("storeId", ==, "id")
+      );
+
+      const productsSnapshot = await getDocs(productsQuery);
+      productsSnapshot.forEach((doc) => {
+        const { id, name, price } = doc.data();
+        const product = { id, name, price };
+        products.push(product);
+      });
+
+      console.log("store with products..", products);
+      return products;
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
 
 export const fetchProductsForStore = createAsyncThunk(
   "stores/fetchProductsForStore",
@@ -107,20 +132,37 @@ const storesSlice = createSlice({
         state.error = action.error.message;
       })
 
-      .addCase(fetchProductsForStore.pending, (state, action) => {
+      .addCase(fetchProducts.pending, (state, action) => {
+        state.productsStatus = "loading";
+
         console.log("fetch products PENDING..", action.payload);
       })
-      .addCase(fetchProductsForStore.fulfilled, (state, action) => {
-        console.log("fetch products fullfiled..", action.payload);
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.productsStatus = "succeeded";
+        state.products = action.payload;
       })
-      .addCase(fetchProductsForStore.rejected, (state, action) => {
-        console.log("fetch products REJECTED..", action.payload);
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.productsStatus = "failed";
+        state.error = action.error.message;
       });
+
+    // .addCase(fetchProductsForStore.pending, (state, action) => {
+    //   console.log("fetch products PENDING..", action.payload);
+    // })
+    // .addCase(fetchProductsForStore.fulfilled, (state, action) => {
+    //   console.log("fetch products fullfiled..", action.payload);
+    // })
+    // .addCase(fetchProductsForStore.rejected, (state, action) => {
+    //   console.log("fetch products REJECTED..", action.payload);
+    // });
   },
 });
 
 export const getStores = (state) => state.stores.stores;
 export const getStoresStatus = (state) => state.stores.status;
 export const getStoresError = (state) => state.stores.error;
+
+export const getStoreProducts = (state) => state.stores.products;
+export const getStoreProductsStatus = (state) => state.stores.productsStatus;
 
 export default storesSlice.reducer;

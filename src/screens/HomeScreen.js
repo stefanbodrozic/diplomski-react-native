@@ -22,7 +22,11 @@ import {
   getCategoriesStatus,
 } from "../store/slices/categoriesSlice";
 import StoreContainer from "../components/StoreContainer";
-import { fetchStores, getStoresStatus } from "../store/slices/storesSlice";
+import {
+  fetchStores,
+  getStores,
+  getStoresStatus,
+} from "../store/slices/storesSlice";
 
 const HomeScreen = () => {
   // const user = useSelector((state) => state.users);
@@ -34,24 +38,13 @@ const HomeScreen = () => {
   const categories = useSelector(getCategories);
 
   const storesStatus = useSelector(getStoresStatus);
+  const stores = useSelector(getStores);
 
   useEffect(() => {
     if (storesStatus === "idle") {
       dispatch(fetchStores());
     }
   }, [storesStatus, dispatch]);
-
-  // useEffect(() => {
-  //   console.log("sta ce sad da se desi??", categories);
-  // }, [categories]);
-
-  // const productsStatus = useSelector(getProductsStatus);
-
-  // useEffect(() => {
-  //   if (productsStatus === "idle") {
-  //     dispatch(fetchProducts());
-  //   }
-  // }, [productsStatus, dispatch]);
 
   const handleSearchTextChange = (text) => {
     console.log("text: ", text);
@@ -93,7 +86,16 @@ const HomeScreen = () => {
           </TouchableOpacity>
         </ScrollView>
 
-        <StoreContainer />
+        {stores.map((store) => {
+          return (
+            <StoreContainer
+              key={store.id}
+              id={store.id}
+              name={store.storeName}
+              products={store.products}
+            />
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );

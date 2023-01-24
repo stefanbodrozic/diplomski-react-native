@@ -6,7 +6,9 @@ const Item = ({ name }) => {
   const navigation = useNavigation();
 
   const handleItem = () => {
-    navigation.navigate("Store");
+    // navigation.navigate("Store");
+    // navigation.navigate("Product");
+    console.log("hi");
   };
 
   return (
