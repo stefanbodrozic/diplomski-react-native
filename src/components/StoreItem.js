@@ -2,19 +2,18 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
-const Item = ({ name }) => {
+const StoreItem = ({ storeName }) => {
   const navigation = useNavigation();
 
   const handleItem = () => {
-    navigation.navigate("Store");
+    navigation.navigate("Product", {
+      product: { name: "test random product name", price: 150 },
+    });
   };
 
   return (
     <TouchableOpacity onPress={handleItem}>
       <View style={styles.root}>
-        <View>
-          <Text style={styles.name}>{name}</Text>
-        </View>
         <View style={styles.imageContainer}>
           <Image
             source={{
@@ -22,16 +21,22 @@ const Item = ({ name }) => {
             }}
           />
         </View>
+        <View style={styles.informations}>
+          <Text style={styles.pricee}>100$</Text>
+          <Text style={styles.product}>{storeName}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default Item;
+export default StoreItem;
+
 const styles = StyleSheet.create({
   root: {
     backgroundColor: "white",
     padding: 15,
+    margin: 15,
     borderRadius: 30,
   },
   imageContainer: {
@@ -41,8 +46,16 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
-  name: {
+
+  pricee: {
+    color: "red",
+  },
+  product: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  price: {
+    color: "red",
+    marginTop: 50,
   },
 });

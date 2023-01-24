@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   root: {
     alignItems: "center",
     padding: 20,
-    paddingTop: 80,
+    // paddingTop: 80,
   },
   searchInput: {
     width: 300,

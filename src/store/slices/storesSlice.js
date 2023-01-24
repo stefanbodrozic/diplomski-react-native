@@ -9,6 +9,8 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { async } from "@firebase/util";
+import { useDispatch } from "react-redux";
 
 const initialState = {
   stores: [],
@@ -18,6 +20,7 @@ const initialState = {
 
 export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
   try {
+    const dispatch = useDispatch();
     let stores = [];
 
     const q = query(
@@ -31,42 +34,28 @@ export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
       const { id, storeName } = doc.data();
 
       stores.push({ id, storeName, products: [] });
-
-      //   const productsQuery = query(
-      //     collection(db, "products", storeName, "products")
-      //     // where("storeId", "==", id)
-      //   );
-
-      //   const productsSnapshot = await getDocs(productsQuery);
-      //   productsSnapshot.forEach((doc) => {
-      //     console.log("product", doc.data());
-      //   });
-
-      // pronaci i producte iz store-a
     });
 
+    let storesWithProducts = [];
     if (stores.length > 0) {
-      console.log(stores);
+      let storesWithProducts = [];
 
-      stores.forEach(async (store, index) => {
-        let products = [];
+      stores.forEach(async (store) => {
+        dispatch(fetchProductsForStore(store));
 
-        const productsQuery = query(
-          collection(db, "products", store.storeName, "products")
-          // where("storeId", "==", id)
-        );
+        // jedno od ova dva treba napraviti da radi
 
-        const productsSnapshot = await getDocs(productsQuery);
-        productsSnapshot.forEach((doc) => {
-          //   console.log("product", doc.data());
-          // update store sa productima
-
-          products.push(doc.data());
-        });
-
-        console.log("PRODUCST", products);
-        // dodeliti products u store (trenutni) .products
-        // store.products = products;
+        // const productsQuery = query(
+        //   collection(db, "products", store.storeName, "products")
+        //   // where("storeId", "==", id)
+        // );
+        // const productsSnapshot = await getDocs(productsQuery);
+        // productsSnapshot.forEach((doc) => {
+        //   let singleStore = { ...store };
+        //   singleStore.products = doc.data();
+        //   storesWithProducts.push(singleStore);
+        // });
+        // console.log(storesWithProducts);
       });
     }
 
@@ -75,6 +64,30 @@ export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
     return error.message;
   }
 });
+
+export const fetchProductsForStore = createAsyncThunk(
+  "stores/fetchProductsForStore",
+  async (store) => {
+    try {
+      let storeWithProducts = { ...store };
+      console.log("fetch products for store ...store => ", storeWithProducts);
+      const productsQuery = query(
+        collection(db, "products", store.storeName, "products")
+        // where("storeId", ==, "id")
+      );
+
+      const productsSnapshot = await getDocs(productsQuery);
+      productsSnapshot.forEach((doc) => {
+        storeWithProducts.products = doc.data();
+      });
+
+      console.log("store with products..", storeWithProducts);
+      return storeWithProducts;
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
 
 const storesSlice = createSlice({
   name: "store",
@@ -90,8 +103,18 @@ const storesSlice = createSlice({
         state.stores = action.payload;
       })
       .addCase(fetchStores.rejected, (state, action) => {
-        state.stauts = "failed";
+        state.status = "failed";
         state.error = action.error.message;
+      })
+
+      .addCase(fetchProductsForStore.pending, (state, action) => {
+        console.log("fetch products PENDING..", action.payload);
+      })
+      .addCase(fetchProductsForStore.fulfilled, (state, action) => {
+        console.log("fetch products fullfiled..", action.payload);
+      })
+      .addCase(fetchProductsForStore.rejected, (state, action) => {
+        console.log("fetch products REJECTED..", action.payload);
       });
   },
 });

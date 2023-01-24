@@ -15,6 +15,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import RegisterScreen from "./src/screens/user/actions/RegisterScreen";
 import SaveProductScreen from "./src/screens/SaveProductScreen";
 import CheckoutScreen from "./src/screens/CheckoutScreen";
+import StoreScreen from "./src/screens/StoreScreen";
+import ProductScreen from "./src/screens/ProductScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -50,6 +52,21 @@ function BottomNavigation() {
   );
 }
 
+const CartHeaderIcon = ({ navigation }) => {
+  const handleCart = () => {
+    navigation.navigate("Checkout");
+  };
+
+  // pratiti stanje u store - cart i ako je nesto dodato u cart promeniti name u ios-cart da bi se promenila ikonica
+  return (
+    <Ionicons
+      name="ios-cart-outline"
+      style={{ fontSize: 24 }}
+      onPress={handleCart}
+    />
+  );
+};
+
 const App = () => {
   return (
     <Provider store={store}>
@@ -69,7 +86,18 @@ const App = () => {
           <Stack.Screen
             name="MainScreen"
             component={BottomNavigation}
-            options={{ headerShown: false }}
+            options={({ navigation }) => ({
+              headerRight: () => (
+                <Ionicons
+                  name="ios-cart-outline"
+                  style={{ fontSize: 24 }}
+                  onPress={() => navigation.navigate("Checkout")}
+                />
+              ),
+              // headerRight: (props) => <CartHeaderIcon {...props} />, // ne moze da prosledi navigation kao prop
+              headerBackVisible: false,
+              headerStatusBarHeight: 0,
+            })}
           />
           <Stack.Screen
             name="Checkout"
@@ -80,6 +108,16 @@ const App = () => {
           <Stack.Screen
             name="Categories"
             component={CategoryScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Store"
+            component={StoreScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Product"
+            component={ProductScreen}
             options={{ headerShown: false }}
           />
 
