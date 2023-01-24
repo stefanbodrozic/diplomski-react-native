@@ -14,7 +14,7 @@ import CategoryScreen from "./src/screens/CategoryScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import RegisterScreen from "./src/screens/user/actions/RegisterScreen";
 import SaveProductScreen from "./src/screens/SaveProductScreen";
-import CheckoutScreen from "./src/screens/CheckoutScreen";
+import CartScreen from "./src/screens/CartScreen";
 import StoreScreen from "./src/screens/StoreScreen";
 import ProductScreen from "./src/screens/ProductScreen";
 
@@ -101,7 +101,7 @@ const App = () => {
           />
           <Stack.Screen
             name="Checkout"
-            component={CheckoutScreen}
+            component={CartScreen}
             options={{ headerShown: false }}
           />
 

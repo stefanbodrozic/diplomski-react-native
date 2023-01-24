@@ -9,14 +9,12 @@ import {
 import React from "react";
 import CheckoutItem from "../components/CheckoutItem";
 
-const CheckoutScreen = () => {
-  const handleCheckout = () => {};
+const CartScreen = () => {
+  const handleOrderNow = () => {};
 
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text>CheckoutScreen</Text>
-
         <View style={styles.checkoutItems}>
           <CheckoutItem />
           <CheckoutItem />
@@ -29,7 +27,7 @@ const CheckoutScreen = () => {
           <Text style={styles.priceText}>Total Price</Text>
           <Text style={styles.priceValue}>$1000</Text>
         </View>
-        <Button title="Check Out" onPress={handleCheckout} />
+        <Button title="Order now" onPress={handleOrderNow} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -56,4 +54,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CheckoutScreen;
+export default CartScreen;
