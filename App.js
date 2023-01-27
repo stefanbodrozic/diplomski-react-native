@@ -94,7 +94,6 @@ const App = () => {
                   onPress={() => navigation.navigate("Checkout")}
                 />
               ),
-              // headerRight: (props) => <CartHeaderIcon {...props} />, // ne moze da prosledi navigation kao prop
               headerBackVisible: false,
               headerStatusBarHeight: 0,
             })}

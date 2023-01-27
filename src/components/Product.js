@@ -17,7 +17,7 @@ const Product = ({ name, price }) => {
         <View style={styles.imageContainer}>
           <Image
             source={{
-              uri: "https://reactnative.dev/docs/assets/p_cat2.png",
+              uri: "https://reactnative.dev/docs/assets/rp_cat2.png",
             }}
           />
         </View>

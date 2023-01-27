@@ -16,6 +16,7 @@ import { getUserInfo } from "../../../store/slices/usersSlice";
 import { useNavigation } from "@react-navigation/native";
 import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 import { fetchCategories } from "../../../store/slices/categoriesSlice";
+import { fetchStores } from "../../../store/slices/storesSlice";
 
 const LoginScreen = () => {
   // const [email, setEmail] = useState("user@user.com"); // admin
@@ -42,6 +43,7 @@ const LoginScreen = () => {
       if (response) {
         dispatch(getUserInfo(email));
         dispatch(fetchCategories());
+        dispatch(fetchStores());
 
         navigation.navigate("MainScreen");
         // navigation.navigate("SaveProduct");

@@ -27,8 +27,11 @@ import {
   getStores,
   getStoresStatus,
 } from "../store/slices/storesSlice";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
+  const navigation = useNavigation();
+
   // const user = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
@@ -37,14 +40,14 @@ const HomeScreen = () => {
 
   const categories = useSelector(getCategories);
 
-  const storesStatus = useSelector(getStoresStatus);
+  // const storesStatus = useSelector(getStoresStatus);
   const stores = useSelector(getStores);
 
-  useEffect(() => {
-    if (storesStatus === "idle") {
-      dispatch(fetchStores());
-    }
-  }, [storesStatus, dispatch]);
+  // useEffect(() => {
+  //   if (storesStatus === "idle") {
+  //     dispatch(fetchStores());
+  //   }
+  // }, [storesStatus, dispatch]);
 
   const handleSearchTextChange = (text) => {
     console.log("text: ", text);
@@ -52,6 +55,10 @@ const HomeScreen = () => {
 
   const handleShowMore = () => {
     console.log("show more");
+  };
+
+  const handleAddIcon = () => {
+    navigation.navigate("SaveProduct");
   };
 
   return (
@@ -97,6 +104,10 @@ const HomeScreen = () => {
           );
         })}
       </ScrollView>
+
+      <TouchableOpacity style={styles.addIcon} onPress={handleAddIcon}>
+        <Text style={{ color: "white" }}>Add</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -124,5 +135,18 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     paddingTop: 20,
+  },
+  addIcon: {
+    borderWidth: 1,
+    borderColor: "red",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 70,
+    position: "absolute",
+    top: 500,
+    right: 20,
+    height: 70,
+    backgroundColor: "red",
+    borderRadius: 100,
   },
 });
