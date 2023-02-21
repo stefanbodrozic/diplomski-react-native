@@ -92,36 +92,24 @@ const SaveProductScreen = () => {
   };
 
   const pickImage0 = async () => {
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsMultipleSelection: true,
-    //   allowsEditing: false,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    //   selectionLimit: 5,
-    // });
-
-    // console.log("result: ", result);
-
-    // if (!result.canceled) {
-    //   console.log("tru: ", result.assets[0].uri);
-    // }
-
-    // if (!result.cancelled) {
-    //   console.log(result);
-    //   setImages([...images, result.uri]);
-    // }
-
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      // allowsEditing: true,
       allowsMultipleSelection: true,
-      selectionLimit: 10,
+      // allowsEditing: false,
       aspect: [4, 3],
       quality: 1,
+      // selectionLimit: 5,
     });
 
-    console.log(result);
+    console.log("result: ", result);
+
+    if (!result.canceled) {
+      console.log("SETUJ IMAGE");
+      // console.log("tru: ", result.assets[0].uri);
+      // console.log(result);
+      // setImages([...images, result.uri]);
+    }
+    console.log("NE SETUJ IMAGE");
   };
 
   const handleChangeCategory = (selectedCategory) => {
@@ -260,17 +248,9 @@ const SaveProductScreen = () => {
 
       <SelectCategory onChangeCategory={handleChangeCategory} />
 
-      {/* <Button title="Pick an image from camera roll" onPress={pickImage} />
-       */}
+      <Button title="Pick an image from camera roll" onPress={pickImage} />
 
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Button title="Pick an image from camera roll" onPress={pickImage} />
-        {image && (
-          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-        )}
-      </View>
-
-      {/* <ScrollView horizontal={true} style={styles.imageContainer}>
+      <ScrollView horizontal={true} style={styles.imageContainer}>
         {images.map((image, index) => {
           return (
             <>
@@ -295,7 +275,7 @@ const SaveProductScreen = () => {
             </>
           );
         })}
-      </ScrollView> */}
+      </ScrollView>
 
       <View style={styles.buttonContainer}>
         <Button title="Save" onPress={handleSaveButton} />

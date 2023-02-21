@@ -1,19 +1,31 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const CheckoutItem = () => {
-  const [quantity, setQuantity] = useState(0);
+import { useDispatch, useSelector } from "react-redux";
+import {
+  removeProductFromCart,
+  increaseProductQuantityInCart,
+  decreaseProductQuantityInCart,
+  getProductsFromCart,
+} from "../store/slices/cartSlice";
 
-  const addQuantity = () => {
-    setQuantity(quantity + 1);
+const CheckoutItem = ({ name, price }) => {
+  const dispatch = useDispatch();
+
+  const products = useSelector(getProductsFromCart);
+  const product = products.find((product) => product.name === name);
+
+  const increaseQuantity = () => {
+    dispatch(increaseProductQuantityInCart(name));
   };
-  const removeQuantity = () => {
-    if (quantity > 0) setQuantity(quantity - 1);
+  const decreaseQuantity = () => {
+    dispatch(decreaseProductQuantityInCart(name));
   };
 
-  const removeItem = () => {};
+  const removeItem = () => {
+    dispatch(removeProductFromCart(name));
+  };
 
   return (
     <View style={styles.root}>
@@ -25,8 +37,8 @@ const CheckoutItem = () => {
         />
       </View>
       <View style={styles.itemInfoContainer}>
-        <Text style={styles.title}>This is title</Text>
-        <Text style={styles.price}>200$</Text>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.price}>{price}$</Text>
       </View>
       <View style={styles.itemActionsContainer}>
         <Ionicons
@@ -42,15 +54,15 @@ const CheckoutItem = () => {
             name="remove-outline"
             size={20}
             style={styles.counter}
-            onPress={removeQuantity}
+            onPress={decreaseQuantity}
           />
-          <Text style={styles.quantity}>{quantity}</Text>
+          <Text style={styles.quantity}>{product.quantity}</Text>
           <Ionicons
             key="add"
             name="add-outline"
             size={20}
             style={styles.counter}
-            onPress={addQuantity}
+            onPress={increaseQuantity}
           />
         </View>
       </View>
@@ -76,7 +88,7 @@ const styles = StyleSheet.create({
   itemInfoContainer: {
     paddingLeft: 10,
   },
-  title: {
+  name: {
     fontSize: 20,
     fontWeight: "bold",
   },

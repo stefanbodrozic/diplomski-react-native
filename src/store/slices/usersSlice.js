@@ -54,7 +54,7 @@ const usersSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    updateUser(state, action) {},
+
   },
   extraReducers(builder) {
     builder

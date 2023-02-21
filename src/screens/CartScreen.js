@@ -9,18 +9,27 @@ import {
 import React from "react";
 import CheckoutItem from "../components/CheckoutItem";
 
+import { useDispatch, useSelector } from "react-redux";
+import { getProductsFromCart } from "../store/slices/cartSlice";
+
 const CartScreen = () => {
+  const products = useSelector(getProductsFromCart);
+
   const handleOrderNow = () => {};
 
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.checkoutItems}>
-          <CheckoutItem />
-          <CheckoutItem />
-          <CheckoutItem />
-          <CheckoutItem />
-          <CheckoutItem />
+          {products.map((product, index) => {
+            return (
+              <CheckoutItem
+                key={index}
+                name={product.name}
+                price={product.price}
+              />
+            );
+          })}
         </View>
 
         <View style={styles.priceContainer}>

@@ -9,11 +9,16 @@ import {
 import React from "react";
 import Slider from "../components/Slider";
 
+import { useDispatch } from "react-redux";
+import { addProductToCart } from "../store/slices/cartSlice";
+
 const ProductScreen = ({ route, navigation }) => {
   const { product } = route.params;
 
+  const dispatch = useDispatch();
+
   const handleAddToCartButton = () => {
-    console.log("add to cart");
+    dispatch(addProductToCart(product));
   };
   return (
     <SafeAreaView style={styles.root}>
