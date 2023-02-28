@@ -10,12 +10,21 @@ import React from "react";
 import CheckoutItem from "../components/CheckoutItem";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getProductsFromCart } from "../store/slices/cartSlice";
+import {
+  confirmOrder,
+  getProductsFromCart,
+  getTotalPrice,
+} from "../store/slices/cartSlice";
 
 const CartScreen = () => {
-  const products = useSelector(getProductsFromCart);
+  const dispatch = useDispatch();
 
-  const handleOrderNow = () => {};
+  const products = useSelector(getProductsFromCart);
+  const totalPrice = useSelector(getTotalPrice);
+
+  const handleOrderNow = () => {
+    dispatch(confirmOrder());
+  };
 
   return (
     <SafeAreaView style={styles.root}>
@@ -34,7 +43,7 @@ const CartScreen = () => {
 
         <View style={styles.priceContainer}>
           <Text style={styles.priceText}>Total Price</Text>
-          <Text style={styles.priceValue}>$1000</Text>
+          <Text style={styles.priceValue}>{totalPrice}$</Text>
         </View>
         <Button title="Order now" onPress={handleOrderNow} />
       </ScrollView>

@@ -2,12 +2,13 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
-const Product = ({ name, price }) => {
+const Product = ({ name, price, storeName }) => {
   const navigation = useNavigation();
 
   const handleItem = () => {
     navigation.navigate("Product", {
       product: { name, price },
+      storeName
     });
   };
 

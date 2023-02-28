@@ -17,6 +17,7 @@ import SaveProductScreen from "./src/screens/SaveProductScreen";
 import CartScreen from "./src/screens/CartScreen";
 import StoreScreen from "./src/screens/StoreScreen";
 import ProductScreen from "./src/screens/ProductScreen";
+import OrdersScreen from "./src/screens/OrdersScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -101,6 +102,12 @@ const App = () => {
           <Stack.Screen
             name="Checkout"
             component={CartScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Orders"
+            component={OrdersScreen}
             options={{ headerShown: false }}
           />
 

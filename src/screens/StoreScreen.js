@@ -103,7 +103,7 @@ const StoreScreen = ({ route, navigation }) => {
         data={products} // DATA ce biti iz baze
         numColumns={2}
         renderItem={({ item }) => (
-          <Product name={item.name} price={item.price} />
+          <Product name={item.name} price={item.price} storeName={storeName} />
         )}
       />
     </SafeAreaView>

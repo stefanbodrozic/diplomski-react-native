@@ -25,11 +25,18 @@ const ProfileScreen = () => {
   }, [loggedInUserStatus]);
 
   const handleLogout = async () => {
-    try {
-      // logout user
-    } catch (error) {
-      console.error("logout error", error);
-    }
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        console.log("Unable to logout");
+      });
+  };
+
+  const handleOrders = () => {
+    navigation.navigate("Orders");
   };
 
   return (
@@ -45,7 +52,16 @@ const ProfileScreen = () => {
         </View>
       </View>
       <View style={styles.optionsContainer}>
-        <Button title="Logout" onPress={handleLogout} />
+        <Button
+          style={styles.optionsItem}
+          title="Orders History"
+          onPress={handleOrders}
+        />
+        <Button
+          style={styles.optionsItem}
+          title="Logout"
+          onPress={handleLogout}
+        />
       </View>
       <View style={styles.optionsContainer}></View>
     </View>
@@ -67,6 +83,8 @@ const styles = StyleSheet.create({
     height: 150,
   },
   optionsContainer: {
+    flex: 1,
+    justifyContent: "space-around",
     paddingTop: 50,
   },
 });

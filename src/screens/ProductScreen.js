@@ -13,12 +13,12 @@ import { useDispatch } from "react-redux";
 import { addProductToCart } from "../store/slices/cartSlice";
 
 const ProductScreen = ({ route, navigation }) => {
-  const { product } = route.params;
+  const { product, storeName } = route.params;
 
   const dispatch = useDispatch();
 
   const handleAddToCartButton = () => {
-    dispatch(addProductToCart(product));
+    dispatch(addProductToCart({ product, storeName }));
   };
   return (
     <SafeAreaView style={styles.root}>
