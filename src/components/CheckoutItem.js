@@ -4,9 +4,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setProductQuantityInCart,
   removeProductFromCart,
-  increaseProductQuantityInCart,
-  decreaseProductQuantityInCart,
   getProductsFromCart,
 } from "../store/slices/cartSlice";
 
@@ -17,10 +16,10 @@ const CheckoutItem = ({ name, price }) => {
   const product = products.find((product) => product.name === name);
 
   const increaseQuantity = () => {
-    dispatch(increaseProductQuantityInCart(name));
+    dispatch(setProductQuantityInCart({ name, type: "increase" }));
   };
   const decreaseQuantity = () => {
-    dispatch(decreaseProductQuantityInCart(name));
+    dispatch(setProductQuantityInCart({ name, type: "decrease" }));
   };
 
   const removeItem = () => {
