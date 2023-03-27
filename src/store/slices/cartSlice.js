@@ -28,8 +28,6 @@ const cartSlice = createSlice({
         (o) => o.storeName === storeName
       );
 
-      // console.log("Before update: ", state.order[orderIndex]);
-
       if (order) {
         const isAlreadyAdded = order.cart.find((p) => p.name === product.name);
         if (!isAlreadyAdded) {
@@ -37,8 +35,6 @@ const cartSlice = createSlice({
           order.totalPrice += Number(product.price);
 
           state.orders[orderIndex] = order;
-
-          // console.log("After update: ", state.order[orderIndex]);
         }
       } else {
         let tempCart = [];
@@ -69,53 +65,24 @@ const cartSlice = createSlice({
 
     setProductQuantityInCart: (state, action) => {
       const { name, type } = action.payload;
+
       state.orders.forEach((order) => {
         order.cart.forEach((product) => {
           if (product.name === name) {
             if (type === "increase") {
-              order.cart.totalPrice -= product.price * product.quantity;
-
               product.quantity += 1;
-
-              order.cart.totalPrice += product.price * product.quantity;
+              // order.cart.totalPrice = product.price * product.quantity;
+            } else {
+              if (product.quantity > 1) {
+                product.quantity -= 1;
+                // order.cart.totalPrice = product.price * product.quantity;
+              }
             }
-            // else {
-            //   if (product.quantity > 1) {
-            //     order.cart.totalPrice -= product.price * product.quantity;
-
-            //     product.quantity -= 1;
-            //     order.cart.totalPrice += product.price * product.quantity;
-            //   }
-            // }
+            // order.cart.totalPrice = product.quantity * product.price;
           }
         });
       });
     },
-
-    // increaseProductQuantityInCart: (state, action) => {
-    //   let product = state.cart.find(
-    //     (product) => product.name === action.payload
-    //   );
-
-    //   state.totalPrice -= product.price * product.quantity;
-
-    //   product.quantity += 1;
-
-    //   state.totalPrice += product.price * product.quantity;
-    // },
-    // decreaseProductQuantityInCart: (state, action) => {
-    //   let product = state.cart.find(
-    //     (product) => product.name === action.payload
-    //   );
-
-    //   if (product.quantity > 1) {
-    //     state.totalPrice -= product.price * product.quantity;
-
-    //     product.quantity -= 1;
-    //     state.totalPrice += product.price * product.quantity;
-    //   }
-    // },
-
     emptyCart: (state, action = undefined) => {
       state.cart = [];
     },
