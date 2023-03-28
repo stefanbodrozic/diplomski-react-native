@@ -12,18 +12,30 @@ import CheckoutItem from "../components/CheckoutItem";
 import { useDispatch, useSelector } from "react-redux";
 import {
   confirmOrder,
+  getOrder,
   getProductsFromCart,
   getTotalPrice,
 } from "../store/slices/cartSlice";
+import { db } from "../../firebase/firebase-config";
+
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 const CartScreen = () => {
   const dispatch = useDispatch();
 
   const products = useSelector(getProductsFromCart);
   const totalPrice = useSelector(getTotalPrice);
+  const order = useSelector(getOrder);
 
-  const handleOrderNow = () => {
-    dispatch(confirmOrder());
+  const handleOrderNow = async () => {
+    try {
+      let tempOrder = { ...order };
+      tempOrder.timestamp = serverTimestamp();
+
+      await addDoc(collection(db, "orders"), tempOrder);
+    } catch (e) {
+      console.error("Error: ", e);
+    }
   };
 
   return (

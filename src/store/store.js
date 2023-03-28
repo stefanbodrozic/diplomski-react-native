@@ -4,6 +4,7 @@ import categoriesSlice from "./slices/categoriesSlice";
 import productsSlice from "./slices/productsSlice";
 import storesSlice from "./slices/storesSlice";
 import cartSlice from "./slices/cartSlice";
+import deliveriesSlice from "./slices/deliveriesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,11 @@ export const store = configureStore({
     products: productsSlice,
     stores: storesSlice,
     cart: cartSlice,
+    deliveries: deliveriesSlice,
   },
+  // middleware: (getDefaultMiddleware) => {
+  //   getDefaultMiddleware({
+  //     serializableCheck: false,
+  //   });
+  // },
 });

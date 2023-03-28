@@ -1,37 +1,73 @@
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { useWindowDimensions } from "react-native";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import Delivery from "../components/Delivery";
+import { TabView, TabBar } from "react-native-tab-view";
+import Deliveries from "../components/Deliveries";
 
-const renderScene = ({ route }) => {
-  switch (route.key) {
-    case "first":
-      return <Delivery isDone={false} />;
-    case "second":
-      return <Delivery isDone={true} />;
-    default:
-      return null;
-  }
-};
+import { useDispatch, useSelector } from "react-redux";
 
-const renderTabBar = (props) => (
-  <TabBar
-    {...props}
-    indicatorStyle={{ backgroundColor: "white" }}
-    style={{ backgroundColor: "#F08080", paddingTop: 50 }}
-  />
-);
+import {
+  getDeliveriesStatus,
+  getDeliveries,
+  fetchDeliveries,
+} from "../store/slices/deliveriesSlice";
 
 const DeliveryScreen = () => {
   const layout = useWindowDimensions();
 
-  const [index, setIndex] = React.useState(0);
+  const dispatch = useDispatch();
+
+  const deliveriesStatus = useSelector(getDeliveriesStatus);
+  const deliveries = useSelector(getDeliveries);
+
+  const [deliveriesDone, setDeliveriesDone] = useState([]);
+  const [deliveriesToDo, setDeliveriesToDo] = useState([]);
+
+  useEffect(() => {
+    if (deliveriesStatus === "idle") {
+      dispatch(fetchDeliveries());
+    }
+    if (deliveriesStatus === "succeeded") {
+      console.log("succedded");
+      let tempDone = [];
+      let tempToDo = [];
+      deliveries.forEach((delivery) => {
+        if (delivery.isDone) tempDone.push(delivery);
+        else tempToDo.push(delivery);
+      });
+
+      console.log("succedded", tempDone, tempToDo);
+
+      setDeliveriesDone(tempDone);
+      setDeliveriesToDo(tempToDo);
+    }
+  }, [deliveriesStatus, dispatch]);
+
+  const [index, setIndex] = useState(0);
   const [routes] = React.useState([
     { key: "todo", title: "TODO" },
     { key: "done", title: "DONE" },
   ]);
+
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case "todo":
+        return <Deliveries deliveries={deliveriesToDo} />;
+      case "done":
+        return <Deliveries deliveries={deliveriesDone} />;
+      default:
+        return null;
+    }
+  };
+
+  const renderTabBar = (props) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{ backgroundColor: "white" }}
+      style={{ backgroundColor: "#F08080", paddingTop: 50 }}
+    />
+  );
 
   return (
     <TabView

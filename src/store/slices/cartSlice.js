@@ -1,5 +1,6 @@
 const { createSlice } = require("@reduxjs/toolkit");
 import uuid from "react-native-uuid";
+import { serverTimestamp } from "firebase/firestore";
 
 const initialState = {
   // ako u jednoj narudzbini postoje proizvodi iz vise prodavnica, svaka prodavnica ce imati svoj objekat "order" i proizvode
@@ -13,6 +14,14 @@ const initialState = {
     // },
   ],
   id: uuid.v4(),
+  user: {},
+  userDetails: {}, // address or phone number..
+  deliverer: null,
+  isDelivered: false,
+  rating: 0,
+  comment: "to be added",
+  deliveredTimestamp: null,
+  timestamp: null,
 };
 
 const cartSlice = createSlice({
@@ -87,10 +96,10 @@ const cartSlice = createSlice({
       state.cart = [];
     },
     confirmOrder: (state, action = undefined) => {
-      state.cart.forEach((product) => {
-        let tempPrice = product.price * product.quantity;
-        state.totalPrice += tempPrice;
-      });
+      // state.cart.forEach((product) => {
+      //   let tempPrice = product.price * product.quantity;
+      //   state.totalPrice += tempPrice;
+      // });
     },
   },
 });
@@ -124,6 +133,10 @@ export const getTotalPrice = (state) => {
   });
 
   return tempTotalPrice;
+};
+
+export const getOrder = (state) => {
+  return state.cart;
 };
 
 export default cartSlice.reducer;
