@@ -18,6 +18,7 @@ import CartScreen from "./src/screens/CartScreen";
 import StoreScreen from "./src/screens/StoreScreen";
 import ProductScreen from "./src/screens/ProductScreen";
 import OrdersScreen from "./src/screens/OrdersScreen";
+import DeliveryScreen from "./src/screens/DeliveryScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -73,6 +74,11 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen
+            name="Delivery"
+            component={DeliveryScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="Login"
             component={LoginScreen}
