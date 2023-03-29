@@ -22,16 +22,16 @@ export const fetchDeliveries = createAsyncThunk(
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        const { id, isDelivered, comment } = doc.data();
+        const { id, user, userDetails, isDelivered, comment } = doc.data();
         const order = {
           id,
+          user,
+          userDetails,
           isDelivered,
           comment,
         };
 
         deliveries.push(order);
-
-        // console.log("doc: ", doc.data());
       });
 
       return deliveries;

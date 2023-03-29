@@ -12,6 +12,7 @@ import CheckoutItem from "../components/CheckoutItem";
 import { useDispatch, useSelector } from "react-redux";
 import {
   confirmOrder,
+  resetCart,
   getOrder,
   getProductsFromCart,
   getTotalPrice,
@@ -32,7 +33,9 @@ const CartScreen = () => {
       let tempOrder = { ...order };
       tempOrder.timestamp = serverTimestamp();
 
-      await addDoc(collection(db, "orders"), tempOrder);
+      await addDoc(collection(db, "orders"), tempOrder).then(() => {
+        dispatch(resetCart());
+      });
     } catch (e) {
       console.error("Error: ", e);
     }

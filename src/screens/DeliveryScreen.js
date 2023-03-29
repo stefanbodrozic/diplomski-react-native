@@ -29,15 +29,16 @@ const DeliveryScreen = () => {
       dispatch(fetchDeliveries());
     }
     if (deliveriesStatus === "succeeded") {
-      console.log("succedded");
       let tempDone = [];
       let tempToDo = [];
       deliveries.forEach((delivery) => {
-        if (delivery.isDone) tempDone.push(delivery);
+        // TODO: provera sa prijavljenim user-om (username) umesto null
+        if (delivery.deliverer == null && delivery.isDone)
+          tempDone.push(delivery);
         else tempToDo.push(delivery);
       });
 
-      console.log("succedded", tempDone, tempToDo);
+      console.log("deliveries: ", tempToDo);
 
       setDeliveriesDone(tempDone);
       setDeliveriesToDo(tempToDo);

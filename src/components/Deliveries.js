@@ -9,7 +9,10 @@ const Deliveries = ({ deliveries }) => {
 
   return (
     <View style={styles.root}>
-      <FlatList data={deliveries} renderItem={({ item }) => <DeliveryItem />} />
+      <FlatList
+        data={deliveries}
+        renderItem={({ delivery }) => <DeliveryItem delivery={delivery} />}
+      />
     </View>
   );
 };

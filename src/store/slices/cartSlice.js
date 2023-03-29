@@ -13,9 +13,14 @@ const initialState = {
     //   user: null,
     // },
   ],
-  id: uuid.v4(),
-  user: {},
-  userDetails: {}, // address or phone number..
+  id: uuid.v4(), // TODO: id se ne menja prilikom reseta ??
+  user: {
+    firstname: "Stefan",
+    lastname: "Bodrozic"
+  },
+  userDetails: {
+    address: "random adresa",
+  }, // address or phone number..
   deliverer: null,
   isDelivered: false,
   rating: 0,
@@ -92,8 +97,8 @@ const cartSlice = createSlice({
         });
       });
     },
-    emptyCart: (state, action = undefined) => {
-      state.cart = [];
+    resetCart: (state, action = undefined) => {
+      return initialState;
     },
     confirmOrder: (state, action = undefined) => {
       // state.cart.forEach((product) => {
@@ -110,7 +115,7 @@ export const {
   setProductQuantityInCart,
   increaseProductQuantityInCart,
   decreaseProductQuantityInCart,
-  emptyCart,
+  resetCart,
   confirmOrder,
 } = cartSlice.actions;
 
