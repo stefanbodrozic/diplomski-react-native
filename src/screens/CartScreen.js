@@ -1,89 +1,80 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  Button,
-} from "react-native";
+import { StyleSheet, FlatList, View, Text, Pressable } from "react-native";
 import React from "react";
-import CheckoutItem from "../components/CheckoutItem";
+import CartItem from "../components/CartItem";
+import cart from "../data/cart";
 
-import { useDispatch, useSelector } from "react-redux";
-import {
-  confirmOrder,
-  resetCart,
-  getOrder,
-  getProductsFromCart,
-  getTotalPrice,
-} from "../store/slices/cartSlice";
-import { db } from "../../firebase/firebase-config";
-
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-
-const CartScreen = () => {
-  const dispatch = useDispatch();
-
-  const products = useSelector(getProductsFromCart);
-  const totalPrice = useSelector(getTotalPrice);
-  const order = useSelector(getOrder);
-
-  const handleOrderNow = async () => {
-    try {
-      let tempOrder = { ...order };
-      tempOrder.timestamp = serverTimestamp();
-
-      await addDoc(collection(db, "orders"), tempOrder).then(() => {
-        dispatch(resetCart());
-      });
-    } catch (e) {
-      console.error("Error: ", e);
-    }
-  };
+const PriceDetailsContainer = () => {
+  const subtotal = 100;
+  const deliveryFee = 50;
+  const total = 1000;
 
   return (
-    <SafeAreaView style={styles.root}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.checkoutItems}>
-          {products.map((product, index) => {
-            return (
-              <CheckoutItem
-                key={index}
-                name={product.name}
-                price={product.price}
-              />
-            );
-          })}
-        </View>
+    <View style={styles.priceContainer}>
+      <View style={styles.row}>
+        <Text style={styles.text}>Subtotal</Text>
+        <Text style={styles.text}>${subtotal}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.text}>Delivery</Text>
+        <Text style={styles.text}>${deliveryFee} </Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.textBold}>Total</Text>
+        <Text style={styles.textBold}>${total}</Text>
+      </View>
+    </View>
+  );
+};
 
-        <View style={styles.priceContainer}>
-          <Text style={styles.priceText}>Total Price</Text>
-          <Text style={styles.priceValue}>{totalPrice}$</Text>
-        </View>
-        <Button title="Order now" onPress={handleOrderNow} />
-      </ScrollView>
-    </SafeAreaView>
+const CartScreen = () => {
+  return (
+    <>
+      <FlatList
+        data={cart}
+        renderItem={({ item }) => <CartItem item={item} />}
+        ListFooterComponent={PriceDetailsContainer}
+      />
+      <Pressable style={styles.button}>
+        <Text style={styles.buttonText}>Checkout</Text>
+      </Pressable>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {
-    padding: 20,
-    paddingTop: 80,
-  },
   priceContainer: {
+    margin: 20,
+    paddingTop: 10,
+    borderColor: "red",
+    borderTopWidth: 1,
+  },
+  row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop: 20,
-    paddingBottom: 20,
+    marginVertical: 2,
   },
-  priceText: {
-    fontSize: 20,
-    fontWeight: "bold",
+  text: {
+    fontSize: 16,
+    color: "gray",
   },
-  priceValue: {
-    fontSize: 20,
-    color: "red",
+  textBold: {
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  button: {
+    position: "absolute",
+    backgroundColor: "black",
+    bottom: 30,
+    width: "90%",
+    alignSelf: "center",
+    padding: 20,
+    borderRadius: 100,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 16,
   },
 });
 

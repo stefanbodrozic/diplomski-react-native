@@ -1,152 +1,50 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import Item from "../components/Item";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useEffect } from "react";
-import {
-  fetchProducts,
-  getProducts,
-  getProductsStatus,
-} from "../store/slices/productsSlice";
-import {
-  getCategories,
-  getCategoriesStatus,
-} from "../store/slices/categoriesSlice";
-import StoreContainer from "../components/StoreContainer";
-import {
-  fetchStores,
-  getStores,
-  getStoresStatus,
-} from "../store/slices/storesSlice";
-import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import ScrollItem from "../components/ScrollItem";
+import Search from "../components/Search";
+import SingleStoreContainer from "../components/StoreContainer";
+import categories from "../data/categories";
+import stores from "../data/stores";
+import { Text } from "react-native";
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
-
-  // const user = useSelector((state) => state.users);
-  const dispatch = useDispatch();
-
-  const categoriesStatus = useSelector(getCategoriesStatus);
-  console.log("categories status HOME SCREEN: ", categoriesStatus);
-
-  const categories = useSelector(getCategories);
-
-  // const storesStatus = useSelector(getStoresStatus);
-  const stores = useSelector(getStores);
-
-  // useEffect(() => {
-  //   if (storesStatus === "idle") {
-  //     dispatch(fetchStores());
-  //   }
-  // }, [storesStatus, dispatch]);
-
-  const handleSearchTextChange = (text) => {
-    console.log("text: ", text);
-  };
-
-  const handleShowMore = () => {
-    console.log("show more");
-  };
-
-  const handleAddIcon = () => {
-    navigation.navigate("SaveProduct");
-  };
-
   return (
-    // search bar
-    //
+    // if user is customer - render list of stores
 
-    <SafeAreaView style={styles.root}>
+    // if user is seller - render seller Store screen (owner of store)
+    // <StoreScreen />
+
+    // if user is deliverer - render list of deliveries (todo/done)
+
+    <SafeAreaView style={screenStyles.root}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <View>
-          <TextInput
-            placeholder="Search"
-            style={styles.searchInput}
-            onChangeText={(text) => handleSearchTextChange(text)}
-          />
-        </View>
-
-        <ScrollView horizontal={true} style={styles.scrollView}>
-          {/* show 4 products and show more button */}
-          {categories.map((category) => {
-            return <Item name={category.name} key={category.id} />;
-          })}
-
-          <TouchableOpacity
-            style={styles.showMoreContainer}
-            onPress={handleShowMore}
-          >
-            <Ionicons name="add-outline" size={30} style={styles.addIcon} />
-            <Text>Show more</Text>
-          </TouchableOpacity>
+        <Search />
+        <ScrollView horizontal={true} style={screenStyles.scrollView}>
+          {categories.map((category) => (
+            <ScrollItem key={category.id} item={category} />
+            // <Text>{category.name}</Text>
+          ))}
         </ScrollView>
 
-        {stores.map((store) => {
-          return (
-            <StoreContainer
-              key={store.id}
-              id={store.id}
-              name={store.storeName}
-              products={store.products}
-            />
-          );
-        })}
+        {stores.map((store) => (
+          <SingleStoreContainer key={store.id} store={store} />
+        ))}
       </ScrollView>
-
-      <TouchableOpacity style={styles.addIcon} onPress={handleAddIcon}>
-        <Text style={{ color: "white" }}>Add</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
-export default HomeScreen;
-
-const styles = StyleSheet.create({
+const screenStyles = StyleSheet.create({
   root: {
-    alignItems: "center",
-    padding: 20,
-    // paddingTop: 80,
-  },
-  searchInput: {
-    width: 300,
-    backgroundColor: "white",
-    borderRadius: 35,
-    fontSize: 30,
-  },
-  showMoreContainer: {
-    paddingTop: 50,
-    paddingLeft: 20,
-  },
-  addIcon: {
-    paddingLeft: 20,
+    backgroundColor: "#EBFBFF",
+    // height: "100%",
   },
   scrollView: {
-    paddingTop: 20,
-  },
-  addIcon: {
-    borderWidth: 1,
-    borderColor: "red",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 70,
-    position: "absolute",
-    top: 500,
-    right: 20,
-    height: 70,
-    backgroundColor: "red",
-    borderRadius: 100,
+    margin: 20,
   },
 });
+
+export default HomeScreen;

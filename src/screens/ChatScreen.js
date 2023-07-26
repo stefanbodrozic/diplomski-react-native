@@ -9,6 +9,6 @@ const ChatScreen = () => {
   );
 };
 
-export default ChatScreen;
-
 const styles = StyleSheet.create({});
+
+export default ChatScreen;
