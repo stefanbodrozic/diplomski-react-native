@@ -1,17 +1,27 @@
-import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import styles from "../config/styles";
 
 import { useNavigation } from "@react-navigation/native";
+import { useForm } from "react-hook-form";
+import TextInputField from "../components/form/TextInputField";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginSchema } from "../config/schema";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const navigation = useNavigation();
 
-  const handleLogin = async () => {
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(loginSchema),
+    defaultValues: {
+      email: "test@mail.com",
+      password: "12345",
+    },
+  });
+
+  const handleLogin = async (data) => {
+    // console.log(data);
     navigation.navigate("Home");
   };
 
@@ -22,29 +32,19 @@ const LoginScreen = () => {
   return (
     <View style={screenStyles.root}>
       <View>
-        <Text style={styles.text}>Welcome! Please login:</Text>
+        <Text style={styles.text}>Welcome! Please login: </Text>
       </View>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="email"
-          value={email}
-          onChange={(text) => setEmail(text)}
-          autoCapitalize="none"
-        />
-      </View>
+      <TextInputField name="email" placeholder="Email" control={control} />
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          autoCapitalize="none"
-        />
-      </View>
+      <TextInputField
+        name="password"
+        placeholder="Password"
+        control={control}
+      />
 
       <View style={styles.buttonsContainer}>
-        <Pressable onPress={handleLogin} style={styles.button}>
+        <Pressable onPress={handleSubmit(handleLogin)} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
 
