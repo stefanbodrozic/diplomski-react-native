@@ -11,18 +11,55 @@ import { registerSchema } from "../config/schema";
 import Dropdown from "../components/form/Dropdown";
 import roles from "../helpers/roles";
 
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../config/firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { getFirebaseUserError } from "../util";
+
 const RegisterScreen = () => {
   const navigation = useNavigation();
 
-  const { control, handleSubmit, watch } = useForm({
+  const { control, handleSubmit, register, watch, getValues } = useForm({
     resolver: yupResolver(registerSchema),
   });
 
   const role = watch("role");
 
   const handleRegister = async () => {
-    navigation.navigate("Home");
+    try {
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        getValues("email"),
+        getValues("password")
+      );
+
+      if (response.user) {
+        const storeName = getValues("storeName");
+
+        const user = {
+          id: response.user.uid,
+          firstname: getValues("firstname"),
+          lastname: getValues("lastname"),
+          username: `${getValues("firstname")}.${getValues("lastname")}`,
+          email: getValues("email"),
+          role: getValues("role"),
+          address: getValues("address"),
+          timestamp: serverTimestamp(),
+        };
+
+        if (user.role === "Seller") {
+          user.storeName = storeName;
+        }
+
+        await addDoc(collection(db, "users"), user);
+        navigation.navigate("Home");
+      }
+    } catch (error) {
+      const errorMessage = getFirebaseUserError(error);
+      console.log("error: ", errorMessage);
+    }
   };
+  const onInvalid = (errors) => console.error(errors);
 
   return (
     <View style={screenStyles.root}>
@@ -42,12 +79,19 @@ const RegisterScreen = () => {
         control={control}
       />
 
-      <TextInputField name="email" placeholder="Email" control={control} />
+      <TextInputField
+        name="email"
+        placeholder="Email"
+        control={control}
+        autoCapitalize="none"
+      />
 
       <TextInputField
         name="password"
         placeholder="Password"
         control={control}
+        autoCapitalize="none"
+        isPassword={true}
       />
 
       <TextInputField name="address" placeholder="Address" control={control} />
@@ -63,7 +107,10 @@ const RegisterScreen = () => {
       )}
 
       <View style={styles.buttonContainer}>
-        <Pressable onPress={handleSubmit(handleRegister)} style={styles.button}>
+        <Pressable
+          onPress={handleSubmit(handleRegister, onInvalid)}
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>Register</Text>
         </Pressable>
       </View>

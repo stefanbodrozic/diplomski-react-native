@@ -17,6 +17,12 @@ export const registerSchema = yup.object().shape({
     .required("Email is required!"),
   password: yup.string().required("Password is required!"),
   address: yup.string().required("Address is required!"),
-  storeName: yup.string().required("Store name is required!"),
   role: yup.string().required(),
+  storeName: yup
+    .string()
+    .notRequired()
+    .when("role", {
+      is: (value) => value === "Seller",
+      then: (field) => field.required("Store is required!"),
+    }),
 });

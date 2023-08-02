@@ -2,7 +2,13 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 import { Controller } from "react-hook-form";
 
-const TextInputField = ({ control, name, placeholder }) => {
+const TextInputField = ({
+  control,
+  name,
+  placeholder,
+  isPassword,
+  autoCapitalize,
+}) => {
   return (
     <Controller
       control={control}
@@ -24,7 +30,8 @@ const TextInputField = ({ control, name, placeholder }) => {
               onBlur={onBlur}
               placeholder={placeholder}
               style={styles.textInput}
-              autoCapitalize="none"
+              autoCapitalize={autoCapitalize}
+              secureTextEntry={isPassword}
             />
           </View>
           {error && <Text style={styles.errorMessage}>{error.message}</Text>}

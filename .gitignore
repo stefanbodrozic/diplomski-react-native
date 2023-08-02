@@ -15,3 +15,13 @@ web-build/
 
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
+
+# VSCode
+.history/
+
+# Expo web env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
