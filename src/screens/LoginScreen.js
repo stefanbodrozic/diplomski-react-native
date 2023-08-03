@@ -13,14 +13,14 @@ import { auth } from "../config/firebase";
 import { getFirebaseUserError } from "../util";
 
 const LoginScreen = () => {
-  // onAuthStateChanged(auth, (user) => {
-  //   if (user) {
-  //     console.log("logged in user", user);
-  //     navigation.navigate("Home");
-  //   } else {
-  //     console.log("no user, stay here");
-  //   }
-  // });
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("user is logged in");
+      navigation.navigate("Home");
+    } else {
+      console.log("no user, stay here");
+    }
+  });
 
   const navigation = useNavigation();
 

@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import ScrollItem from "../components/ScrollItem";
 import Search from "../components/Search";
 import SingleStoreContainer from "../components/StoreContainer";
-import categories from "../data/categories";
 import stores from "../data/stores";
-import { Text } from "react-native";
+import { fetchCategories, getCategories } from "../store/slices/categories";
 
 const HomeScreen = () => {
+  const dispatch = useDispatch();
+
+  const categories = useSelector(getCategories);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
+
   return (
     // if user is customer - render list of stores
 

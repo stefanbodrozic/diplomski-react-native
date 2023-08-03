@@ -9,4 +9,10 @@ const getFirebaseUserError = (error) => {
     return "Email already in use!";
 };
 
-export { getFirebaseUserError };
+const Status = {
+  pending: "loading",
+  fullfiled: "fullfiled",
+  failed: "failed",
+};
+
+export { getFirebaseUserError, Status };

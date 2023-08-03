@@ -15,6 +15,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { getFirebaseUserError } from "../util";
+import uuid from "react-native-uuid";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -37,7 +38,8 @@ const RegisterScreen = () => {
         const storeName = getValues("storeName");
 
         const user = {
-          id: response.user.uid,
+          id: uuid.v4(),
+          uid: response.user.uid,
           firstname: getValues("firstname"),
           lastname: getValues("lastname"),
           username: `${getValues("firstname")}.${getValues("lastname")}`,
