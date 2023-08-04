@@ -4,16 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import ScrollItem from "../components/ScrollItem";
 import Search from "../components/Search";
 import SingleStoreContainer from "../components/StoreContainer";
-import stores from "../data/stores";
 import { fetchCategories, getCategories } from "../store/slices/categories";
+import { fetchStores, getStores } from "../store/slices/stores";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
 
   const categories = useSelector(getCategories);
+  const stores = useSelector(getStores);
 
   useEffect(() => {
     dispatch(fetchCategories());
+    dispatch(fetchStores());
   }, []);
 
   return (

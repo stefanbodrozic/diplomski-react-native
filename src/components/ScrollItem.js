@@ -15,7 +15,7 @@ const ScrollItem = ({ item }) => {
           <Image
             style={styles.image}
             source={{
-              uri: item.image,
+              uri: item.image || item.images[0],
             }}
           />
         </View>

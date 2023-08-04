@@ -10,9 +10,10 @@ const getFirebaseUserError = (error) => {
 };
 
 const Status = {
-  pending: "loading",
-  fullfiled: "fullfiled",
-  failed: "failed",
+  IDLE: "idle",
+  PENDING: "loading",
+  FULLFILED: "fullfiled",
+  FAILED: "failed",
 };
 
 export { getFirebaseUserError, Status };
