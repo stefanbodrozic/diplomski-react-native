@@ -1,38 +1,56 @@
-import { View, Text, StyleSheet, Image } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useDispatch } from "react-redux";
+import {
+  removeProductFromCart,
+  updateProductQuantity,
+} from "../store/slices/cart";
+import { ActionType } from "../util";
 
 const CartItem = ({ item }) => {
-  const increaseQuantity = () => {};
+  const dispatch = useDispatch();
 
-  const decreaseQuantity = () => {};
+  const increaseQuantity = () => {
+    dispatch(
+      updateProductQuantity({ product: item, actionType: ActionType.INCREASE })
+    );
+  };
+
+  const decreaseQuantity = () => {
+    dispatch(
+      updateProductQuantity({ product: item, actionType: ActionType.DECREASE })
+    );
+  };
+
+  const removeProduct = () => {
+    dispatch(removeProductFromCart({ product: item }));
+  };
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: item.product.uri }} style={styles.image} />
+      <Image source={{ uri: item.images[0] }} style={styles.image} />
 
       <View style={styles.contentContainer}>
-        <Text style={styles.name}>{item.product.name}</Text>
+        <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.size}>
-          {item.product.description.split(" ").slice(0, 10).join(" ")}...
+          {item.description.split(" ").slice(0, 10).join(" ")}...
         </Text>
 
         <View style={styles.footer}>
-          <Feather
-            onPress={decreaseQuantity}
-            name="minus-circle"
-            size={24}
-            color="gray"
-          />
+          <Pressable onPress={decreaseQuantity}>
+            <FontAwesome5 name="minus-circle" size={24} />
+          </Pressable>
+
           <Text style={styles.quantity}>{item.quantity}</Text>
-          <Feather
-            onPress={increaseQuantity}
-            name="plus-circle"
-            size={24}
-            color="gray"
-          />
-          <Text style={styles.itemTotal}>
-            $ {item.product.price * item.quantity}
-          </Text>
+
+          <Pressable onPress={increaseQuantity}>
+            <FontAwesome5 name="plus-circle" size={24} />
+          </Pressable>
+
+          <Text style={styles.itemTotal}>$ {item.price * item.quantity}</Text>
+          <Pressable onPress={removeProduct}>
+            <FontAwesome5 name="trash" size={18} />
+          </Pressable>
         </View>
       </View>
     </View>
@@ -75,6 +93,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: "auto",
     fontWeight: "500",
+    marginRight: 5,
   },
 });
 

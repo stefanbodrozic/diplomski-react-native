@@ -1,14 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const ProductPreview = ({ product, storeName }) => {
+const ProductPreview = ({ product, store }) => {
   const navigation = useNavigation();
 
   const handleProduct = () => {
     navigation.navigate("Product Details", {
-      productId: product.id,
-      storeName,
+      product,
+      store,
     });
   };
 
@@ -19,13 +18,13 @@ const ProductPreview = ({ product, storeName }) => {
         <View style={styles.imageContainer}>
           <Image
             source={{
-              uri: product.uri,
+              uri: product.images[0],
             }}
             style={{ width: 100, height: 100 }}
           />
         </View>
         <View style={styles.informations}>
-          <Text style={styles.pricee}>${product.price}</Text>
+          <Text style={styles.price}>${product.price}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -48,7 +47,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
 
-  pricee: {
+  price: {
     color: "red",
   },
   product: {

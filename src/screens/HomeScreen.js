@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import ScrollItem from "../components/ScrollItem";
 import Search from "../components/Search";
@@ -38,6 +38,8 @@ const HomeScreen = () => {
             // <Text>{category.name}</Text>
           ))}
         </ScrollView>
+
+        {stores.length < 1 && <Text>No data!</Text>}
 
         {stores.map((store) => (
           <SingleStoreContainer key={store.id} store={store} />

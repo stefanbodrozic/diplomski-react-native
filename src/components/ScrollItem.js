@@ -1,9 +1,16 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
 import { Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const ScrollItem = ({ item }) => {
-  const handleItem = () => {};
+const ScrollItem = ({ item, store }) => {
+  const navigation = useNavigation();
+
+  const handleItem = () => {
+    navigation.navigate("Product Details", {
+      product: item,
+      store,
+    });
+  };
 
   return (
     <TouchableOpacity onPress={handleItem}>

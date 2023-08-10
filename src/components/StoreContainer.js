@@ -15,9 +15,7 @@ const SingleStoreContainer = ({ store }) => {
   const navigation = useNavigation();
 
   const handleShowMore = () => {
-    const storeId = store.id;
-    const storeName = store.name;
-    navigation.navigate("Store", { storeId, storeName });
+    navigation.navigate("Store", { store });
   };
 
   return (
@@ -29,7 +27,13 @@ const SingleStoreContainer = ({ store }) => {
       <ScrollView horizontal={true} style={componentStyles.scrollView}>
         {store.products &&
           store.products.slice(0, 3).map((product) => {
-            return <ScrollItem key={product.id} item={product} />;
+            return (
+              <ScrollItem
+                key={product.id}
+                item={product}
+                store={{ name: store.name, id: store.id }}
+              />
+            );
           })}
 
         <Pressable

@@ -1,38 +1,18 @@
-import { StyleSheet, FlatList, View, Text, Pressable } from "react-native";
-import React from "react";
+import { FlatList, Pressable, StyleSheet, Text } from "react-native";
+import { useSelector } from "react-redux";
 import CartItem from "../components/CartItem";
-import cart from "../data/cart";
-
-const PriceDetailsContainer = () => {
-  const subtotal = 100;
-  const deliveryFee = 50;
-  const total = 1000;
-
-  return (
-    <View style={styles.priceContainer}>
-      <View style={styles.row}>
-        <Text style={styles.text}>Subtotal</Text>
-        <Text style={styles.text}>${subtotal}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.text}>Delivery</Text>
-        <Text style={styles.text}>${deliveryFee} </Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.textBold}>Total</Text>
-        <Text style={styles.textBold}>${total}</Text>
-      </View>
-    </View>
-  );
-};
+import CartPriceDetailsContainer from "../components/CartPriceDetailsContainer";
+import { getCartData } from "../store/slices/cart";
 
 const CartScreen = () => {
+  const data = useSelector(getCartData);
+
   return (
     <>
       <FlatList
-        data={cart}
+        data={data}
         renderItem={({ item }) => <CartItem item={item} />}
-        ListFooterComponent={PriceDetailsContainer}
+        ListFooterComponent={CartPriceDetailsContainer}
       />
       <Pressable style={styles.button}>
         <Text style={styles.buttonText}>Checkout</Text>
@@ -42,25 +22,6 @@ const CartScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  priceContainer: {
-    margin: 20,
-    paddingTop: 10,
-    borderColor: "red",
-    borderTopWidth: 1,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 2,
-  },
-  text: {
-    fontSize: 16,
-    color: "gray",
-  },
-  textBold: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
   button: {
     position: "absolute",
     backgroundColor: "black",

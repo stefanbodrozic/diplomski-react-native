@@ -1,5 +1,5 @@
 import { StyleSheet, TextInput, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Search = () => {
   const [text, setText] = useState("");

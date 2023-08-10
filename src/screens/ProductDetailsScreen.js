@@ -9,19 +9,22 @@ import {
   useWindowDimensions,
   FlatList,
 } from "react-native";
-import stores from "../data/stores";
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { addProductToCart } from "../store/slices/cart";
 
 const ProductDetailsScreen = ({ route }) => {
   const { width } = useWindowDimensions();
+  const navigation = useNavigation();
 
-  const { productId, storeName } = route.params;
+  const { product, store } = route.params;
 
-  const handleAddToCart = () => {};
+  const dispatch = useDispatch();
 
-  const store = stores.find((store) => store.name === storeName);
-  const product = store.products.find((product) => product.id === productId);
-
-  console.log(product);
+  const handleAddToCart = () => {
+    dispatch(addProductToCart({ product, store }));
+    navigation.navigate("Cart");
+  };
 
   return (
     <View>

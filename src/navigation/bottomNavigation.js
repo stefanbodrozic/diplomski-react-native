@@ -4,6 +4,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import StoreScreen from "../screens/StoreScreen";
 
 const BottomNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -28,11 +29,6 @@ const BottomNavigation = () => {
       })}
     >
       <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{ headerShown: false }}
@@ -40,6 +36,11 @@ const BottomNavigation = () => {
       <Tab.Screen
         name="Chat"
         component={ChatScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
         options={{ headerShown: false }}
       />
     </Tab.Navigator>

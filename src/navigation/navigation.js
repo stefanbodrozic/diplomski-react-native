@@ -18,10 +18,6 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Cart" component={CartScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Discount" component={DiscountScreen} />
-        <Stack.Screen name="AddProduct" component={AddProductScreen} />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -32,6 +28,29 @@ const Navigation = () => {
             },
           })}
         />
+
+        <Stack.Screen name="AddProduct" component={AddProductScreen} />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={() => ({
+            headerTitle: "Register",
+            headerStyle: {
+              backgroundColor: "#EBFBFF",
+            },
+          })}
+        />
+
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={() => ({
+            headerRight: () => <CartIcon />,
+            headerBackVisible: false,
+          })}
+        />
+        <Stack.Screen name="Cart" component={CartScreen} />
+        <Stack.Screen name="Discount" component={DiscountScreen} />
         <Stack.Screen name="Store" component={StoreScreen} />
         <Stack.Screen
           name="Product Details"
@@ -39,28 +58,6 @@ const Navigation = () => {
           options={() => ({
             // headerShown: false,
             headerTitle: "Shopping App",
-            headerStyle: {
-              backgroundColor: "#EBFBFF",
-            },
-          })}
-        />
-        <Stack.Screen
-          name="Shopping App"
-          component={BottomNavigation}
-          options={() => ({
-            headerRight: () => <CartIcon />,
-            headerStyle: {
-              backgroundColor: "#EBFBFF",
-            },
-            headerBackVisible: false,
-          })}
-        />
-
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={() => ({
-            headerTitle: "Register",
             headerStyle: {
               backgroundColor: "#EBFBFF",
             },

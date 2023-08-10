@@ -16,4 +16,9 @@ const Status = {
   FAILED: "failed",
 };
 
-export { getFirebaseUserError, Status };
+const ActionType = {
+  INCREASE: "increase",
+  DECREASE: "decrease",
+};
+
+export { getFirebaseUserError, Status, ActionType };
