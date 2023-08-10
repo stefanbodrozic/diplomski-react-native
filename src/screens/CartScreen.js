@@ -2,10 +2,25 @@ import { FlatList, Pressable, StyleSheet, Text } from "react-native";
 import { useSelector } from "react-redux";
 import CartItem from "../components/CartItem";
 import CartPriceDetailsContainer from "../components/CartPriceDetailsContainer";
-import { getCartData } from "../store/slices/cart";
+import { getCart, getCartData } from "../store/slices/cart";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../config/firebase";
+import uuid from "react-native-uuid";
 
 const CartScreen = () => {
   const data = useSelector(getCartData);
+  const cart = useSelector(getCart);
+
+  const handleCheckout = async () => {
+    try {
+      await addDoc(collection(db, "orders"), {
+        id: uuid.v4(),
+        ...cart,
+      });
+    } catch (error) {
+      console.log("Error: ", e);
+    }
+  };
 
   return (
     <>
@@ -14,7 +29,7 @@ const CartScreen = () => {
         renderItem={({ item }) => <CartItem item={item} />}
         ListFooterComponent={CartPriceDetailsContainer}
       />
-      <Pressable style={styles.button}>
+      <Pressable onPress={handleCheckout} style={styles.button}>
         <Text style={styles.buttonText}>Checkout</Text>
       </Pressable>
     </>

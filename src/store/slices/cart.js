@@ -1,21 +1,16 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ActionType, Status } from "../../util";
-
-export const createOrder = createAsyncThunk("orders/create", async () => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-});
+import { createSlice } from "@reduxjs/toolkit";
+import { ActionType } from "../../util";
 
 const initialState = {
   order: [
     // array of products
   ],
   orderDetails: {
+    userId: "",
     firstname: "",
     lastname: "",
     address: "",
+    email: "",
     price: 0,
     deliveryFee: 50,
   },
@@ -24,9 +19,6 @@ const initialState = {
   comment: "",
   deliveredAt: null,
   createdAt: null,
-
-  status: Status.IDLE, // for createOrder
-  error: null,
 };
 
 const cartSlice = createSlice({
@@ -34,7 +26,7 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addProductToCart: (state, action) => {
-      const { product, store } = action.payload;
+      const { product, store, user } = action.payload;
 
       const tempProduct = { ...product };
       tempProduct.quantity = 1;
@@ -43,6 +35,14 @@ const cartSlice = createSlice({
 
       state.order.push(tempProduct);
       state.orderDetails.price += tempProduct.price;
+
+      if (state.orderDetails.userId === "") {
+        state.orderDetails.userId = user.id;
+        state.orderDetails.firstname = user.firstname;
+        state.orderDetails.lastname = user.lastname;
+        state.orderDetails.address = user.address;
+        state.orderDetails.email = user.email;
+      }
     },
     removeProductFromCart: (state, action) => {
       const { product } = action.payload;
@@ -77,22 +77,11 @@ const cartSlice = createSlice({
     },
     resetCart: (state, action) => {},
   },
-  extraReducers(builder) {
-    builder
-      .addCase(createOrder.pending, (state, _action) => {
-        state.status = Status.PENDING;
-      })
-      .addCase(createOrder.fulfilled, (state, action) => {
-        state.status = Status.FULLFILED;
-      })
-      .addCase(createOrder.rejected, (state, _action) => {
-        state.status = Status.FAILED;
-      });
-  },
 });
 
 export const getCartData = (state) => state.cart.order;
 export const getCartDetails = (state) => state.cart.orderDetails;
+export const getCart = (state) => state.cart;
 
 export const {
   addProductToCart,

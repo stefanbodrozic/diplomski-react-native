@@ -10,8 +10,9 @@ import {
   FlatList,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addProductToCart } from "../store/slices/cart";
+import { getUserData } from "../store/slices/user";
 
 const ProductDetailsScreen = ({ route }) => {
   const { width } = useWindowDimensions();
@@ -21,8 +22,10 @@ const ProductDetailsScreen = ({ route }) => {
 
   const dispatch = useDispatch();
 
+  const user = useSelector(getUserData);
+
   const handleAddToCart = () => {
-    dispatch(addProductToCart({ product, store }));
+    dispatch(addProductToCart({ product, store, user }));
     navigation.navigate("Cart");
   };
 
