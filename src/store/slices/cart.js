@@ -82,6 +82,7 @@ const cartSlice = createSlice({
 export const getCartData = (state) => state.cart.order;
 export const getCartDetails = (state) => state.cart.orderDetails;
 export const getCart = (state) => state.cart;
+export const getNumberOfProductsInCart = (state) => state.cart.order.length;
 
 export const {
   addProductToCart,

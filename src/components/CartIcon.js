@@ -2,9 +2,13 @@ import { Pressable, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { getNumberOfProductsInCart } from "../store/slices/cart";
 
 const CartIcon = () => {
   const navigation = useNavigation();
+
+  const count = useSelector(getNumberOfProductsInCart);
 
   return (
     <Pressable
@@ -12,7 +16,7 @@ const CartIcon = () => {
       style={{ flexDirection: "row" }}
     >
       <FontAwesome5 name="shopping-cart" size={18} color="gray" />
-      <Text style={styles.text}>0</Text>
+      <Text style={styles.text}>{count}</Text>
     </Pressable>
   );
 };
