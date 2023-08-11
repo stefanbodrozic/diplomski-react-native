@@ -15,12 +15,20 @@ import {
   View,
 } from "react-native";
 import styles from "../config/styles";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { useSelector } from "react-redux";
+import { getUserData } from "../store/slices/user";
+import { addDoc, collection, doc } from "firebase/firestore";
+import { db } from "../config/firebase";
+import uuid from "react-native-uuid";
 
 const AddProductScreen = () => {
-  const [productName, setProductName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
+  const [productName, setProductName] = useState("productest");
+  const [description, setDescription] = useState("random description");
+  const [price, setPrice] = useState();
   const [images, setImages] = useState([]);
+
+  const user = useSelector(getUserData);
 
   const imgDirectory = FileSystem.documentDirectory + "images/";
 
@@ -89,7 +97,58 @@ const AddProductScreen = () => {
     setImages(images.filter((image) => image !== uri));
   };
 
-  const saveProduct = () => {};
+  const saveProduct = async () => {
+    try {
+      const urls = await uploadImages();
+
+      const product = {
+        id: uuid.v4(),
+        name: productName,
+        description,
+        price,
+        images: urls,
+        categoryId: "", //TODO
+      };
+
+      const storeRef = doc(db, "stores", user.docRefId);
+      const productsRef = collection(storeRef, "products");
+
+      await addDoc(productsRef, product);
+    } catch (error) {
+      console.log("error while saving product data", error);
+    }
+  };
+
+  const uploadImages = async () => {
+    try {
+      let links = [];
+
+      const storage = getStorage();
+
+      await Promise.all(
+        images.map(async (image, index) => {
+          const response = await fetch(image);
+          const blob = await response.blob();
+
+          const productsRef = ref(
+            storage,
+            `${user.storeName}/${productName}/${productName}_${index}`
+          );
+
+          const upload = uploadBytes(productsRef, blob);
+
+          if (upload) {
+            const url = await getDownloadURL(productsRef);
+            links.push(url);
+          }
+        })
+      );
+
+      return links;
+    } catch (error) {
+      console.log("error while trying to upload images..", error.message);
+    }
+  };
 
   return (
     <SafeAreaView style={screenStyles.root}>

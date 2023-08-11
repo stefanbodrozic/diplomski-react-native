@@ -56,13 +56,16 @@ const RegisterScreen = () => {
 
         if (user.role === "Seller") {
           user.storeName = storeName;
-          await addDoc(collection(db, "stores"), {
+
+          const docRef = await addDoc(collection(db, "stores"), {
             id: uuid.v4(),
-            userUid: user.uid,
+            userId: user.id,
             storeName: user.storeName,
             address: user.address,
             timestamp: serverTimestamp(),
           });
+
+          user.docRefId = docRef.id;
         }
 
         await addDoc(collection(db, "users"), user);

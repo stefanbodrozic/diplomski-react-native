@@ -24,7 +24,7 @@ const LoginScreen = () => {
       if (fetchUserDetailsStatus === Status.IDLE)
         dispatch(fetchUserDetails(user.email));
       else if (fetchUserDetailsStatus === Status.FULLFILED) {
-        navigation.navigate("Home");
+        navigation.navigate("Add Product");
       }
     } else {
       console.log("login");
@@ -36,7 +36,8 @@ const LoginScreen = () => {
   const { control, handleSubmit, getValues } = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      email: "stefan1@mail.com",
+      // email: "stefan1@mail.com",
+      email: "aaaayyy@b.com",
       password: "password12345",
     },
   });
