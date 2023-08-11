@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import CartItem from "../components/CartItem";
 import CartPriceDetailsContainer from "../components/CartPriceDetailsContainer";
 import { getCart, getCartData } from "../store/slices/cart";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../config/firebase";
 import uuid from "react-native-uuid";
 
@@ -13,9 +13,12 @@ const CartScreen = () => {
 
   const handleCheckout = async () => {
     try {
+      const tempCart = { ...cart };
+      tempCart.createdAt = serverTimestamp();
+
       await addDoc(collection(db, "orders"), {
         id: uuid.v4(),
-        ...cart,
+        ...tempCart,
       });
     } catch (error) {
       console.log("Error: ", e);

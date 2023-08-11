@@ -24,7 +24,7 @@ const LoginScreen = () => {
       if (fetchUserDetailsStatus === Status.IDLE)
         dispatch(fetchUserDetails(user.email));
       else if (fetchUserDetailsStatus === Status.FULLFILED) {
-        navigation.navigate("Add Product");
+        navigation.navigate("Home");
       }
     } else {
       console.log("login");
