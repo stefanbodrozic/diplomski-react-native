@@ -7,30 +7,12 @@ import { useForm } from "react-hook-form";
 import TextInputField from "../components/form/TextInputField";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { loginSchema } from "../config/schema";
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
-import { Status, getFirebaseUserError } from "../util";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUserDetails, getUserStatus } from "../store/slices/user";
+import { loginSchema } from "../config/schema";
+import { getFirebaseUserError } from "../util";
 
 const LoginScreen = () => {
-  const dispatch = useDispatch();
-
-  const fetchUserDetailsStatus = useSelector(getUserStatus);
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      if (fetchUserDetailsStatus === Status.IDLE)
-        dispatch(fetchUserDetails(user.email));
-      else if (fetchUserDetailsStatus === Status.FULLFILED) {
-        navigation.navigate("Home");
-      }
-    } else {
-      console.log("login");
-    }
-  });
-
   const navigation = useNavigation();
 
   const { control, handleSubmit, getValues } = useForm({
