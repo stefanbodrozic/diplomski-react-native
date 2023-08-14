@@ -18,7 +18,8 @@ const SplashScreen = () => {
       if (fetchUserDetailsStatus === Status.IDLE)
         dispatch(fetchUserDetails(user.email));
       else if (fetchUserDetailsStatus === Status.FULLFILED) {
-        navigation.navigate("Home");
+        // navigation.navigate("Home");
+        navigation.navigate("Deliveries");
       }
     } else {
       console.log("login");

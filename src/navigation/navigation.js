@@ -12,6 +12,7 @@ import HomeScreen from "../screens/HomeScreen";
 import AddProductScreen from "../screens/AddProductScreen";
 import DiscountScreen from "../screens/DiscountScreen";
 import SplashScreen from "../screens/SplashScreen";
+import DeliveriesScreen from "../screens/DeliveriesScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,17 @@ const Navigation = () => {
           options={{
             headerShown: false,
           }}
+        />
+        <Stack.Screen
+          name="Deliveries"
+          component={DeliveriesScreen}
+          options={() => ({
+            headerTitle: "Shopping App",
+            headerStyle: {
+              backgroundColor: "#EBFBFF",
+            },
+            headerBackVisible: false,
+          })}
         />
         <Stack.Screen
           name="Login"

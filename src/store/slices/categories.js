@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Status, status } from "../../util";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import { Status } from "../../util";
 
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",

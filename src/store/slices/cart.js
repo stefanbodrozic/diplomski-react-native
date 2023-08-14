@@ -14,6 +14,7 @@ const initialState = {
     price: 0,
     deliveryFee: 50,
   },
+  delivererId: "",
   isDelivered: false,
   rating: 0,
   comment: "",
