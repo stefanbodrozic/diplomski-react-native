@@ -2,12 +2,15 @@ import { StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchAllOrders,
-  fetchDeliveries,
-  getDeliveries,
-  getDeliveriesStatus,
-  getOrders,
-  getOrdersStatus,
+  fetchAvailableOrders,
+  fetchCompletedDeliveries,
+  getCompletedDeliveries,
+  getCompletedDeliveriesStatus,
+  getAvailableOrders,
+  getAvailableOrdersStatus,
+  getDeliveriesInProgress,
+  getDeliveriesInProgressStatus,
+  fetchDeliveriesInProgress,
 } from "../store/slices/deliveries";
 import { Status } from "../util";
 import { getUserData } from "../store/slices/user";
@@ -19,25 +22,36 @@ const DeliveriesScreen = () => {
 
   const user = useSelector(getUserData);
 
-  const orders = useSelector(getOrders);
-  const deliveries = useSelector(getDeliveries);
+  const availableOrders = useSelector(getAvailableOrders);
+  const deliveriesInProgress = useSelector(getDeliveriesInProgress);
+  const completedDeliveries = useSelector(getCompletedDeliveries);
 
-  const fetchOrdersStatus = useSelector(getOrdersStatus);
-  const fetchDeliveriesStatus = useSelector(getDeliveriesStatus);
-
+  const fetchAvailableOrdersStatus = useSelector(getAvailableOrdersStatus);
+  const fetchDeliveriesInProgressStatus = useSelector(
+    getDeliveriesInProgressStatus
+  );
+  const fetchCompletedDeliveriesStatus = useSelector(
+    getCompletedDeliveriesStatus
+  );
   useEffect(() => {
-    if (fetchOrdersStatus === Status.IDLE) {
-      dispatch(fetchAllOrders());
-    } else if (fetchDeliveriesStatus === Status.IDLE) {
-      dispatch(fetchDeliveries(user.id));
+    if (fetchAvailableOrdersStatus === Status.IDLE) {
+      dispatch(fetchAvailableOrders());
+    } else if (fetchCompletedDeliveriesStatus === Status.IDLE) {
+      dispatch(fetchCompletedDeliveries(user.id));
+    } else if (fetchDeliveriesInProgressStatus === Status.IDLE) {
+      dispatch(fetchDeliveriesInProgress(user.id));
     }
-  }, [fetchOrdersStatus, fetchDeliveriesStatus, dispatch]);
+  }, [fetchAvailableOrdersStatus, fetchCompletedDeliveriesStatus, dispatch]);
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {
       key: "todo",
       title: "Available deliveries",
+    },
+    {
+      key: "inprogress",
+      title: "In Progress",
     },
     {
       key: "completed",
@@ -48,9 +62,11 @@ const DeliveriesScreen = () => {
   const renderScene = ({ route }) => {
     switch (route.key) {
       case "todo":
-        return <Deliveries data={orders} />;
+        return <Deliveries data={availableOrders} />;
+      case "inprogress":
+        return <Deliveries data={deliveriesInProgress} />;
       case "completed":
-        return <Deliveries data={deliveries} />;
+        return <Deliveries data={completedDeliveries} />;
       default:
         return null;
     }

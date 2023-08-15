@@ -3,11 +3,11 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { Status } from "../../util";
 
-export const fetchDeliveries = createAsyncThunk(
-  "deliveries/fetchDeliveries",
+export const fetchCompletedDeliveries = createAsyncThunk(
+  "deliveries/fetchCompletedDeliveries",
   async (delivererId) => {
     try {
-      const deliveries = [];
+      const completedDeliveries = [];
 
       const q = query(
         collection(db, "orders"),
@@ -29,7 +29,8 @@ export const fetchDeliveries = createAsyncThunk(
           rating,
         } = doc.data();
 
-        deliveries.push({
+        completedDeliveries.push({
+          docId: doc.id,
           id,
           comment,
           // createdAt,
@@ -41,14 +42,14 @@ export const fetchDeliveries = createAsyncThunk(
         });
       });
 
-      return deliveries;
+      return completedDeliveries;
     } catch (error) {
       console.log(error);
     }
   }
 );
 
-export const fetchAllOrders = createAsyncThunk(
+export const fetchAvailableOrders = createAsyncThunk(
   "deliveries/allOrders",
   async () => {
     try {
@@ -56,6 +57,7 @@ export const fetchAllOrders = createAsyncThunk(
 
       const q = query(
         collection(db, "orders"),
+        where("delivererId", "==", ""),
         where("isDelivered", "==", false)
       );
 
@@ -74,6 +76,7 @@ export const fetchAllOrders = createAsyncThunk(
         } = doc.data();
 
         orders.push({
+          docId: doc.id,
           id,
           comment,
           // createdAt,
@@ -92,49 +95,122 @@ export const fetchAllOrders = createAsyncThunk(
   }
 );
 
-const initialState = {
-  deliveries: [],
-  orders: [],
-  ordersStatus: Status.IDLE,
-  status: Status.IDLE,
-  error: null,
+export const fetchDeliveriesInProgress = createAsyncThunk(
+  "deliveries/fetchDeliveriesInProgress",
+  async (delivererId) => {
+    try {
+      const deliveries = [];
+
+      const q = query(
+        collection(db, "orders"),
+        where("delivererId", "==", delivererId),
+        where("isDelivered", "==", false)
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        const {
+          id,
+          comment,
+          createdAt,
+          deliveredAt,
+          delivererId,
+          isDelivered,
+          orderDetails,
+          rating,
+        } = doc.data();
+
+        deliveries.push({
+          docId: doc.id,
+          id,
+          comment,
+          // createdAt,
+          deliveredAt,
+          delivererId,
+          isDelivered,
+          orderDetails,
+          rating,
+        });
+      });
+
+      return deliveries;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const initialState = {
+  completedDeliveries: [],
+  deliveriesInProgress: [],
+  availableOrders: [],
+
+  availableOrdersStatus: Status.IDLE,
+  deliveriesInProgressStatus: Status.IDLE,
+  completedDeliveriesStatus: Status.IDLE,
 };
 
 const deliveriesSlice = createSlice({
   name: "deliveries",
   initialState,
+  reducers: {
+    refetchData: (state, _action) => {
+      state.availableOrdersStatus = Status.IDLE;
+      state.deliveriesInProgressStatus = Status.IDLE;
+      state.completedDeliveriesStatus = Status.IDLE;
+    },
+  },
   extraReducers(builder) {
     builder
-      .addCase(fetchDeliveries.pending, (state, _action) => {
-        state.status = Status.PENDING;
+      .addCase(fetchCompletedDeliveries.pending, (state, _action) => {
+        state.completedDeliveriesStatus = Status.PENDING;
       })
-      .addCase(fetchDeliveries.fulfilled, (state, action) => {
-        state.status = Status.FULLFILED;
-        state.deliveries = action.payload;
+      .addCase(fetchCompletedDeliveries.fulfilled, (state, action) => {
+        state.completedDeliveriesStatus = Status.FULLFILED;
+        state.completedDeliveries = action.payload;
       })
-      .addCase(fetchDeliveries.rejected, (state, _action) => {
-        state.status = Status.FAILED;
+      .addCase(fetchCompletedDeliveries.rejected, (state, _action) => {
+        state.completedDeliveriesStatus = Status.FAILED;
       })
 
-      .addCase(fetchAllOrders.pending, (state, _action) => {
-        state.ordersStatus = Status.PENDING;
+      .addCase(fetchAvailableOrders.pending, (state, _action) => {
+        state.availableOrdersStatus = Status.PENDING;
       })
-      .addCase(fetchAllOrders.fulfilled, (state, action) => {
-        state.ordersStatus = Status.FULLFILED;
-        state.orders = action.payload;
+      .addCase(fetchAvailableOrders.fulfilled, (state, action) => {
+        state.availableOrdersStatus = Status.FULLFILED;
+        state.availableOrders = action.payload;
       })
-      .addCase(fetchAllOrders.rejected, (state, _action) => {
-        state.ordersStatus = Status.FAILED;
+      .addCase(fetchAvailableOrders.rejected, (state, _action) => {
+        state.availableOrdersStatus = Status.FAILED;
+      })
+      .addCase(fetchDeliveriesInProgress.pending, (state, _action) => {
+        state.deliveriesInProgressStatus = Status.PENDING;
+      })
+      .addCase(fetchDeliveriesInProgress.fulfilled, (state, action) => {
+        state.deliveriesInProgressStatus = Status.FULLFILED;
+        state.deliveriesInProgress = action.payload;
+      })
+      .addCase(fetchDeliveriesInProgress.rejected, (state, _action) => {
+        state.deliveriesInProgressStatus = Status.FAILED;
       });
   },
 });
 
-export const getDeliveries = (state) => state.deliveries.deliveries;
-export const getDeliveriesStatus = (state) => state.deliveries.status;
-export const getDeliveriesError = (state) => state.deliveries.error;
+export const getCompletedDeliveries = (state) =>
+  state.deliveries.completedDeliveries;
+export const getCompletedDeliveriesStatus = (state) =>
+  state.deliveries.completedDeliveriesStatus;
 
-export const getOrders = (state) => state.deliveries.orders;
-export const getOrdersStatus = (state) => state.deliveries.ordersStatus;
-export const getOrdersError = (state) => state.deliveries.error;
+export const getAvailableOrders = (state) => state.deliveries.availableOrders;
+export const getAvailableOrdersStatus = (state) =>
+  state.deliveries.availableOrdersStatus;
+
+export const getDeliveriesInProgress = (state) =>
+  state.deliveries.deliveriesInProgress;
+export const getDeliveriesInProgressStatus = (state) =>
+  state.deliveries.deliveriesInProgressStatus;
+
+export const { refetchData } = deliveriesSlice.actions;
 
 export default deliveriesSlice.reducer;
