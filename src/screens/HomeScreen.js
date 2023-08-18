@@ -5,13 +5,13 @@ import ScrollItem from "../components/ScrollItem";
 import Search from "../components/Search";
 import SingleStoreContainer from "../components/StoreContainer";
 import { fetchCategories, getCategories } from "../store/slices/categories";
-import { fetchStores, getStores } from "../store/slices/stores";
+import { fetchStores, getAllStores } from "../store/slices/stores";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
 
   const categories = useSelector(getCategories);
-  const stores = useSelector(getStores);
+  const stores = useSelector(getAllStores);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -19,13 +19,6 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    // if user is customer - render list of stores
-
-    // if user is seller - render seller Store screen (owner of store)
-    // <StoreScreen />
-
-    // if user is deliverer - render list of deliveries (todo/done)
-
     <SafeAreaView style={screenStyles.root}>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -41,9 +34,10 @@ const HomeScreen = () => {
 
         {stores.length < 1 && <Text>No data!</Text>}
 
-        {stores.map((store) => (
-          <SingleStoreContainer key={store.id} store={store} />
-        ))}
+        {stores.length >= 1 &&
+          stores.map((store) => (
+            <SingleStoreContainer key={store.id} store={store} />
+          ))}
       </ScrollView>
     </SafeAreaView>
   );

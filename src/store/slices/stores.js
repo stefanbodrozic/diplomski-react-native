@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { Status } from "../../util";
 
@@ -49,9 +49,58 @@ export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
   }
 });
 
+export const fetchSingleStore = createAsyncThunk(
+  "stores/fetchSingleStore",
+  async (user) => {
+    try {
+      let store = [];
+
+      const q = query(collection(db, "stores"), where("userId", "==", user.id));
+
+      const storeQuerySnapshot = await getDocs(q);
+
+      storeQuerySnapshot.forEach((doc) => {
+        const { id, address, storeName, userUid } = doc.data();
+
+        store = {
+          id,
+          docId: doc.id,
+          address,
+          name: storeName,
+          userUid,
+          products: [],
+        };
+      });
+
+      const querySnapshot = await getDocs(
+        collection(db, "stores", user.storeRefId, "products")
+      );
+
+      querySnapshot.forEach((doc) => {
+        const { id, categoryId, name, description, price, images } = doc.data();
+        store.products.push({
+          id,
+          categoryId,
+          name,
+          description,
+          price,
+          images,
+        });
+      });
+
+      return store;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 const initialState = {
-  data: [],
-  status: Status.IDLE,
+  allStores: [],
+  allStoresStatus: Status.IDLE,
+
+  store: null,
+  storeStatus: Status.IDLE,
   error: null,
 };
 
@@ -61,20 +110,34 @@ const storesSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchStores.pending, (state, _action) => {
-        state.status = Status.PENDING;
+        state.allStoresStatus = Status.PENDING;
       })
       .addCase(fetchStores.fulfilled, (state, action) => {
-        state.status = Status.FULLFILED;
-        state.data = action.payload;
+        state.allStoresStatus = Status.FULLFILED;
+        state.allStores = action.payload;
       })
       .addCase(fetchStores.rejected, (state, _action) => {
-        state.status = Status.FAILED;
+        state.allStoresStatus = Status.FAILED;
+      })
+
+      .addCase(fetchSingleStore.pending, (state, _action) => {
+        state.storeStatus = Status.PENDING;
+      })
+      .addCase(fetchSingleStore.fulfilled, (state, action) => {
+        state.storeStatus = Status.FULLFILED;
+        state.store = action.payload;
+      })
+      .addCase(fetchSingleStore.rejected, (state, _action) => {
+        state.storeStatus = Status.FAILED;
       });
   },
 });
 
-export const getStores = (state) => state.stores.data;
-export const getStoresStatus = (state) => state.stores.status;
-export const getStoresError = (state) => state.stores.error;
+export const getAllStores = (state) => state.stores.allStores;
+export const getAllStoresStatus = (state) => state.stores.allStoresStatus;
+export const getAllStoresError = (state) => state.stores.error;
+
+export const getStore = (state) => state.stores.store;
+export const getStoreStatus = (state) => state.stores.storeStatus;
 
 export default storesSlice.reducer;

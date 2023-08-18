@@ -79,7 +79,7 @@ export const fetchAvailableOrders = createAsyncThunk(
           docId: doc.id,
           id,
           comment,
-          // createdAt,
+          createdAt,
           deliveredAt,
           delivererId,
           isDelivered,

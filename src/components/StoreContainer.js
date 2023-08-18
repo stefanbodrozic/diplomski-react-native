@@ -25,7 +25,7 @@ const SingleStoreContainer = ({ store }) => {
       </View>
 
       <ScrollView horizontal={true} style={componentStyles.scrollView}>
-        {store.products &&
+        {store.products.length >= 1 &&
           store.products.slice(0, 3).map((product) => {
             return (
               <ScrollItem

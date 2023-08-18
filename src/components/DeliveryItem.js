@@ -1,4 +1,4 @@
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { db } from "../config/firebase";
@@ -24,7 +24,7 @@ const DeliveryItem = ({ item }) => {
 
     await updateDoc(orderRef, {
       isDelivered: true,
-      deliveredAt: serverTimestamp(),
+      deliveredAt: new Date(),
     });
 
     dispatch(refetchData());

@@ -23,7 +23,7 @@ import { db } from "../config/firebase";
 import uuid from "react-native-uuid";
 
 const AddProductScreen = () => {
-  const [productName, setProductName] = useState("productest");
+  const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("random description");
   const [price, setPrice] = useState();
   const [images, setImages] = useState([]);
@@ -156,7 +156,7 @@ const AddProductScreen = () => {
         <TextInput
           placeholder="Product name"
           value={productName}
-          onChange={(text) => setProductName(text)}
+          onChangeText={(text) => setProductName(text)}
         />
       </View>
 
@@ -164,7 +164,7 @@ const AddProductScreen = () => {
         <TextInput
           placeholder="Description"
           value={description}
-          onChange={(text) => setDescription(text)}
+          onChangeText={(text) => setDescription(text)}
           multiline
           numberOfLines={10}
           maxLength={50}
@@ -175,7 +175,7 @@ const AddProductScreen = () => {
         <TextInput
           placeholder="Price"
           value={price}
-          onChange={(text) => setPrice(Number(text))}
+          onChangeText={(text) => setPrice(text)}
           keyboardType="number-pad"
         />
       </View>

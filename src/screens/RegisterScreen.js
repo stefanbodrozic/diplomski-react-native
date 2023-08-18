@@ -13,12 +13,7 @@ import roles from "../helpers/roles";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config/firebase";
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
+import { addDoc, collection, setDoc } from "firebase/firestore";
 import { getFirebaseUserError } from "../util";
 import uuid from "react-native-uuid";
 
@@ -51,7 +46,7 @@ const RegisterScreen = () => {
           email: getValues("email"),
           role: getValues("role"),
           address: getValues("address"),
-          timestamp: serverTimestamp(),
+          timestamp: new Date(),
         };
 
         if (user.role === "Seller") {
@@ -62,10 +57,10 @@ const RegisterScreen = () => {
             userId: user.id,
             storeName: user.storeName,
             address: user.address,
-            timestamp: serverTimestamp(),
+            timestamp: new Date(),
           });
 
-          user.docRefId = docRef.id;
+          user.storeRefId = docRef.id;
         }
 
         await addDoc(collection(db, "users"), user);

@@ -23,7 +23,7 @@ export const fetchUserDetails = createAsyncThunk(
           role,
           address,
           storeName,
-          docRefId,
+          storeRefId,
         } = doc.data();
 
         user = {
@@ -38,7 +38,7 @@ export const fetchUserDetails = createAsyncThunk(
 
         if (storeName) {
           user.storeName = storeName;
-          user.docRefId = docRefId;
+          user.storeRefId = storeRefId;
         }
       });
 

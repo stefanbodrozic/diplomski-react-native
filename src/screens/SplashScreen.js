@@ -3,8 +3,17 @@ import { onAuthStateChanged } from "firebase/auth";
 import { StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../config/firebase";
-import { fetchUserDetails, getUserStatus } from "../store/slices/user";
+import {
+  fetchUserDetails,
+  getUserData,
+  getUserStatus,
+} from "../store/slices/user";
 import { Status } from "../util";
+import {
+  fetchSingleStore,
+  getStore,
+  getStoreStatus,
+} from "../store/slices/stores";
 
 const SplashScreen = () => {
   const navigation = useNavigation();
@@ -12,24 +21,59 @@ const SplashScreen = () => {
   const dispatch = useDispatch();
 
   const fetchUserDetailsStatus = useSelector(getUserStatus);
+  const userDetails = useSelector(getUserData);
+
+  const store = useSelector(getStore);
+  const fetchStoreStatus = useSelector(getStoreStatus);
+
+  const handleNavigation = (name, store) => {
+    const route = store ? { name, params: store } : { name };
+
+    navigation.reset({
+      index: 0,
+      routes: [route],
+    });
+  };
+
+  const handleRoleNavigation = () => {
+    switch (userDetails.role) {
+      case "Admin":
+        // TODO
+        return console.log("admin");
+      case "Seller":
+        if (fetchStoreStatus === Status.FULLFILED) {
+          return handleNavigation("Store", store);
+        }
+        return;
+      case "Deliverer":
+        return handleNavigation("Deliveries");
+      case "Customer":
+        return handleNavigation("Home");
+
+      default:
+        return null;
+    }
+  };
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
       if (fetchUserDetailsStatus === Status.IDLE)
         dispatch(fetchUserDetails(user.email));
       else if (fetchUserDetailsStatus === Status.FULLFILED) {
-        // navigation.navigate("Home");
-        navigation.navigate("Deliveries");
+        if (fetchStoreStatus === Status.IDLE)
+          dispatch(fetchSingleStore(userDetails));
+
+        handleRoleNavigation();
       }
     } else {
-      console.log("login");
-      navigation.navigate("Login");
+      handleNavigation("Login");
     }
   });
 
   return (
     <View style={styles.root}>
       <Text style={styles.text}>Welcome to shopping application!</Text>
+      <Text style={styles.text}>loading...</Text>
     </View>
   );
 };

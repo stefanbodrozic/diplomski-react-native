@@ -18,9 +18,10 @@ const LoginScreen = () => {
   const { control, handleSubmit, getValues } = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      // email: "stefan1@mail.com",
-      // email: "aaaayyy@b.com",
-      email: "d@d.com",
+      // email: "admin@mail.com",
+      email: "customer@mail.com",
+      // email: "seller2@mail.com",
+      // email: "deliverer@mail.com",
       password: "password12345",
     },
   });
@@ -34,6 +35,7 @@ const LoginScreen = () => {
       );
 
       if (response) {
+        // TODO: handle role navigation
         navigation.navigate("Home");
       }
     } catch (error) {
