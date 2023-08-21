@@ -14,6 +14,7 @@ import DiscountScreen from "../screens/DiscountScreen";
 import SplashScreen from "../screens/SplashScreen";
 import DeliveriesScreen from "../screens/DeliveriesScreen";
 import AddProductIcon from "../components/AddProductIcon";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ const Navigation = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="AddProduct" component={AddProductScreen} />
         <Stack.Screen
           name="Deliveries"
@@ -79,7 +81,6 @@ const Navigation = () => {
             headerTitle:
               route.params.name || route.params.store?.name || "Store",
             headerRight: () => {
-              console.log(route.params);
               if (route.params.showAddProductIcon === undefined) {
                 return <AddProductIcon />;
               } else {

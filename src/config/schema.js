@@ -26,3 +26,10 @@ export const registerSchema = yup.object().shape({
       then: (field) => field.required("Store is required!"),
     }),
 });
+
+export const profileSchema = yup.object().shape({
+  firstname: yup.string().required("Firstname is required!"),
+  lastname: yup.string().required("Lastname is required!"),
+  address: yup.string().required("Address is required!"),
+  username: yup.string().required("Username is required!"),
+});

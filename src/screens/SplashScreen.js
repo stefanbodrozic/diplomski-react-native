@@ -48,7 +48,8 @@ const SplashScreen = () => {
       case "Deliverer":
         return handleNavigation("Deliveries");
       case "Customer":
-        return handleNavigation("Home");
+        // return handleNavigation("Home");
+        return handleNavigation("Profile");
 
       default:
         return null;

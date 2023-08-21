@@ -27,6 +27,7 @@ export const fetchUserDetails = createAsyncThunk(
         } = doc.data();
 
         user = {
+          docId: doc.id,
           id,
           username,
           firstname,
