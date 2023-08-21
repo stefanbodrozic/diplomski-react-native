@@ -4,7 +4,7 @@ import ProductPreview from "../components/ProductPreview";
 const StoreScreen = ({ route }) => {
   const store = route.params;
 
-  if (!store || store.products.length < 1) return <Text>No data!</Text>;
+  if (!store || store?.products?.length < 1) return <Text>No data!</Text>;
 
   return (
     <SafeAreaView style={styles.root}>

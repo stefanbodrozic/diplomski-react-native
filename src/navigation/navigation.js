@@ -13,6 +13,7 @@ import AddProductScreen from "../screens/AddProductScreen";
 import DiscountScreen from "../screens/DiscountScreen";
 import SplashScreen from "../screens/SplashScreen";
 import DeliveriesScreen from "../screens/DeliveriesScreen";
+import AddProductIcon from "../components/AddProductIcon";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,7 @@ const Navigation = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen name="AddProduct" component={AddProductScreen} />
         <Stack.Screen
           name="Deliveries"
           component={DeliveriesScreen}
@@ -49,7 +51,6 @@ const Navigation = () => {
           })}
         />
 
-        <Stack.Screen name="AddProduct" component={AddProductScreen} />
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
@@ -71,7 +72,24 @@ const Navigation = () => {
         />
         <Stack.Screen name="Cart" component={CartScreen} />
         <Stack.Screen name="Discount" component={DiscountScreen} />
-        <Stack.Screen name="Store" component={StoreScreen} />
+        <Stack.Screen
+          name="Store"
+          component={StoreScreen}
+          options={({ route }) => ({
+            headerTitle:
+              route.params.name || route.params.store?.name || "Store",
+            headerRight: () => {
+              console.log(route.params);
+              if (route.params.showAddProductIcon === undefined) {
+                return <AddProductIcon />;
+              } else {
+                return route.params.showAddProductIcon ? (
+                  <AddProductIcon />
+                ) : null;
+              }
+            },
+          })}
+        />
         <Stack.Screen
           name="Product Details"
           component={ProductDetailsScreen}

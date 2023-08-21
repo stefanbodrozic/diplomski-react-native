@@ -10,12 +10,24 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import styles from "../config/styles";
 import ScrollItem from "./ScrollItem";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { getUserData } from "../store/slices/user";
 
 const SingleStoreContainer = ({ store }) => {
   const navigation = useNavigation();
 
+  const userData = useSelector(getUserData);
+  let isOwner = false;
+
+  if (
+    userData.storeName !== undefined &&
+    store.storeName === userData.storeName
+  ) {
+    isOwner = true;
+  }
+
   const handleShowMore = () => {
-    navigation.navigate("Store", { store });
+    navigation.navigate("Store", { store, showAddProductIcon: isOwner });
   };
 
   return (
