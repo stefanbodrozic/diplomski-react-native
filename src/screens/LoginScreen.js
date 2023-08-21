@@ -69,12 +69,15 @@ const LoginScreen = () => {
       />
 
       <View style={styles.buttonsContainer}>
-        <Pressable onPress={handleSubmit(handleLogin)} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
+        <Pressable
+          onPress={handleSubmit(handleLogin)}
+          style={screenStyles.button}
+        >
+          <Text style={screenStyles.buttonText}>Login</Text>
         </Pressable>
 
-        <Pressable onPress={handleRegister} style={styles.button}>
-          <Text style={styles.buttonText}>Register</Text>
+        <Pressable onPress={handleRegister} style={screenStyles.button}>
+          <Text style={screenStyles.buttonText}>Register</Text>
         </Pressable>
       </View>
     </View>
@@ -88,6 +91,19 @@ const screenStyles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     paddingTop: 150,
+  },
+  button: {
+    backgroundColor: "black",
+    width: "45%",
+    alignSelf: "center",
+    padding: 20,
+    borderRadius: 100,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 16,
   },
 });
 

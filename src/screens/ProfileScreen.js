@@ -26,7 +26,6 @@ const ProfileScreen = () => {
   });
 
   const handleSave = async () => {
-    console.log("save..");
     const newFirstname = getValues("firstname");
     const newLastname = getValues("lastname");
     const newAddress = getValues("address");
@@ -44,7 +43,14 @@ const ProfileScreen = () => {
 
   const handleLogout = () => {
     signOut(auth);
-    navigation.navigate("Login");
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: "Login",
+        },
+      ],
+    });
   };
 
   const onInvalid = (errors) => console.error(errors);
@@ -86,13 +92,13 @@ const ProfileScreen = () => {
       <View style={styles.buttonContainer}>
         <Pressable
           onPress={handleSubmit(handleSave, onInvalid)}
-          style={styles.button}
+          style={screenStyles.button}
         >
-          <Text style={styles.buttonText}>Save</Text>
+          <Text style={screenStyles.buttonText}>Save</Text>
         </Pressable>
 
-        <Pressable onPress={handleLogout} style={styles.button}>
-          <Text style={styles.buttonText}>Logout</Text>
+        <Pressable onPress={handleLogout} style={screenStyles.button}>
+          <Text style={screenStyles.buttonText}>Logout</Text>
         </Pressable>
       </View>
 
@@ -110,6 +116,21 @@ const screenStyles = StyleSheet.create({
   },
   textContainer: {
     marginRight: 210,
+  },
+  button: {
+    backgroundColor: "black",
+    width: "45%",
+    alignSelf: "center",
+    padding: 20,
+    margin: 10,
+    marginBottom: 20,
+    borderRadius: 100,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 16,
   },
 });
 
