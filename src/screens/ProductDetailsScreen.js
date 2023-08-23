@@ -24,6 +24,12 @@ const ProductDetailsScreen = ({ route }) => {
 
   const user = useSelector(getUserData);
 
+  let isOwner = false;
+
+  if (user.storeName !== undefined && store.storeName === user.storeName) {
+    isOwner = true;
+  }
+
   const handleAddToCart = () => {
     dispatch(addProductToCart({ product, store, user }));
     navigation.navigate("Cart");
@@ -49,9 +55,11 @@ const ProductDetailsScreen = ({ route }) => {
           <Text style={screenStyles.description}>{product.description}</Text>
         </View>
 
-        <Pressable onPress={handleAddToCart} style={screenStyles.button}>
-          <Text style={screenStyles.buttonText}>Add to cart</Text>
-        </Pressable>
+        {!isOwner && (
+          <Pressable onPress={handleAddToCart} style={screenStyles.button}>
+            <Text style={screenStyles.buttonText}>Add to cart</Text>
+          </Pressable>
+        )}
       </ScrollView>
     </View>
   );

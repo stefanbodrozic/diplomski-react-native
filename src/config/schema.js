@@ -25,6 +25,13 @@ export const registerSchema = yup.object().shape({
       is: (value) => value === "Seller",
       then: (field) => field.required("Store is required!"),
     }),
+  category: yup
+    .string()
+    .notRequired()
+    .when("role", {
+      is: (value) => value === "Seller",
+      then: (field) => field.required("Store is required!"),
+    }),
 });
 
 export const profileSchema = yup.object().shape({

@@ -12,13 +12,39 @@ import Dropdown from "../components/form/Dropdown";
 import roles from "../helpers/roles";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../config/firebase";
-import { addDoc, collection, setDoc } from "firebase/firestore";
-import { getFirebaseUserError } from "../util";
+import { addDoc, collection } from "firebase/firestore";
 import uuid from "react-native-uuid";
+import { auth, db } from "../config/firebase";
+import { Status, getFirebaseUserError } from "../util";
+
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchCategories,
+  getCategories,
+  getCategoriesStatus,
+} from "../store/slices/categories";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const categories = useSelector(getCategories);
+  const fetchCategoriesStatus = useSelector(getCategoriesStatus);
+
+  let categoriesDropdown = [];
+  categories.forEach((category) =>
+    categoriesDropdown.push({
+      key: category.id,
+      value: category.name,
+    })
+  );
+
+  useEffect(() => {
+    if (fetchCategoriesStatus === Status.IDLE) {
+      dispatch(fetchCategories());
+    }
+  }, [fetchCategoriesStatus, categories, dispatch]);
 
   const { control, handleSubmit, register, watch, getValues } = useForm({
     resolver: yupResolver(registerSchema),
@@ -35,8 +61,6 @@ const RegisterScreen = () => {
       );
 
       if (response.user) {
-        const storeName = getValues("storeName");
-
         const user = {
           id: uuid.v4(),
           uid: response.user.uid,
@@ -50,7 +74,10 @@ const RegisterScreen = () => {
         };
 
         if (user.role === "Seller") {
+          const storeName = getValues("storeName");
+          const category = getValues("category");
           user.storeName = storeName;
+          user.category = category;
 
           const docRef = await addDoc(collection(db, "stores"), {
             id: uuid.v4(),
@@ -110,12 +137,20 @@ const RegisterScreen = () => {
 
       <Dropdown name="role" control={control} data={roles} />
 
-      {role === "Seller" && (
-        <TextInputField
-          name="storeName"
-          placeholder="Store name"
-          control={control}
-        />
+      {role === "Seller" && categories.length > 0 && (
+        <>
+          <TextInputField
+            name="storeName"
+            placeholder="Store name"
+            control={control}
+          />
+
+          <Dropdown
+            name="category"
+            control={control}
+            data={categoriesDropdown}
+          />
+        </>
       )}
 
       <View style={styles.buttonContainer}>

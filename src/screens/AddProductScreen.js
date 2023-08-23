@@ -109,8 +109,7 @@ const AddProductScreen = () => {
         images: urls,
         categoryId: "", //TODO
       };
-
-      const storeRef = doc(db, "stores", user.docRefId);
+      const storeRef = doc(db, "stores", user.storeRefId);
       const productsRef = collection(storeRef, "products");
 
       await addDoc(productsRef, product);
