@@ -77,10 +77,10 @@ const RegisterScreen = () => {
           const storeName = getValues("storeName");
           const category = getValues("category");
           user.storeName = storeName;
-          user.category = category;
 
           const docRef = await addDoc(collection(db, "stores"), {
             id: uuid.v4(),
+            category,
             userId: user.id,
             storeName: user.storeName,
             address: user.address,

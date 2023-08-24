@@ -2,14 +2,18 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ScrollItem = ({ item, store }) => {
+const ScrollItem = ({ item, store, isCategory, handleCategoryFilter }) => {
   const navigation = useNavigation();
 
   const handleItem = () => {
-    navigation.navigate("Product Details", {
-      product: item,
-      store,
-    });
+    if (isCategory) {
+      handleCategoryFilter(item.name);
+    } else {
+      navigation.navigate("Product Details", {
+        product: item,
+        store,
+      });
+    }
   };
 
   return (

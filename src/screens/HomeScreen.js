@@ -5,18 +5,37 @@ import ScrollItem from "../components/ScrollItem";
 import Search from "../components/Search";
 import SingleStoreContainer from "../components/StoreContainer";
 import { fetchCategories, getCategories } from "../store/slices/categories";
-import { fetchStores, getAllStores } from "../store/slices/stores";
+import {
+  fetchStores,
+  getAllStores,
+  getAllStoresStatus,
+} from "../store/slices/stores";
+import { Status } from "../util";
 
 const HomeScreen = () => {
+  const [filteredStores, setFilteredStores] = useState([]);
   const dispatch = useDispatch();
 
   const categories = useSelector(getCategories);
   const stores = useSelector(getAllStores);
 
+  const storesStatus = useSelector(getAllStoresStatus);
+
   useEffect(() => {
+    if (storesStatus === Status.IDLE) {
+      dispatch(fetchStores());
+    } else if (storesStatus === Status.FULLFILED) {
+      setFilteredStores(stores);
+    }
+
     dispatch(fetchCategories());
-    dispatch(fetchStores());
-  }, []);
+  }, [dispatch, storesStatus]);
+
+  const handleCategoryFilter = (category) => {
+    const filter = stores.filter((store) => store.category === category);
+
+    setFilteredStores(filter);
+  };
 
   return (
     <SafeAreaView style={screenStyles.root}>
@@ -27,15 +46,19 @@ const HomeScreen = () => {
         <Search />
         <ScrollView horizontal={true} style={screenStyles.scrollView}>
           {categories.map((category) => (
-            <ScrollItem key={category.id} item={category} />
-            // <Text>{category.name}</Text>
+            <ScrollItem
+              key={category.id}
+              item={category}
+              isCategory={true}
+              handleCategoryFilter={handleCategoryFilter}
+            />
           ))}
         </ScrollView>
 
-        {stores.length < 1 && <Text>No data!</Text>}
+        {filteredStores?.length < 1 && <Text>No data!</Text>}
 
-        {stores.length >= 1 &&
-          stores.map((store) => (
+        {filteredStores?.length >= 1 &&
+          filteredStores.map((store) => (
             <SingleStoreContainer key={store.id} store={store} />
           ))}
       </ScrollView>

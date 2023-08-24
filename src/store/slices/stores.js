@@ -9,10 +9,11 @@ export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
 
     const querySnapshot = await getDocs(collection(db, "stores"));
     querySnapshot.forEach((doc) => {
-      const { id, address, storeName, userUid } = doc.data();
+      const { id, address, storeName, userUid, category } = doc.data();
 
       stores.push({
         id,
+        category,
         docId: doc.id,
         address,
         name: storeName,
@@ -60,10 +61,11 @@ export const fetchSingleStore = createAsyncThunk(
       const storeQuerySnapshot = await getDocs(q);
 
       storeQuerySnapshot.forEach((doc) => {
-        const { id, address, storeName, userUid } = doc.data();
+        const { id, address, storeName, userUid, category } = doc.data();
 
         store = {
           id,
+          category,
           docId: doc.id,
           address,
           name: storeName,
