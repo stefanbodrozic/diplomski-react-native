@@ -11,9 +11,13 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { loginSchema } from "../config/schema";
 import { getFirebaseUserError } from "../util";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserDetails, getUserData } from "../store/slices/user";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const userDetails = useSelector(getUserData);
+  const dispatch = useDispatch();
 
   const { control, handleSubmit, getValues } = useForm({
     resolver: yupResolver(loginSchema),
@@ -35,8 +39,12 @@ const LoginScreen = () => {
       );
 
       if (response) {
-        // TODO: handle role navigation
-        navigation.navigate("Home");
+        dispatch(fetchUserDetails(getValues("email")));
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Main" }],
+        });
       }
     } catch (error) {
       const errorMessage = getFirebaseUserError(error);

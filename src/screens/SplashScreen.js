@@ -23,36 +23,19 @@ const SplashScreen = () => {
   const fetchUserDetailsStatus = useSelector(getUserStatus);
   const userDetails = useSelector(getUserData);
 
-  const store = useSelector(getStore);
   const fetchStoreStatus = useSelector(getStoreStatus);
 
-  const handleNavigation = (name, store) => {
-    const route = store ? { name, params: store } : { name };
-
-    navigation.reset({
-      index: 0,
-      routes: [route],
-    });
-  };
-
-  const handleRoleNavigation = () => {
-    switch (userDetails.role) {
-      case "Admin":
-        // TODO
-        return console.log("admin");
-      case "Seller":
-        if (fetchStoreStatus === Status.FULLFILED) {
-          return handleNavigation("Store", store);
-        }
-        return;
-      case "Deliverer":
-        return handleNavigation("Deliveries");
-      case "Customer":
-        return handleNavigation("Home");
-      // return handleNavigation("Profile");
-
-      default:
-        return null;
+  const handleNavigation = () => {
+    if (!userDetails.role) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+    } else {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Main" }],
+      });
     }
   };
 
@@ -64,7 +47,7 @@ const SplashScreen = () => {
         if (fetchStoreStatus === Status.IDLE)
           dispatch(fetchSingleStore(userDetails));
 
-        handleRoleNavigation();
+        handleNavigation();
       }
     } else {
       handleNavigation("Login");

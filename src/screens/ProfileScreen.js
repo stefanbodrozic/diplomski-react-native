@@ -42,7 +42,6 @@ const ProfileScreen = () => {
   };
 
   const handleLogout = () => {
-    signOut(auth);
     navigation.reset({
       index: 0,
       routes: [
@@ -51,6 +50,7 @@ const ProfileScreen = () => {
         },
       ],
     });
+    signOut(auth);
   };
 
   const onInvalid = (errors) => console.error(errors);

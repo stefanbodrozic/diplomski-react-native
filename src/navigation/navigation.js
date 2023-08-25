@@ -29,6 +29,18 @@ const Navigation = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="Main"
+          component={BottomNavigation}
+          options={() => ({
+            headerRight: () => <CartIcon />,
+            headerTitle: "Shopping App",
+            headerStyle: {
+              backgroundColor: "#EBFBFF",
+            },
+            headerBackVisible: false,
+          })}
+        />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="AddProduct" component={AddProductScreen} />
         <Stack.Screen
@@ -95,7 +107,6 @@ const Navigation = () => {
           name="Product Details"
           component={ProductDetailsScreen}
           options={() => ({
-            // headerShown: false,
             headerTitle: "Shopping App",
             headerStyle: {
               backgroundColor: "#EBFBFF",

@@ -5,10 +5,14 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import StoreScreen from "../screens/StoreScreen";
+import { useSelector } from "react-redux";
+import { getUserData } from "../store/slices/user";
+import DeliveriesScreen from "../screens/DeliveriesScreen";
 
 const BottomNavigation = () => {
-  const Tab = createBottomTabNavigator();
+  const userDetails = useSelector(getUserData);
 
+  const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -28,11 +32,28 @@ const BottomNavigation = () => {
         tabBarActiveTintColor: "tomato",
       })}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
+      {userDetails.role === "Customer" && (
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+      )}
+      {userDetails.role === "Seller" && (
+        <Tab.Screen
+          name="Home"
+          component={StoreScreen}
+          options={{ headerShown: false }}
+        />
+      )}
+      {userDetails.role === "Deliverer" && (
+        <Tab.Screen
+          name="Home"
+          component={DeliveriesScreen}
+          options={{ headerShown: false }}
+        />
+      )}
+
       <Tab.Screen
         name="Chat"
         component={ChatScreen}
