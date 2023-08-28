@@ -23,8 +23,8 @@ const LoginScreen = () => {
     resolver: yupResolver(loginSchema),
     defaultValues: {
       // email: "admin@mail.com",
-      email: "customer@mail.com",
-      // email: "seller2@mail.com",
+      // email: "customer@mail.com",
+      email: "seller5@mail.com",
       // email: "deliverer@mail.com",
       password: "password12345",
     },

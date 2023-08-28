@@ -3,17 +3,18 @@ import { useNavigation } from "@react-navigation/native";
 import { signOut } from "firebase/auth";
 import { useForm } from "react-hook-form";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TextInputField from "../components/form/TextInputField";
 import { auth, db } from "../config/firebase";
 import { profileSchema } from "../config/schema";
 import styles from "../config/styles";
-import { getUserData } from "../store/slices/user";
+import { getUserData, logout } from "../store/slices/user";
 import { doc, updateDoc } from "firebase/firestore";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const user = useSelector(getUserData);
+  const dispatch = useDispatch();
 
   const { control, handleSubmit, getValues } = useForm({
     resolver: yupResolver(profileSchema),
@@ -42,15 +43,21 @@ const ProfileScreen = () => {
   };
 
   const handleLogout = () => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: "Login",
-        },
-      ],
-    });
-    signOut(auth);
+    try {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: "Login",
+          },
+        ],
+      });
+
+      dispatch(logout);
+      signOut(auth);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onInvalid = (errors) => console.error(errors);

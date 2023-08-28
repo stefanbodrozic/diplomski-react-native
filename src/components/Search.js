@@ -1,11 +1,12 @@
 import { StyleSheet, TextInput, View } from "react-native";
 import React, { useEffect, useState } from "react";
 
-const Search = () => {
+const Search = ({ handleSearch }) => {
   const [text, setText] = useState("");
 
   const onChangeText = (text) => {
     setText(text);
+    handleSearch(text);
   };
 
   return (

@@ -91,7 +91,7 @@ const RegisterScreen = () => {
         }
 
         await addDoc(collection(db, "users"), user);
-        navigation.navigate("Home");
+        navigation.navigate("Main");
       }
     } catch (error) {
       const errorMessage = getFirebaseUserError(error);

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import ScrollItem from "../components/ScrollItem";
-import Search from "../components/Search";
 import SingleStoreContainer from "../components/StoreContainer";
 import { fetchCategories, getCategories } from "../store/slices/categories";
 import {
@@ -14,10 +13,12 @@ import { Status } from "../util";
 
 const HomeScreen = () => {
   const [filteredStores, setFilteredStores] = useState([]);
+  const [shouldReset, setShouldReset] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
   const dispatch = useDispatch();
 
   const categories = useSelector(getCategories);
-  const stores = useSelector(getAllStores);
+const stores = useSelector(getAllStores);
 
   const storesStatus = useSelector(getAllStoresStatus);
 
@@ -33,8 +34,8 @@ const HomeScreen = () => {
 
   const handleCategoryFilter = (category) => {
     const filter = stores.filter((store) => store.category === category);
-
-    setFilteredStores(filter);
+    if (filter.length < 1) setFilteredStores(stores);
+    else setFilteredStores(filter);
   };
 
   return (
@@ -43,7 +44,6 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <Search />
         <ScrollView horizontal={true} style={screenStyles.scrollView}>
           {categories.map((category) => (
             <ScrollItem

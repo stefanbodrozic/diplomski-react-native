@@ -1,21 +1,65 @@
 import { FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
 import ProductPreview from "../components/ProductPreview";
+import Search from "../components/Search";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchSingleStore,
+  getStore,
+  getStoreStatus,
+} from "../store/slices/stores";
+import { Status } from "../util";
+import { getUserData } from "../store/slices/user";
 
 const StoreScreen = ({ route }) => {
-  const store = route.params;
+  const [products, setProducts] = useState();
 
-  if (!store || store?.products?.length < 1) return <Text>No data!</Text>;
+  const [searchItem, setSearchItem] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState(products);
+
+  const params = route.params;
+
+  const userDetails = useSelector(getUserData);
+  const store = useSelector(getStore);
+  const storeStatus = useSelector(getStoreStatus);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (storeStatus === Status.IDLE) {
+      dispatch(fetchSingleStore(userDetails));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (params?.store?.products?.length >= 1) {
+      setProducts(params.store?.products);
+    } else {
+      setProducts(store?.products);
+      setFilteredProducts(store?.products);
+    }
+  }, []);
+
+  const searchProducts = (search) => {
+    setSearchItem(search);
+
+    const filterProducts = products?.filter((product) =>
+      product.name.toLowerCase().includes(search.toLowerCase())
+    );
+
+    setFilteredProducts(filterProducts);
+  };
 
   return (
     <SafeAreaView style={styles.root}>
-      <Text style={styles.storeName}>{store.name}</Text>
+      <Search style={styles.search} handleSearch={searchProducts} />
+
       <FlatList
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ justifyContent: "space-between" }}
-        data={store.products}
+        data={filteredProducts}
         numColumns={2}
         renderItem={({ item }) => (
-          <ProductPreview product={item} store={store} />
+          <ProductPreview product={item} store={params} />
         )}
       />
     </SafeAreaView>
@@ -24,7 +68,6 @@ const StoreScreen = ({ route }) => {
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: "center",
     padding: 20,
   },
   scrollView: {
@@ -37,6 +80,9 @@ const styles = StyleSheet.create({
   storeName: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  search: {
+    width: "auto",
   },
 });
 
