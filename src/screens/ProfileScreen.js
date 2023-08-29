@@ -10,6 +10,8 @@ import { profileSchema } from "../config/schema";
 import styles from "../config/styles";
 import { getUserData, logout } from "../store/slices/user";
 import { doc, updateDoc } from "firebase/firestore";
+import { resetCart } from "../store/slices/cart";
+import { resetStores } from "../store/slices/stores";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -53,7 +55,11 @@ const ProfileScreen = () => {
         ],
       });
 
-      dispatch(logout);
+      dispatch(logout());
+      dispatch(resetCart());
+      dispatch(resetCart());
+      dispatch(resetStores());
+
       signOut(auth);
     } catch (error) {
       console.log(error);
@@ -109,7 +115,16 @@ const ProfileScreen = () => {
         </Pressable>
       </View>
 
-      <View style={styles.buttonContainer}></View>
+      <View style={styles.buttonContainer}>
+        {user.role === "Customer" && (
+          <Pressable
+            onPress={() => navigation.navigate("Order History")}
+            style={screenStyles.button}
+          >
+            <Text style={screenStyles.buttonText}>Order history</Text>
+          </Pressable>
+        )}
+      </View>
     </View>
   );
 };

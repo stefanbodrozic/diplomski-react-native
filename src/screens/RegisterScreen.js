@@ -70,7 +70,7 @@ const RegisterScreen = () => {
           email: getValues("email"),
           role: getValues("role"),
           address: getValues("address"),
-          timestamp: new Date(),
+          timestamp: new Date().toLocaleString(),
         };
 
         if (user.role === "Seller") {
@@ -84,7 +84,7 @@ const RegisterScreen = () => {
             userId: user.id,
             storeName: user.storeName,
             address: user.address,
-            timestamp: new Date(),
+            timestamp: new Date().toLocaleString(),
           });
 
           user.storeRefId = docRef.id;

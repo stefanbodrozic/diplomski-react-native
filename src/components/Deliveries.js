@@ -1,12 +1,14 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import DeliveryItem from "./DeliveryItem";
 
-const Deliveries = ({ data }) => {
+const Deliveries = ({ data, isCustomer }) => {
   return (
     <View style={styles.root}>
       <FlatList
         data={data}
-        renderItem={({ item }) => <DeliveryItem item={item} />}
+        renderItem={({ item }) => (
+          <DeliveryItem item={item} isCustomer={isCustomer} />
+        )}
       />
     </View>
   );

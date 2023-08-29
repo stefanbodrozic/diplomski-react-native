@@ -5,14 +5,14 @@ import { db } from "../config/firebase";
 import { getUserData } from "../store/slices/user";
 import { refetchData } from "../store/slices/deliveries";
 
-const DeliveryItem = ({ item }) => {
+const DeliveryItem = ({ item, isCustomer }) => {
   const dispatch = useDispatch();
   const user = useSelector(getUserData);
 
   const assignDelivery = async () => {
     const orderRef = doc(db, "orders", item.docId);
 
-    await updateDoc(orderRef, {
+    updateDoc(orderRef, {
       delivererId: user.id,
     });
 
@@ -24,12 +24,11 @@ const DeliveryItem = ({ item }) => {
 
     await updateDoc(orderRef, {
       isDelivered: true,
-      deliveredAt: new Date(),
+      deliveredAt: new Date().toLocaleString(),
     });
 
     dispatch(refetchData());
   };
-
   return (
     <View style={styles.container}>
       {item.isDelivered ? (
@@ -46,16 +45,31 @@ const DeliveryItem = ({ item }) => {
 
       <View style={styles.content}>
         <Text style={styles.text}>{item.orderDetails?.address}</Text>
-        {!item.isDelivered && item.delivererId === "" && (
+
+        <Text style={styles.info}>{item?.createdAt}</Text>
+
+        {!item.isDelivered && item.delivererId === "" && !isCustomer && (
           <Pressable onPress={assignDelivery} style={styles.button}>
             <Text style={styles.btnText}>Take over</Text>
           </Pressable>
         )}
 
-        {!item.isDelivered && item.delivererId != "" && (
+        {!item.isDelivered && item.delivererId != "" && !isCustomer && (
           <Pressable onPress={completeDelivery} style={styles.button}>
             <Text style={styles.btnText}>Complete</Text>
           </Pressable>
+        )}
+
+        {!item.isDelivered && item.delivererId != "" && isCustomer && (
+          <Text style={styles.info}>Delivery in progress</Text>
+        )}
+
+        {!item.isDelivered && item.delivererId === "" && isCustomer && (
+          <Text style={styles.onHold}>On hold</Text>
+        )}
+
+        {isCustomer && item.isDelivered && item.delivererId != "" && (
+          <Text style={styles.completed}>Completed</Text>
         )}
       </View>
     </View>
@@ -94,5 +108,20 @@ const styles = StyleSheet.create({
     marginTop: 50,
     borderRadius: 100,
     alignItems: "center",
+  },
+  info: {
+    fontWeight: "500",
+    fontSize: 18,
+    color: "blue",
+  },
+  completed: {
+    fontWeight: "500",
+    fontSize: 18,
+    color: "green",
+  },
+  onHold: {
+    fontWeight: "500",
+    fontSize: 18,
+    color: "red",
   },
 });

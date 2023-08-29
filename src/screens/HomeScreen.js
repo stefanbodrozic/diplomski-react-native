@@ -13,12 +13,10 @@ import { Status } from "../util";
 
 const HomeScreen = () => {
   const [filteredStores, setFilteredStores] = useState([]);
-  const [shouldReset, setShouldReset] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
   const dispatch = useDispatch();
 
   const categories = useSelector(getCategories);
-const stores = useSelector(getAllStores);
+  const stores = useSelector(getAllStores);
 
   const storesStatus = useSelector(getAllStoresStatus);
 

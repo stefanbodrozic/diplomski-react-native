@@ -1,25 +1,37 @@
 import { FlatList, Pressable, StyleSheet, Text } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CartItem from "../components/CartItem";
 import CartPriceDetailsContainer from "../components/CartPriceDetailsContainer";
-import { getCart, getCartData } from "../store/slices/cart";
+import { getCart, getCartData, resetCart } from "../store/slices/cart";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../config/firebase";
 import uuid from "react-native-uuid";
+import { getUserData } from "../store/slices/user";
+import { useNavigation } from "@react-navigation/native";
 
 const CartScreen = () => {
+  const navigation = useNavigation();
+
   const data = useSelector(getCartData);
   const cart = useSelector(getCart);
+
+  const user = useSelector(getUserData);
+
+  const dispatch = useDispatch();
 
   const handleCheckout = async () => {
     try {
       const tempCart = { ...cart };
-      tempCart.createdAt = new Date();
+      tempCart.createdAt = new Date().toLocaleString();
 
       await addDoc(collection(db, "orders"), {
         id: uuid.v4(),
         ...tempCart,
       });
+
+      dispatch(resetCart());
+
+      navigation.navigate("Order History");
     } catch (error) {
       console.log("Error: ", e);
     }
@@ -32,9 +44,11 @@ const CartScreen = () => {
         renderItem={({ item }) => <CartItem item={item} />}
         ListFooterComponent={CartPriceDetailsContainer}
       />
-      <Pressable onPress={handleCheckout} style={styles.button}>
-        <Text style={styles.buttonText}>Checkout</Text>
-      </Pressable>
+      {user.role !== "Seller" && (
+        <Pressable onPress={handleCheckout} style={styles.button}>
+          <Text style={styles.buttonText}>Checkout</Text>
+        </Pressable>
+      )}
     </>
   );
 };

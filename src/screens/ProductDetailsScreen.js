@@ -26,7 +26,7 @@ const ProductDetailsScreen = ({ route }) => {
 
   let isOwner = false;
 
-  if (user.storeName !== undefined && store.storeName === user.storeName) {
+  if (user?.storeName !== undefined && store?.storeName === user?.storeName) {
     isOwner = true;
   }
 

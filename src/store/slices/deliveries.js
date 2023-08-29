@@ -33,7 +33,7 @@ export const fetchCompletedDeliveries = createAsyncThunk(
           docId: doc.id,
           id,
           comment,
-          // createdAt,
+          createdAt,
           deliveredAt,
           delivererId,
           isDelivered,
@@ -125,7 +125,7 @@ export const fetchDeliveriesInProgress = createAsyncThunk(
           docId: doc.id,
           id,
           comment,
-          // createdAt,
+          createdAt,
           deliveredAt,
           delivererId,
           isDelivered,
@@ -141,14 +141,61 @@ export const fetchDeliveriesInProgress = createAsyncThunk(
   }
 );
 
+export const fetchCustomerOrders = createAsyncThunk(
+  "deliveries/fetchCustomerOrders",
+  async (customerId) => {
+    try {
+      const orders = [];
+
+      const q = query(
+        collection(db, "orders"),
+        where("orderDetails.userId", "==", customerId)
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        const {
+          id,
+          comment,
+          createdAt,
+          deliveredAt,
+          delivererId,
+          isDelivered,
+          orderDetails,
+          rating,
+        } = doc.data();
+
+        orders.push({
+          docId: doc.id,
+          id,
+          comment,
+          createdAt,
+          deliveredAt,
+          delivererId,
+          isDelivered,
+          orderDetails,
+          rating,
+        });
+      });
+
+      return orders;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 export const initialState = {
   completedDeliveries: [],
   deliveriesInProgress: [],
   availableOrders: [],
+  customerOrders: [],
 
   availableOrdersStatus: Status.IDLE,
   deliveriesInProgressStatus: Status.IDLE,
   completedDeliveriesStatus: Status.IDLE,
+  customerOrdersStatus: Status.IDLE,
 };
 
 const deliveriesSlice = createSlice({
@@ -159,6 +206,17 @@ const deliveriesSlice = createSlice({
       state.availableOrdersStatus = Status.IDLE;
       state.deliveriesInProgressStatus = Status.IDLE;
       state.completedDeliveriesStatus = Status.IDLE;
+    },
+    resetDeliveries: (state, _action) => {
+      state.completedDeliveries = [];
+      state.deliveriesInProgress = [];
+      state.availableOrders = [];
+      state.customerOrders = [];
+
+      state.availableOrdersStatus = Status.IDLE;
+      state.deliveriesInProgressStatus = Status.IDLE;
+      state.completedDeliveriesStatus = Status.IDLE;
+      state.customerOrdersStatus = Status.IDLE;
     },
   },
   extraReducers(builder) {
@@ -184,6 +242,7 @@ const deliveriesSlice = createSlice({
       .addCase(fetchAvailableOrders.rejected, (state, _action) => {
         state.availableOrdersStatus = Status.FAILED;
       })
+
       .addCase(fetchDeliveriesInProgress.pending, (state, _action) => {
         state.deliveriesInProgressStatus = Status.PENDING;
       })
@@ -193,6 +252,14 @@ const deliveriesSlice = createSlice({
       })
       .addCase(fetchDeliveriesInProgress.rejected, (state, _action) => {
         state.deliveriesInProgressStatus = Status.FAILED;
+      })
+
+      .addCase(fetchCustomerOrders.pending, (state, _action) => {
+        state.customerOrdersStatus = Status.PENDING;
+      })
+      .addCase(fetchCustomerOrders.fulfilled, (state, action) => {
+        state.customerOrders = action.payload;
+        state.customerOrdersStatus = Status.FULLFILED;
       });
   },
 });
@@ -211,6 +278,10 @@ export const getDeliveriesInProgress = (state) =>
 export const getDeliveriesInProgressStatus = (state) =>
   state.deliveries.deliveriesInProgressStatus;
 
-export const { refetchData } = deliveriesSlice.actions;
+export const getCustomerOrders = (state) => state.deliveries.customerOrders;
+export const getCustomerOrdersStatus = (state) =>
+  state.deliveries.customerOrdersStatus;
+
+export const { refetchData, resetDeliveries } = deliveriesSlice.actions;
 
 export default deliveriesSlice.reducer;

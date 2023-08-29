@@ -13,6 +13,9 @@ import { loginSchema } from "../config/schema";
 import { getFirebaseUserError } from "../util";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserDetails, getUserData } from "../store/slices/user";
+import { fetchSingleStore, fetchStores } from "../store/slices/stores";
+import { fetchCategories } from "../store/slices/categories";
+import { useEffect } from "react";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -30,6 +33,19 @@ const LoginScreen = () => {
     },
   });
 
+  useEffect(() => {
+    if (userDetails.role) {
+      dispatch(fetchStores());
+      dispatch(fetchCategories());
+      dispatch(fetchSingleStore(userDetails));
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Main" }],
+      });
+    }
+  }, [dispatch, userDetails]);
+
   const handleLogin = async () => {
     try {
       const response = await signInWithEmailAndPassword(
@@ -40,11 +56,6 @@ const LoginScreen = () => {
 
       if (response) {
         dispatch(fetchUserDetails(getValues("email")));
-
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Main" }],
-        });
       }
     } catch (error) {
       const errorMessage = getFirebaseUserError(error);

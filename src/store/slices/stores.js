@@ -109,6 +109,16 @@ const initialState = {
 const storesSlice = createSlice({
   name: "stores",
   initialState,
+  reducers: {
+    resetStores: (state, _action) => {
+      state.allStores = [];
+      state.allStoresStatus = Status.IDLE;
+
+      state.store = null;
+      state.storeStatus = Status.IDLE;
+      state.error = null;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchStores.pending, (state, _action) => {
@@ -141,5 +151,7 @@ export const getAllStoresError = (state) => state.stores.error;
 
 export const getStore = (state) => state.stores.store;
 export const getStoreStatus = (state) => state.stores.storeStatus;
+
+export const { resetStores } = storesSlice.actions;
 
 export default storesSlice.reducer;

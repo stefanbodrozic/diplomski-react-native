@@ -27,12 +27,16 @@ const StoreScreen = ({ route }) => {
   useEffect(() => {
     if (storeStatus === Status.IDLE) {
       dispatch(fetchSingleStore(userDetails));
+    } else if (storeStatus === Status.FULLFILED) {
+      setProducts(store?.products);
+      setFilteredProducts(store?.products);
     }
-  }, []);
+  }, [storeStatus, dispatch, store]);
 
   useEffect(() => {
     if (params?.store?.products?.length >= 1) {
       setProducts(params.store?.products);
+      setFilteredProducts(params.store?.products);
     } else {
       setProducts(store?.products);
       setFilteredProducts(store?.products);

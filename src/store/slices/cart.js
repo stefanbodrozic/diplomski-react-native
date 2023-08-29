@@ -76,7 +76,24 @@ const cartSlice = createSlice({
         }
       }
     },
-    resetCart: (state, action) => {},
+    resetCart: (state, _action) => {
+      state.order = [];
+      state.orderDetails = {
+        userId: "",
+        firstname: "",
+        lastname: "",
+        address: "",
+        email: "",
+        price: 0,
+        deliveryFee: 50,
+      };
+      state.delivererId = "";
+      state.isDelivered = false;
+      state.rating = 0;
+      state.comment = "";
+      state.deliveredAt = null;
+      state.createdAt = null;
+    },
   },
 });
 

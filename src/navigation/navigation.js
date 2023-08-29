@@ -15,6 +15,7 @@ import SplashScreen from "../screens/SplashScreen";
 import DeliveriesScreen from "../screens/DeliveriesScreen";
 import AddProductIcon from "../components/AddProductIcon";
 import ProfileScreen from "../screens/ProfileScreen";
+import OrderHistory from "../screens/OrderHistory";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,8 @@ const Navigation = () => {
             headerBackVisible: false,
           })}
         />
+
+        <Stack.Screen name="Order History" component={OrderHistory} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="AddProduct" component={AddProductScreen} />
         <Stack.Screen
