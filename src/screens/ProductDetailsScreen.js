@@ -26,7 +26,12 @@ const ProductDetailsScreen = ({ route }) => {
 
   let isOwner = false;
 
-  if (user?.storeName !== undefined && store?.storeName === user?.storeName) {
+  if (user?.role === "Seller") {
+    isOwner = true;
+  } else if (
+    user?.storeName !== undefined &&
+    store?.storeName === user?.storeName
+  ) {
     isOwner = true;
   }
 
@@ -82,10 +87,7 @@ const screenStyles = StyleSheet.create({
     fontWeight: "300",
   },
   button: {
-    // position: "absolute",
-
     backgroundColor: "black",
-    // bottom: 50,
     width: "90%",
     alignSelf: "center",
     padding: 20,

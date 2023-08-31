@@ -8,9 +8,23 @@ import StoreScreen from "../screens/StoreScreen";
 import { useSelector } from "react-redux";
 import { getUserData } from "../store/slices/user";
 import DeliveriesScreen from "../screens/DeliveriesScreen";
+import { useNavigation } from "@react-navigation/native";
 
 const BottomNavigation = () => {
+  const navigation = useNavigation();
+
   const userDetails = useSelector(getUserData);
+
+  if (!userDetails.role) {
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: "Login",
+        },
+      ],
+    });
+  }
 
   const Tab = createBottomTabNavigator();
   return (

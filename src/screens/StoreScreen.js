@@ -63,7 +63,7 @@ const StoreScreen = ({ route }) => {
         data={filteredProducts}
         numColumns={2}
         renderItem={({ item }) => (
-          <ProductPreview product={item} store={params} />
+          <ProductPreview product={item} store={params || store} />
         )}
       />
     </SafeAreaView>
