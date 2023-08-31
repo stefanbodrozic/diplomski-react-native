@@ -124,6 +124,15 @@ const ProfileScreen = () => {
             <Text style={screenStyles.buttonText}>Order history</Text>
           </Pressable>
         )}
+
+        {user.role === "Seller" && (
+          <Pressable
+            onPress={() => navigation.navigate("AddProduct")}
+            style={screenStyles.button}
+          >
+            <Text style={screenStyles.buttonText}>Add Product</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );

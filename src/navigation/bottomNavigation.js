@@ -9,24 +9,28 @@ import { useSelector } from "react-redux";
 import { getUserData } from "../store/slices/user";
 import DeliveriesScreen from "../screens/DeliveriesScreen";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect } from "react";
+import { Text } from "react-native";
 
 const BottomNavigation = () => {
-  const navigation = useNavigation();
+  const Tab = createBottomTabNavigator();
 
+  const navigation = useNavigation();
   const userDetails = useSelector(getUserData);
 
-  if (!userDetails.role) {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: "Login",
-        },
-      ],
-    });
-  }
+  useEffect(() => {
+    if (!userDetails.role) {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: "Login",
+          },
+        ],
+      });
+    }
+  }, [userDetails]);
 
-  const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -46,6 +50,8 @@ const BottomNavigation = () => {
         tabBarActiveTintColor: "tomato",
       })}
     >
+      {!userDetails?.role && <Text>Loading...</Text>}
+      
       {userDetails.role === "Customer" && (
         <Tab.Screen
           name="Home"

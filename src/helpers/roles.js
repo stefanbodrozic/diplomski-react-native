@@ -1,18 +1,14 @@
 export default roles = [
   {
     key: 1,
-    value: "Admin",
-  },
-  {
-    key: 2,
     value: "Customer",
   },
   {
-    key: 3,
+    key: 2,
     value: "Seller",
   },
   {
-    key: 4,
+    key: 3,
     value: "Deliverer",
   },
 ];
