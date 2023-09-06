@@ -14,8 +14,7 @@ const CartPriceDetailsContainer = () => {
 
   const dispatch = useDispatch();
 
-  const navigation = useNavigation();
-
+  const navigation = useNavigation
   const handleCheckout = async () => {
     try {
       const tempCart = { ...cart };

@@ -35,7 +35,10 @@ const cartSlice = createSlice({
       tempProduct.storeName = store.name;
 
       state.order.push(tempProduct);
-      state.orderDetails.price += tempProduct.price;
+
+      const newPrice =
+        Number(state.orderDetails.price) + Number(tempProduct.price);
+      state.orderDetails.price = newPrice;
 
       if (state.orderDetails.userId === "") {
         state.orderDetails.userId = user.id;
@@ -62,7 +65,9 @@ const cartSlice = createSlice({
         if (actionType === ActionType.INCREASE) {
           cartProduct.quantity += 1;
 
-          state.orderDetails.price += cartProduct.price;
+          const newPrice =
+            Number(state.orderDetails.price) + Number(cartProduct.price);
+          state.orderDetails.price = newPrice;
         } else if (actionType === ActionType.DECREASE) {
           if (cartProduct.quantity > 1) {
             cartProduct.quantity -= 1;
@@ -72,7 +77,9 @@ const cartSlice = createSlice({
               1
             );
           }
-          state.orderDetails.price -= cartProduct.price;
+          const newPrice =
+            Number(state.orderDetails.price) - Number(cartProduct.price);
+          state.orderDetails.price = newPrice;
         }
       }
     },
