@@ -1,9 +1,12 @@
 import { FontAwesome5 } from "@expo/vector-icons";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
+import { addDoc, collection, doc } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
-  Button,
   FlatList,
   Image,
   Pressable,
@@ -11,24 +14,29 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
-import styles from "../config/styles";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { useSelector } from "react-redux";
-import { getUserData } from "../store/slices/user";
-import { addDoc, collection, doc } from "firebase/firestore";
-import { db } from "../config/firebase";
 import uuid from "react-native-uuid";
+import { useSelector } from "react-redux";
+import TextInputField from "../components/form/TextInputField";
+import { db } from "../config/firebase";
+import { newProductSchema } from "../config/schema";
+import styles from "../config/styles";
+import { getUserData } from "../store/slices/user";
+import { useNavigation } from "@react-navigation/native";
 
 const AddProductScreen = () => {
-  const [productName, setProductName] = useState("");
-  const [description, setDescription] = useState("random description");
-  const [price, setPrice] = useState();
   const [images, setImages] = useState([]);
 
+  const { control, handleSubmit, getValues } = useForm({
+    resolver: yupResolver(newProductSchema),
+  });
+
+  const onInvalid = (errors) => console.error(errors);
+
   const user = useSelector(getUserData);
+
+  const navigation = useNavigation();
 
   const imgDirectory = FileSystem.documentDirectory + "images/";
 
@@ -75,6 +83,70 @@ const AddProductScreen = () => {
     setImages([...images, destination]);
   };
 
+  const deleteImage = async (uri) => {
+    await FileSystem.deleteAsync(uri);
+    setImages(images.filter((image) => image !== uri));
+  };
+
+  const saveProduct = async () => {
+    try {
+      const urls = await uploadImages();
+
+      const product = {
+        id: uuid.v4(),
+        name: getValues("productName"),
+        description: getValues("description"),
+        price: getValues("price"),
+        quantity: getValues("quantity"),
+        images: urls,
+        createdAt: new Date().toLocaleString(),
+      };
+
+      const storeRef = doc(db, "stores", user.storeRefId);
+      const productsRef = collection(storeRef, "products");
+
+      const docRef = await addDoc(productsRef, product);
+      if (docRef.id) {
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.log("error while saving product data", error);
+    }
+  };
+
+  const uploadImages = async () => {
+    try {
+      let links = [];
+
+      const storage = getStorage();
+
+      const productName = getValues("productName");
+
+      await Promise.all(
+        images.map(async (image) => {
+          const response = await fetch(image);
+          const blob = await response.blob();
+
+          const imageRef = ref(
+            storage,
+            `images/${user.storeName}/${productName}/${uuid.v4()}`
+          );
+
+          const upload = await uploadBytes(imageRef, blob);
+
+          if (upload) {
+            const url = await getDownloadURL(imageRef);
+            links.push(url);
+          }
+        })
+      );
+
+      return links;
+    } catch (error) {
+      console.log("error while trying to upload images..", error.message);
+    }
+  };
+
   const renderItem = (item) => {
     return (
       <View style={screenStyles.renderImageContainer}>
@@ -92,92 +164,33 @@ const AddProductScreen = () => {
     );
   };
 
-  const deleteImage = async (uri) => {
-    await FileSystem.deleteAsync(uri);
-    setImages(images.filter((image) => image !== uri));
-  };
-
-  const saveProduct = async () => {
-    try {
-      const urls = await uploadImages();
-
-      const product = {
-        id: uuid.v4(),
-        name: productName,
-        description,
-        price,
-        images: urls,
-        categoryId: "", //TODO
-      };
-      const storeRef = doc(db, "stores", user.storeRefId);
-      const productsRef = collection(storeRef, "products");
-
-      await addDoc(productsRef, product);
-    } catch (error) {
-      console.log("error while saving product data", error);
-    }
-  };
-
-  const uploadImages = async () => {
-    try {
-      let links = [];
-
-      const storage = getStorage();
-
-      await Promise.all(
-        images.map(async (image, index) => {
-          const response = await fetch(image);
-          const blob = await response.blob();
-
-          const productsRef = ref(
-            storage,
-            `${user.storeName}/${productName}/${productName}_${index}`
-          );
-
-          const upload = uploadBytes(productsRef, blob);
-
-          if (upload) {
-            const url = await getDownloadURL(productsRef);
-            links.push(url);
-          }
-        })
-      );
-
-      return links;
-    } catch (error) {
-      console.log("error while trying to upload images..", error.message);
-    }
-  };
-
   return (
     <SafeAreaView style={screenStyles.root}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Product name"
-          value={productName}
-          onChangeText={(text) => setProductName(text)}
-        />
-      </View>
+      <TextInputField
+        name="productName"
+        placeholder="Product name"
+        control={control}
+      />
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Description"
-          value={description}
-          onChangeText={(text) => setDescription(text)}
-          multiline
-          numberOfLines={10}
-          maxLength={50}
-        />
-      </View>
+      <TextInputField
+        name="description"
+        placeholder="Description"
+        control={control}
+      />
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Price"
-          value={price}
-          onChangeText={(text) => setPrice(text)}
-          keyboardType="number-pad"
-        />
-      </View>
+      <TextInputField
+        name="price"
+        placeholder="Price"
+        control={control}
+        keyboardType="number-pad"
+      />
+
+      <TextInputField
+        name="quantity"
+        placeholder="Quantity"
+        control={control}
+        keyboardType="number-pad"
+      />
 
       {images && (
         <ScrollView>
@@ -201,7 +214,10 @@ const AddProductScreen = () => {
       </View>
 
       <View style={screenStyles.saveButton}>
-        <Pressable style={styles.button} onPress={saveProduct}>
+        <Pressable
+          style={styles.button}
+          onPress={handleSubmit(saveProduct, onInvalid)}
+        >
           <Text style={styles.buttonText}>Save product</Text>
         </Pressable>
       </View>

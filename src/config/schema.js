@@ -40,3 +40,10 @@ export const profileSchema = yup.object().shape({
   address: yup.string().required("Address is required!"),
   username: yup.string().required("Username is required!"),
 });
+
+export const newProductSchema = yup.object().shape({
+  productName: yup.string().required("Product name is required!"),
+  description: yup.string().required("Description is required").min(10),
+  price: yup.number().required("Price is required!").min(1),
+  quantity: yup.number().required("Quantity is required!").min(1),
+});

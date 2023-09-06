@@ -7,6 +7,7 @@ const TextInputField = ({
   placeholder,
   isPassword,
   autoCapitalize,
+  keyboardType
 }) => {
   return (
     <Controller
@@ -31,6 +32,7 @@ const TextInputField = ({
               style={styles.textInput}
               autoCapitalize={autoCapitalize}
               secureTextEntry={isPassword}
+              keyboardType={keyboardType}
             />
           </View>
           {error && <Text style={styles.errorMessage}>{error.message}</Text>}
