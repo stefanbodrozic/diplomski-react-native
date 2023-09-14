@@ -14,7 +14,8 @@ const CartPriceDetailsContainer = () => {
 
   const dispatch = useDispatch();
 
-  const navigation = useNavigation
+  const navigation = useNavigation();
+
   const handleCheckout = async () => {
     try {
       const tempCart = { ...cart };
@@ -24,12 +25,11 @@ const CartPriceDetailsContainer = () => {
         id: uuid.v4(),
         ...tempCart,
       });
-
       dispatch(resetCart());
 
       navigation.navigate("Order History");
     } catch (error) {
-      console.log("Error: ", e);
+      console.log("Error: ", error);
     }
   };
 

@@ -29,16 +29,22 @@ export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
         );
 
         querySnapshot.forEach((doc) => {
-          const { id, categoryId, name, description, price, images } =
-            doc.data();
-
-          store.products.push({
+          const {
             id,
-            categoryId,
             name,
             description,
             price,
             images,
+            numberOfProductsInStore,
+          } = doc.data();
+
+          store.products.push({
+            id,
+            name,
+            description,
+            price,
+            images,
+            numberOfProductsInStore,
           });
         });
       })
@@ -79,14 +85,21 @@ export const fetchSingleStore = createAsyncThunk(
       );
 
       querySnapshot.forEach((doc) => {
-        const { id, categoryId, name, description, price, images } = doc.data();
-        store.products.push({
+        const {
           id,
-          categoryId,
           name,
           description,
           price,
           images,
+          numberOfProductsInStore,
+        } = doc.data();
+        store.products.push({
+          id,
+          name,
+          description,
+          price,
+          images,
+          numberOfProductsInStore,
         });
       });
 

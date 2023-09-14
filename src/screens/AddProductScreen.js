@@ -97,7 +97,7 @@ const AddProductScreen = () => {
         name: getValues("productName"),
         description: getValues("description"),
         price: getValues("price"),
-        quantity: parseInt(getValues("quantity")),
+        numberOfProductsInStore: parseInt(getValues("quantity")),
         images: urls,
         createdAt: new Date().toLocaleString(),
       };

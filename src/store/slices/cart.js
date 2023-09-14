@@ -59,15 +59,17 @@ const cartSlice = createSlice({
     },
     updateProductQuantity: (state, action) => {
       const { product, actionType } = action.payload;
-
       const cartProduct = state.order.find((item) => item.id === product.id);
       if (cartProduct) {
         if (actionType === ActionType.INCREASE) {
-          cartProduct.quantity += 1;
+          const newQuantity = cartProduct.quantity + 1;
+          if (newQuantity <= product.numberOfProductsInStore) {
+            cartProduct.quantity = newQuantity;
 
-          const newPrice =
-            Number(state.orderDetails.price) + Number(cartProduct.price);
-          state.orderDetails.price = newPrice;
+            const newPrice =
+              Number(state.orderDetails.price) + Number(cartProduct.price);
+            state.orderDetails.price = newPrice;
+          }
         } else if (actionType === ActionType.DECREASE) {
           if (cartProduct.quantity > 1) {
             cartProduct.quantity -= 1;
