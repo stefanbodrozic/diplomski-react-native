@@ -2,7 +2,16 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart, getCartDetails, resetCart } from "../store/slices/cart";
 import { getUserData } from "../store/slices/user";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../config/firebase";
 import uuid from "react-native-uuid";
 import { useNavigation } from "@react-navigation/native";
@@ -25,6 +34,46 @@ const CartPriceDetailsContainer = () => {
         id: uuid.v4(),
         ...tempCart,
       });
+
+      // update product quantity
+      tempCart.order.map(async (product) => {
+        // find store reference id
+        let storeRefId = "";
+        const storeRef = collection(db, "stores");
+        const q = query(storeRef, where("id", "==", product.storeId));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          storeRefId = doc.id;
+        });
+
+        // find product reference id
+        let numberOfProductsInStoreDB = 0;
+        let productRefId = "";
+        const productStoreRef = doc(db, "stores", storeRefId);
+        const productsRef = collection(productStoreRef, "products");
+
+        const productQuery = query(productsRef, where("id", "==", product.id));
+        const productQuerySnapshot = await getDocs(productQuery);
+        productQuerySnapshot.forEach((doc) => {
+          productRefId = doc.id;
+          const { numberOfProductsInStore } = doc.data();
+          numberOfProductsInStoreDB = numberOfProductsInStore;
+        });
+
+        // update product quantity
+        const productRef = doc(
+          db,
+          "stores",
+          storeRefId,
+          "products",
+          productRefId
+        );
+
+        await updateDoc(productRef, {
+          numberOfProductsInStore: numberOfProductsInStoreDB - product.quantity,
+        });
+      });
+
       dispatch(resetCart());
 
       navigation.navigate("Order History");

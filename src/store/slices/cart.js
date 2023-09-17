@@ -30,6 +30,7 @@ const cartSlice = createSlice({
       const { product, store, user } = action.payload;
 
       const tempProduct = { ...product };
+
       tempProduct.quantity = 1;
       tempProduct.storeId = store.id;
       tempProduct.storeName = store.name;
@@ -60,29 +61,29 @@ const cartSlice = createSlice({
     updateProductQuantity: (state, action) => {
       const { product, actionType } = action.payload;
       const cartProduct = state.order.find((item) => item.id === product.id);
-      if (cartProduct) {
-        if (actionType === ActionType.INCREASE) {
-          const newQuantity = cartProduct.quantity + 1;
-          if (newQuantity <= product.numberOfProductsInStore) {
-            cartProduct.quantity = newQuantity;
+      if (!cartProduct) return;
 
-            const newPrice =
-              Number(state.orderDetails.price) + Number(cartProduct.price);
-            state.orderDetails.price = newPrice;
-          }
-        } else if (actionType === ActionType.DECREASE) {
-          if (cartProduct.quantity > 1) {
-            cartProduct.quantity -= 1;
-          } else {
-            state.order.splice(
-              state.order.findIndex((item) => item.id === cartProduct.id),
-              1
-            );
-          }
-          const newPrice =
-            Number(state.orderDetails.price) - Number(cartProduct.price);
-          state.orderDetails.price = newPrice;
+      if (actionType === ActionType.INCREASE) {
+        const newQuantity = cartProduct.quantity + 1;
+        if (newQuantity > product.numberOfProductsInStore) return;
+
+        cartProduct.quantity = newQuantity;
+
+        const newPrice =
+          Number(state.orderDetails.price) + Number(cartProduct.price);
+        state.orderDetails.price = newPrice;
+      } else if (actionType === ActionType.DECREASE) {
+        if (cartProduct.quantity > 1) {
+          cartProduct.quantity -= 1;
+        } else {
+          state.order.splice(
+            state.order.findIndex((item) => item.id === cartProduct.id),
+            1
+          );
         }
+        const newPrice =
+          Number(state.orderDetails.price) - Number(cartProduct.price);
+        state.orderDetails.price = newPrice;
       }
     },
     resetCart: (state, _action) => {
