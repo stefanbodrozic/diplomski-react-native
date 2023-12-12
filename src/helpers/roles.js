@@ -1,20 +1,14 @@
-const roles = [
+export default roles = [
   {
-    id: 1,
-    name: "Admin",
+    key: 1,
+    value: "Customer",
   },
   {
-    id: 2,
-    name: "Customer",
+    key: 2,
+    value: "Seller",
   },
   {
-    id: 3,
-    name: "Seller",
-  },
-  {
-    id: 4,
-    name: "Deliverer",
+    key: 3,
+    value: "Deliverer",
   },
 ];
-
-export default roles;

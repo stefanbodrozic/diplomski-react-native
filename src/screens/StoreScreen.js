@@ -1,122 +1,78 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
-import React from "react";
-import Product from "../components/Product";
+import { FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
+import ProductPreview from "../components/ProductPreview";
+import Search from "../components/Search";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductsStatus } from "../store/slices/productsSlice";
 import {
-  fetchProducts,
-  getStoreProducts,
-  getStoreProductsStatus,
-} from "../store/slices/storesSlice";
-import { useEffect } from "react";
+  fetchSingleStore,
+  getStore,
+  getStoreStatus,
+} from "../store/slices/stores";
+import { Status } from "../util";
+import { getUserData } from "../store/slices/user";
 
-const DATA = [
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    title: "First Item",
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    title: "Second Item",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Third Item",
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba1",
-    title: "First Item",
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f632",
-    title: "Second Item",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d723",
-    title: "Third Item",
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba4",
-    title: "First Item",
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f635",
-    title: "Second Item",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d726",
-    title: "Third Item",
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba7",
-    title: "First Item",
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f638",
-    title: "Second Item",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d729",
-    title: "Third Item",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72910",
-    title: "Third Item",
-  },
-];
+const StoreScreen = ({ route }) => {
+  const [products, setProducts] = useState();
 
-const StoreScreen = ({ route, navigation }) => {
-  const { id, storeName } = route.params; // proslediti samo id product-a i pronaci ga iz store-a
+  const [searchItem, setSearchItem] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
-  // pustiti query za dobavljanje podataka
+  const params = route.params;
+
+  const userDetails = useSelector(getUserData);
+  const store = useSelector(getStore);
+  const storeStatus = useSelector(getStoreStatus);
   const dispatch = useDispatch();
 
-  const productsStatus = useSelector(getStoreProductsStatus);
-  const products = useSelector(getStoreProducts);
-
   useEffect(() => {
-    if (productsStatus === "idle") {
-      dispatch(fetchProducts(id, storeName));
+    if (storeStatus === Status.IDLE) {
+      dispatch(fetchSingleStore(userDetails));
+    } else if (storeStatus === Status.FULLFILED) {
+      setProducts(store?.products);
+      setFilteredProducts(store?.products);
     }
-  }, [productsStatus, dispatch]);
+  }, [storeStatus, dispatch, store]);
 
   useEffect(() => {
-    console.log("products..", products);
-  }, [productsStatus, products]);
+    if (params?.store?.products?.length >= 1) {
+      setProducts(params.store?.products);
+      setFilteredProducts(params.store?.products);
+    } else {
+      setProducts(store?.products);
+      setFilteredProducts(store?.products);
+    }
+  }, []);
+
+  const searchProducts = (search) => {
+    setSearchItem(search);
+
+    const filterProducts = products?.filter((product) =>
+      product.name.toLowerCase().includes(search.toLowerCase())
+    );
+
+    setFilteredProducts(filterProducts);
+  };
 
   return (
     <SafeAreaView style={styles.root}>
-      <Text>{storeName}</Text>
-      {/* FlatList renders items lazily, when they are about to appear, and removes items that scroll way off screen to save memory and processing time. */}
+      <Search style={styles.search} handleSearch={searchProducts} />
+
       <FlatList
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ justifyContent: "space-between" }}
-        data={products} // DATA ce biti iz baze
+        data={filteredProducts}
         numColumns={2}
         renderItem={({ item }) => (
-          <Product name={item.name} price={item.price} storeName={storeName} />
+          <ProductPreview product={item} store={params || store} />
         )}
       />
     </SafeAreaView>
   );
 };
 
-export default StoreScreen;
-
 const styles = StyleSheet.create({
   root: {
-    alignItems: "center",
     padding: 20,
-    paddingTop: 80,
   },
   scrollView: {
     paddingTop: 20,
@@ -125,4 +81,13 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
   },
+  storeName: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  search: {
+    width: "auto",
+  },
 });
+
+export default StoreScreen;

@@ -1,23 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
-import usersSlice from "./slices/usersSlice";
-import categoriesSlice from "./slices/categoriesSlice";
-import productsSlice from "./slices/productsSlice";
-import storesSlice from "./slices/storesSlice";
-import cartSlice from "./slices/cartSlice";
-import deliveriesSlice from "./slices/deliveriesSlice";
+import categories from "./slices/categories";
+import stores from "./slices/stores";
+import cart from "./slices/cart";
+import user from "./slices/user";
+import deliveries from "./slices/deliveries";
 
 export const store = configureStore({
   reducer: {
-    users: usersSlice,
-    categories: categoriesSlice,
-    products: productsSlice,
-    stores: storesSlice,
-    cart: cartSlice,
-    deliveries: deliveriesSlice,
+    categories,
+    stores,
+    cart,
+    user,
+    deliveries,
   },
-  // middleware: (getDefaultMiddleware) => {
-  //   getDefaultMiddleware({
-  //     serializableCheck: false,
-  //   });
-  // },
 });
