@@ -37,6 +37,7 @@ module.exports = {
     'react-native/no-raw-text': 2,
     'react-native/no-single-element-style-arrays': 2,
     'react-native/no-color-literals': 'off',
+    'react-native/no-inline-styles': 'warn',
 
     'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
     'react-hooks/exhaustive-deps': 'warn' // Checks effect dependencies

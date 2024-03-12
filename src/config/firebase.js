@@ -1,7 +1,7 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app'
 
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
 import {
   API_KEY,
   AUTH_DOMAIN,
@@ -9,8 +9,8 @@ import {
   STORAGE_BUCKET,
   MESSAGING_SENDER_ID,
   APP_ID,
-  MEASUREMENT_ID,
-} from "@env";
+  MEASUREMENT_ID
+} from '@env'
 
 const firebaseConfig = {
   apiKey: API_KEY,
@@ -19,10 +19,10 @@ const firebaseConfig = {
   storageBucket: STORAGE_BUCKET,
   messagingSenderId: MESSAGING_SENDER_ID,
   appId: APP_ID,
-  measurementId: MEASUREMENT_ID,
-};
+  measurementId: MEASUREMENT_ID
+}
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const app = initializeApp(firebaseConfig)
+export const auth = getAuth(app)
+export const db = getFirestore(app)

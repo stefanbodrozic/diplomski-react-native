@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet, View } from "react-native";
-import DeliveryItem from "./DeliveryItem";
+import { FlatList, StyleSheet, View } from 'react-native'
+import DeliveryItem from './DeliveryItem'
 
 const Deliveries = ({ data, isCustomer }) => {
   return (
@@ -7,17 +7,20 @@ const Deliveries = ({ data, isCustomer }) => {
       <FlatList
         data={data}
         renderItem={({ item }) => (
-          <DeliveryItem item={item} isCustomer={isCustomer} />
+          <DeliveryItem
+            item={item}
+            isCustomer={isCustomer}
+          />
         )}
       />
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   root: {
-    paddingTop: 20,
-  },
-});
+    paddingTop: 20
+  }
+})
 
-export default Deliveries;
+export default Deliveries

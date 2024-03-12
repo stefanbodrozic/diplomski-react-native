@@ -1,54 +1,54 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
-  container: {
-    display: "flex",
-    backgroundColor: "#FFFFFF",
-    width: "100%",
-    height: "100%",
-  },
-
-  inputContainer: {
-    borderColor: "e8e8e8",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginVertical: 10,
-    margin: 20,
-    width: "90%",
+  button: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#70E2FF',
+    borderRadius: 100,
+    marginRight: 5,
+    padding: 10,
+    width: '50%'
   },
 
   buttonContainer: {
-    marginTop: 50,
-    flexDirection: "row",
-    alignItems: "center",
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 50
+  },
+
+  buttonText: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: '500'
   },
 
   buttonsContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 50,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "80%",
-    alignItems: "center",
+    width: '80%'
   },
 
-  button: {
-    width: "50%",
-    alignSelf: "center",
-    padding: 10,
-    marginRight: 5,
-    borderRadius: 100,
-    alignItems: "center",
-    backgroundColor: "#70E2FF",
+  container: {
+    backgroundColor: '#FFFFFF',
+    display: 'flex',
+    height: '100%',
+    width: '100%'
   },
-  buttonText: {
-    color: "black",
-    fontWeight: "500",
-    fontSize: 16,
+  inputContainer: {
+    borderColor: 'e8e8e8',
+    borderRadius: 5,
+    borderWidth: 1,
+    marginVertical: 10,
+    margin: 20,
+    paddingHorizontal: 10,
+    width: '90%'
   },
   text: {
-    color: "black",
-    fontWeight: "500",
+    color: 'black',
     fontSize: 16,
-  },
-});
+    fontWeight: '500'
+  }
+})

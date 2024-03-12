@@ -1,18 +1,18 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import { useSelector } from "react-redux";
-import CartItem from "../components/CartItem";
-import CartPriceDetailsContainer from "../components/CartPriceDetailsContainer";
-import { getCartData } from "../store/slices/cart";
-import { getUserData } from "../store/slices/user";
+import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { useSelector } from 'react-redux'
+import CartItem from '../components/CartItem'
+import CartPriceDetailsContainer from '../components/CartPriceDetailsContainer'
+import { getCartData } from '../store/slices/cart'
+import { getUserData } from '../store/slices/user'
 
 const CartScreen = () => {
-  const data = useSelector(getCartData);
+  const data = useSelector(getCartData)
 
-  const user = useSelector(getUserData);
+  const user = useSelector(getUserData)
 
   return (
     <View>
-      {user.role === "Seller" ? (
+      {user.role === 'Seller' ? (
         <Text>Available for customers only!</Text>
       ) : (
         <View>
@@ -24,9 +24,9 @@ const CartScreen = () => {
         </View>
       )}
     </View>
-  );
-};
+  )
+}
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({})
 
-export default CartScreen;
+export default CartScreen

@@ -1,93 +1,99 @@
-import { FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
-import ProductPreview from "../components/ProductPreview";
-import Search from "../components/Search";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { FlatList, SafeAreaView, StyleSheet, Text } from 'react-native'
+import ProductPreview from '../components/ProductPreview'
+import Search from '../components/Search'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchSingleStore,
   getStore,
-  getStoreStatus,
-} from "../store/slices/stores";
-import { Status } from "../util";
-import { getUserData } from "../store/slices/user";
+  getStoreStatus
+} from '../store/slices/stores'
+import { Status } from '../util'
+import { getUserData } from '../store/slices/user'
 
 const StoreScreen = ({ route }) => {
-  const [products, setProducts] = useState();
+  const [products, setProducts] = useState()
 
-  const [searchItem, setSearchItem] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [searchItem, setSearchItem] = useState('')
+  const [filteredProducts, setFilteredProducts] = useState(products)
 
-  const params = route.params;
+  const params = route.params
 
-  const userDetails = useSelector(getUserData);
-  const store = useSelector(getStore);
-  const storeStatus = useSelector(getStoreStatus);
-  const dispatch = useDispatch();
+  const userDetails = useSelector(getUserData)
+  const store = useSelector(getStore)
+  const storeStatus = useSelector(getStoreStatus)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (storeStatus === Status.IDLE) {
-      dispatch(fetchSingleStore(userDetails));
+      dispatch(fetchSingleStore(userDetails))
     } else if (storeStatus === Status.FULLFILED) {
-      setProducts(store?.products);
-      setFilteredProducts(store?.products);
+      setProducts(store?.products)
+      setFilteredProducts(store?.products)
     }
-  }, [storeStatus, dispatch, store]);
+  }, [storeStatus, dispatch, store])
 
   useEffect(() => {
     if (params?.store?.products?.length >= 1) {
-      setProducts(params.store?.products);
-      setFilteredProducts(params.store?.products);
+      setProducts(params.store?.products)
+      setFilteredProducts(params.store?.products)
     } else {
-      setProducts(store?.products);
-      setFilteredProducts(store?.products);
+      setProducts(store?.products)
+      setFilteredProducts(store?.products)
     }
-  }, []);
+  }, [])
 
   const searchProducts = (search) => {
-    setSearchItem(search);
+    setSearchItem(search)
 
     const filterProducts = products?.filter((product) =>
       product.name.toLowerCase().includes(search.toLowerCase())
-    );
+    )
 
-    setFilteredProducts(filterProducts);
-  };
+    setFilteredProducts(filterProducts)
+  }
 
   return (
     <SafeAreaView style={styles.root}>
-      <Search style={styles.search} handleSearch={searchProducts} />
+      <Search
+        style={styles.search}
+        handleSearch={searchProducts}
+      />
 
       <FlatList
         showsVerticalScrollIndicator={false}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
+        columnWrapperStyle={{ justifyContent: 'space-between' }}
         data={filteredProducts}
         numColumns={2}
         renderItem={({ item }) => (
-          <ProductPreview product={item} store={params || store} />
+          <ProductPreview
+            product={item}
+            store={params || store}
+          />
         )}
       />
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   root: {
-    padding: 20,
+    padding: 20
   },
-  scrollView: {
-    paddingTop: 20,
-  },
-  productsContainer: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  storeName: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
+  // scrollView: {
+  //   paddingTop: 20
+  // },
+  // productsContainer: {
+  //   display: 'flex',
+  //   flexDirection: 'row'
+  // },
+  // storeName: {
+  //   fontSize: 20,
+  //   fontWeight: 'bold'
+  // },
   search: {
-    width: "auto",
-  },
-});
+    width: 'auto'
+  }
+})
 
-export default StoreScreen;
+export default StoreScreen

@@ -1,8 +1,8 @@
-import { View } from "react-native";
-import { Provider } from "react-redux";
-import styles from "./src/config/styles";
-import Navigation from "./src/navigation/navigation";
-import { store } from "./src/store/store";
+import { View } from 'react-native'
+import { Provider } from 'react-redux'
+import styles from './src/config/styles'
+import Navigation from './src/navigation/navigation'
+import { store } from './src/store/store'
 
 export default function App() {
   return (
@@ -11,9 +11,8 @@ export default function App() {
         <Navigation />
       </View>
     </Provider>
-  );
+  )
 }
-
 
 // const styles = StyleSheet.create({
 //   container: {

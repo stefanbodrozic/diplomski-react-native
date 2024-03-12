@@ -1,22 +1,22 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigation } from "@react-navigation/native";
-import { signOut } from "firebase/auth";
-import { useForm } from "react-hook-form";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import TextInputField from "../components/form/TextInputField";
-import { auth, db } from "../config/firebase";
-import { profileSchema } from "../config/schema";
-import styles from "../config/styles";
-import { getUserData, logout } from "../store/slices/user";
-import { doc, updateDoc } from "firebase/firestore";
-import { resetCart } from "../store/slices/cart";
-import { resetStores } from "../store/slices/stores";
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useNavigation } from '@react-navigation/native'
+import { signOut } from 'firebase/auth'
+import { useForm } from 'react-hook-form'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import TextInputField from '../components/form/TextInputField'
+import { auth, db } from '../config/firebase'
+import { profileSchema } from '../config/schema'
+import styles from '../config/styles'
+import { getUserData, logout } from '../store/slices/user'
+import { doc, updateDoc } from 'firebase/firestore'
+import { resetCart } from '../store/slices/cart'
+import { resetStores } from '../store/slices/stores'
 
 const ProfileScreen = () => {
-  const navigation = useNavigation();
-  const user = useSelector(getUserData);
-  const dispatch = useDispatch();
+  const navigation = useNavigation()
+  const user = useSelector(getUserData)
+  const dispatch = useDispatch()
 
   const { control, handleSubmit, getValues } = useForm({
     resolver: yupResolver(profileSchema),
@@ -24,25 +24,25 @@ const ProfileScreen = () => {
       firstname: user.firstname,
       lastname: user.lastname,
       address: user.address,
-      username: user.username,
-    },
-  });
+      username: user.username
+    }
+  })
 
   const handleSave = async () => {
-    const newFirstname = getValues("firstname");
-    const newLastname = getValues("lastname");
-    const newAddress = getValues("address");
-    const newUsername = getValues("username");
+    const newFirstname = getValues('firstname')
+    const newLastname = getValues('lastname')
+    const newAddress = getValues('address')
+    const newUsername = getValues('username')
 
-    const userRef = doc(db, "users", user.docId);
+    const userRef = doc(db, 'users', user.docId)
 
     await updateDoc(userRef, {
       firstname: newFirstname,
       lastname: newLastname,
       address: newAddress,
-      username: newUsername,
-    });
-  };
+      username: newUsername
+    })
+  }
 
   const handleLogout = () => {
     try {
@@ -50,23 +50,23 @@ const ProfileScreen = () => {
         index: 0,
         routes: [
           {
-            name: "Login",
-          },
-        ],
-      });
+            name: 'Login'
+          }
+        ]
+      })
 
-      dispatch(logout());
-      dispatch(resetCart());
-      dispatch(resetCart());
-      dispatch(resetStores());
+      dispatch(logout())
+      dispatch(resetCart())
+      dispatch(resetCart())
+      dispatch(resetStores())
 
-      signOut(auth);
+      signOut(auth)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
-  const onInvalid = (errors) => console.error(errors);
+  const onInvalid = (errors) => console.error(errors)
 
   return (
     <View style={screenStyles.root}>
@@ -91,7 +91,11 @@ const ProfileScreen = () => {
       <View style={screenStyles.textContainer}>
         <Text style={styles.text}>Address:</Text>
       </View>
-      <TextInputField name="address" placeholder="Address" control={control} />
+      <TextInputField
+        name="address"
+        placeholder="Address"
+        control={control}
+      />
 
       <View style={screenStyles.textContainer}>
         <Text style={styles.text}>Username:</Text>
@@ -110,24 +114,27 @@ const ProfileScreen = () => {
           <Text style={screenStyles.buttonText}>Save</Text>
         </Pressable>
 
-        <Pressable onPress={handleLogout} style={screenStyles.button}>
+        <Pressable
+          onPress={handleLogout}
+          style={screenStyles.button}
+        >
           <Text style={screenStyles.buttonText}>Logout</Text>
         </Pressable>
       </View>
 
       <View style={styles.buttonContainer}>
-        {user.role === "Customer" && (
+        {user.role === 'Customer' && (
           <Pressable
-            onPress={() => navigation.navigate("Order History")}
+            onPress={() => navigation.navigate('Order History')}
             style={screenStyles.button}
           >
             <Text style={screenStyles.buttonText}>Order history</Text>
           </Pressable>
         )}
 
-        {user.role === "Seller" && (
+        {user.role === 'Seller' && (
           <Pressable
-            onPress={() => navigation.navigate("AddProduct")}
+            onPress={() => navigation.navigate('AddProduct')}
             style={screenStyles.button}
           >
             <Text style={screenStyles.buttonText}>Add Product</Text>
@@ -135,34 +142,34 @@ const ProfileScreen = () => {
         )}
       </View>
     </View>
-  );
-};
+  )
+}
 
 const screenStyles = StyleSheet.create({
-  root: {
-    backgroundColor: "#FFFFFF",
-    height: "100%",
-    alignItems: "center",
-    padding: 20,
-  },
-  textContainer: {
-    marginRight: 210,
-  },
   button: {
-    backgroundColor: "black",
-    width: "45%",
-    alignSelf: "center",
-    padding: 20,
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: 'black',
+    borderRadius: 100,
     margin: 10,
     marginBottom: 20,
-    borderRadius: 100,
-    alignItems: "center",
+    padding: 20,
+    width: '45%'
   },
   buttonText: {
-    color: "white",
-    fontWeight: "500",
+    color: 'white',
     fontSize: 16,
+    fontWeight: '500'
   },
-});
+  root: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    height: '100%',
+    padding: 20
+  },
+  textContainer: {
+    marginRight: 210
+  }
+})
 
-export default ProfileScreen;
+export default ProfileScreen

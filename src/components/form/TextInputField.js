@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import { Controller } from "react-hook-form";
+import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Controller } from 'react-hook-form'
 
 const TextInputField = ({
   control,
@@ -15,13 +15,13 @@ const TextInputField = ({
       name={name}
       render={({
         field: { value, onChange, onBlur },
-        fieldState: { error },
+        fieldState: { error }
       }) => (
         <>
           <View
             style={[
               styles.inputContainer,
-              { borderColor: error ? "#ff0000" : "#e8e8e8" },
+              { borderColor: error ? '#ff0000' : '#e8e8e8' }
             ]}
           >
             <TextInput
@@ -39,24 +39,24 @@ const TextInputField = ({
         </>
       )}
     />
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
+  errorMessage: {
+    alignSelf: 'stretch',
+    color: 'red',
+    marginLeft: 20
+  },
   inputContainer: {
-    borderColor: "#e8e8e8",
-    borderWidth: 1,
+    borderColor: '#e8e8e8',
     borderRadius: 5,
-    paddingHorizontal: 10,
+    borderWidth: 1,
     marginVertical: 10,
     margin: 20,
-    width: "90%",
-  },
-  errorMessage: {
-    marginLeft: 20,
-    color: "red",
-    alignSelf: "stretch",
-  },
-});
+    paddingHorizontal: 10,
+    width: '90%'
+  }
+})
 
-export default TextInputField;
+export default TextInputField

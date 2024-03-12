@@ -1,22 +1,22 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import Checkbox from "expo-checkbox";
+import { Image, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import Checkbox from 'expo-checkbox'
 
 const DiscountItem = ({ product, discount }) => {
-  const [priceWithDiscount, setPriceWithDiscount] = useState(0);
-  const [isChecked, setChecked] = useState(false);
+  const [priceWithDiscount, setPriceWithDiscount] = useState(0)
+  const [isChecked, setChecked] = useState(false)
 
   useEffect(() => {
     const tempPrice =
-      Number(product.price) - Number(product.price) / Number(discount);
-    setPriceWithDiscount(tempPrice);
-  }, [discount]);
+      Number(product.price) - Number(product.price) / Number(discount)
+    setPriceWithDiscount(tempPrice)
+  }, [discount])
 
   const handleCheck = () => {
-    setChecked(!isChecked);
+    setChecked(!isChecked)
 
     // add product to array with products with discount
-  };
+  }
 
   return (
     <View style={styles.row}>
@@ -47,32 +47,35 @@ const DiscountItem = ({ product, discount }) => {
         </View>
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default DiscountItem;
+export default DiscountItem
 
 const styles = StyleSheet.create({
-  row: {
-    backgroundColor: "white",
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottomWidth: 2,
-    marginBottom: 10,
-  },
   checkbox: {
-    margin: 10,
+    margin: 10
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: '500'
+  },
+  price: {
+    color: 'red',
+    textDecorationLine: 'line-through'
   },
   product: {
-    flexDirection: "row",
+    flexDirection: 'row'
   },
   productDetails: {
-    marginLeft: 5,
     gap: 5,
+    marginLeft: 5
   },
-  name: { fontWeight: "500", fontSize: 18 },
-  price: { textDecorationLine: "line-through", color: "red" },
-  checkbox: {
-    margin: 10,
-  },
-});
+  row: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderBottomWidth: 2,
+    flexDirection: 'row',
+    marginBottom: 10
+  }
+})

@@ -1,21 +1,21 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../config/firebase";
-import { Status } from "../../util";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { collection, getDocs, query, where } from 'firebase/firestore'
+import { db } from '../../config/firebase'
+import { Status } from '../../util'
 
 export const fetchCompletedDeliveries = createAsyncThunk(
-  "deliveries/fetchCompletedDeliveries",
+  'deliveries/fetchCompletedDeliveries',
   async (delivererId) => {
     try {
-      const completedDeliveries = [];
+      const completedDeliveries = []
 
       const q = query(
-        collection(db, "orders"),
-        where("delivererId", "==", delivererId),
-        where("isDelivered", "==", true)
-      );
+        collection(db, 'orders'),
+        where('delivererId', '==', delivererId),
+        where('isDelivered', '==', true)
+      )
 
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(q)
 
       querySnapshot.forEach((doc) => {
         const {
@@ -26,8 +26,8 @@ export const fetchCompletedDeliveries = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating,
-        } = doc.data();
+          rating
+        } = doc.data()
 
         completedDeliveries.push({
           docId: doc.id,
@@ -38,30 +38,30 @@ export const fetchCompletedDeliveries = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating,
-        });
-      });
+          rating
+        })
+      })
 
-      return completedDeliveries;
+      return completedDeliveries
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
-);
+)
 
 export const fetchAvailableOrders = createAsyncThunk(
-  "deliveries/allOrders",
+  'deliveries/allOrders',
   async () => {
     try {
-      let orders = [];
+      let orders = []
 
       const q = query(
-        collection(db, "orders"),
-        where("delivererId", "==", ""),
-        where("isDelivered", "==", false)
-      );
+        collection(db, 'orders'),
+        where('delivererId', '==', ''),
+        where('isDelivered', '==', false)
+      )
 
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(q)
 
       querySnapshot.forEach((doc) => {
         const {
@@ -72,8 +72,8 @@ export const fetchAvailableOrders = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating,
-        } = doc.data();
+          rating
+        } = doc.data()
 
         orders.push({
           docId: doc.id,
@@ -84,30 +84,30 @@ export const fetchAvailableOrders = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating,
-        });
-      });
+          rating
+        })
+      })
 
-      return orders;
+      return orders
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
-);
+)
 
 export const fetchDeliveriesInProgress = createAsyncThunk(
-  "deliveries/fetchDeliveriesInProgress",
+  'deliveries/fetchDeliveriesInProgress',
   async (delivererId) => {
     try {
-      const deliveries = [];
+      const deliveries = []
 
       const q = query(
-        collection(db, "orders"),
-        where("delivererId", "==", delivererId),
-        where("isDelivered", "==", false)
-      );
+        collection(db, 'orders'),
+        where('delivererId', '==', delivererId),
+        where('isDelivered', '==', false)
+      )
 
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(q)
 
       querySnapshot.forEach((doc) => {
         const {
@@ -118,8 +118,8 @@ export const fetchDeliveriesInProgress = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating,
-        } = doc.data();
+          rating
+        } = doc.data()
 
         deliveries.push({
           docId: doc.id,
@@ -130,29 +130,29 @@ export const fetchDeliveriesInProgress = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating,
-        });
-      });
+          rating
+        })
+      })
 
-      return deliveries;
+      return deliveries
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
-);
+)
 
 export const fetchCustomerOrders = createAsyncThunk(
-  "deliveries/fetchCustomerOrders",
+  'deliveries/fetchCustomerOrders',
   async (customerId) => {
     try {
-      const orders = [];
+      const orders = []
 
       const q = query(
-        collection(db, "orders"),
-        where("orderDetails.userId", "==", customerId)
-      );
+        collection(db, 'orders'),
+        where('orderDetails.userId', '==', customerId)
+      )
 
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(q)
 
       querySnapshot.forEach((doc) => {
         const {
@@ -163,8 +163,8 @@ export const fetchCustomerOrders = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating,
-        } = doc.data();
+          rating
+        } = doc.data()
 
         orders.push({
           docId: doc.id,
@@ -175,16 +175,16 @@ export const fetchCustomerOrders = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating,
-        });
-      });
+          rating
+        })
+      })
 
-      return orders;
+      return orders
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
-);
+)
 
 export const initialState = {
   completedDeliveries: [],
@@ -195,93 +195,93 @@ export const initialState = {
   availableOrdersStatus: Status.IDLE,
   deliveriesInProgressStatus: Status.IDLE,
   completedDeliveriesStatus: Status.IDLE,
-  customerOrdersStatus: Status.IDLE,
-};
+  customerOrdersStatus: Status.IDLE
+}
 
 const deliveriesSlice = createSlice({
-  name: "deliveries",
+  name: 'deliveries',
   initialState,
   reducers: {
     refetchData: (state, _action) => {
-      state.availableOrdersStatus = Status.IDLE;
-      state.deliveriesInProgressStatus = Status.IDLE;
-      state.completedDeliveriesStatus = Status.IDLE;
+      state.availableOrdersStatus = Status.IDLE
+      state.deliveriesInProgressStatus = Status.IDLE
+      state.completedDeliveriesStatus = Status.IDLE
     },
     resetDeliveries: (state, _action) => {
-      state.completedDeliveries = [];
-      state.deliveriesInProgress = [];
-      state.availableOrders = [];
-      state.customerOrders = [];
+      state.completedDeliveries = []
+      state.deliveriesInProgress = []
+      state.availableOrders = []
+      state.customerOrders = []
 
-      state.availableOrdersStatus = Status.IDLE;
-      state.deliveriesInProgressStatus = Status.IDLE;
-      state.completedDeliveriesStatus = Status.IDLE;
-      state.customerOrdersStatus = Status.IDLE;
-    },
+      state.availableOrdersStatus = Status.IDLE
+      state.deliveriesInProgressStatus = Status.IDLE
+      state.completedDeliveriesStatus = Status.IDLE
+      state.customerOrdersStatus = Status.IDLE
+    }
   },
   extraReducers(builder) {
     builder
       .addCase(fetchCompletedDeliveries.pending, (state, _action) => {
-        state.completedDeliveriesStatus = Status.PENDING;
+        state.completedDeliveriesStatus = Status.PENDING
       })
       .addCase(fetchCompletedDeliveries.fulfilled, (state, action) => {
-        state.completedDeliveriesStatus = Status.FULLFILED;
-        state.completedDeliveries = action.payload;
+        state.completedDeliveriesStatus = Status.FULLFILED
+        state.completedDeliveries = action.payload
       })
       .addCase(fetchCompletedDeliveries.rejected, (state, _action) => {
-        state.completedDeliveriesStatus = Status.FAILED;
+        state.completedDeliveriesStatus = Status.FAILED
       })
 
       .addCase(fetchAvailableOrders.pending, (state, _action) => {
-        state.availableOrdersStatus = Status.PENDING;
+        state.availableOrdersStatus = Status.PENDING
       })
       .addCase(fetchAvailableOrders.fulfilled, (state, action) => {
-        state.availableOrdersStatus = Status.FULLFILED;
-        state.availableOrders = action.payload;
+        state.availableOrdersStatus = Status.FULLFILED
+        state.availableOrders = action.payload
       })
       .addCase(fetchAvailableOrders.rejected, (state, _action) => {
-        state.availableOrdersStatus = Status.FAILED;
+        state.availableOrdersStatus = Status.FAILED
       })
 
       .addCase(fetchDeliveriesInProgress.pending, (state, _action) => {
-        state.deliveriesInProgressStatus = Status.PENDING;
+        state.deliveriesInProgressStatus = Status.PENDING
       })
       .addCase(fetchDeliveriesInProgress.fulfilled, (state, action) => {
-        state.deliveriesInProgressStatus = Status.FULLFILED;
-        state.deliveriesInProgress = action.payload;
+        state.deliveriesInProgressStatus = Status.FULLFILED
+        state.deliveriesInProgress = action.payload
       })
       .addCase(fetchDeliveriesInProgress.rejected, (state, _action) => {
-        state.deliveriesInProgressStatus = Status.FAILED;
+        state.deliveriesInProgressStatus = Status.FAILED
       })
 
       .addCase(fetchCustomerOrders.pending, (state, _action) => {
-        state.customerOrdersStatus = Status.PENDING;
+        state.customerOrdersStatus = Status.PENDING
       })
       .addCase(fetchCustomerOrders.fulfilled, (state, action) => {
-        state.customerOrders = action.payload;
-        state.customerOrdersStatus = Status.FULLFILED;
-      });
-  },
-});
+        state.customerOrders = action.payload
+        state.customerOrdersStatus = Status.FULLFILED
+      })
+  }
+})
 
 export const getCompletedDeliveries = (state) =>
-  state.deliveries.completedDeliveries;
+  state.deliveries.completedDeliveries
 export const getCompletedDeliveriesStatus = (state) =>
-  state.deliveries.completedDeliveriesStatus;
+  state.deliveries.completedDeliveriesStatus
 
-export const getAvailableOrders = (state) => state.deliveries.availableOrders;
+export const getAvailableOrders = (state) => state.deliveries.availableOrders
 export const getAvailableOrdersStatus = (state) =>
-  state.deliveries.availableOrdersStatus;
+  state.deliveries.availableOrdersStatus
 
 export const getDeliveriesInProgress = (state) =>
-  state.deliveries.deliveriesInProgress;
+  state.deliveries.deliveriesInProgress
 export const getDeliveriesInProgressStatus = (state) =>
-  state.deliveries.deliveriesInProgressStatus;
+  state.deliveries.deliveriesInProgressStatus
 
-export const getCustomerOrders = (state) => state.deliveries.customerOrders;
+export const getCustomerOrders = (state) => state.deliveries.customerOrders
 export const getCustomerOrdersStatus = (state) =>
-  state.deliveries.customerOrdersStatus;
+  state.deliveries.customerOrdersStatus
 
-export const { refetchData, resetDeliveries } = deliveriesSlice.actions;
+export const { refetchData, resetDeliveries } = deliveriesSlice.actions
 
-export default deliveriesSlice.reducer;
+export default deliveriesSlice.reducer

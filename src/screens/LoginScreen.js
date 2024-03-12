@@ -1,71 +1,71 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 
-import styles from "../config/styles";
+import styles from '../config/styles'
 
-import { useNavigation } from "@react-navigation/native";
-import { useForm } from "react-hook-form";
-import TextInputField from "../components/form/TextInputField";
+import { useNavigation } from '@react-navigation/native'
+import { useForm } from 'react-hook-form'
+import TextInputField from '../components/form/TextInputField'
 
-import { yupResolver } from "@hookform/resolvers/yup";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebase";
-import { loginSchema } from "../config/schema";
-import { getFirebaseUserError } from "../util";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUserDetails, getUserData } from "../store/slices/user";
-import { fetchSingleStore, fetchStores } from "../store/slices/stores";
-import { fetchCategories } from "../store/slices/categories";
-import { useEffect } from "react";
+import { yupResolver } from '@hookform/resolvers/yup'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../config/firebase'
+import { loginSchema } from '../config/schema'
+import { getFirebaseUserError } from '../util'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchUserDetails, getUserData } from '../store/slices/user'
+import { fetchSingleStore, fetchStores } from '../store/slices/stores'
+import { fetchCategories } from '../store/slices/categories'
+import { useEffect } from 'react'
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
-  const userDetails = useSelector(getUserData);
-  const dispatch = useDispatch();
+  const navigation = useNavigation()
+  const userDetails = useSelector(getUserData)
+  const dispatch = useDispatch()
 
   const { control, handleSubmit, getValues } = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
       // email: "admin@mail.com",
       // email: "customer@mail.com",
-      email: "seller5@mail.com",
+      email: 'seller5@mail.com',
       // email: "deliverer@mail.com",
-      password: "password12345",
-    },
-  });
+      password: 'password12345'
+    }
+  })
 
   useEffect(() => {
     if (userDetails.role) {
-      dispatch(fetchStores());
-      dispatch(fetchCategories());
-      dispatch(fetchSingleStore(userDetails));
+      dispatch(fetchStores())
+      dispatch(fetchCategories())
+      dispatch(fetchSingleStore(userDetails))
 
       navigation.reset({
         index: 0,
-        routes: [{ name: "Main" }],
-      });
+        routes: [{ name: 'Main' }]
+      })
     }
-  }, [dispatch, userDetails]);
+  }, [dispatch, userDetails])
 
   const handleLogin = async () => {
     try {
       const response = await signInWithEmailAndPassword(
         auth,
-        getValues("email"),
-        getValues("password")
-      );
+        getValues('email'),
+        getValues('password')
+      )
 
       if (response) {
-        dispatch(fetchUserDetails(getValues("email")));
+        dispatch(fetchUserDetails(getValues('email')))
       }
     } catch (error) {
-      const errorMessage = getFirebaseUserError(error);
-      console.log("error: ", errorMessage);
+      const errorMessage = getFirebaseUserError(error)
+      console.log('error: ', errorMessage)
     }
-  };
+  }
 
   const handleRegister = () => {
-    navigation.navigate("Register");
-  };
+    navigation.navigate('Register')
+  }
 
   return (
     <View style={screenStyles.root}>
@@ -95,35 +95,38 @@ const LoginScreen = () => {
           <Text style={screenStyles.buttonText}>Login</Text>
         </Pressable>
 
-        <Pressable onPress={handleRegister} style={screenStyles.button}>
+        <Pressable
+          onPress={handleRegister}
+          style={screenStyles.button}
+        >
           <Text style={screenStyles.buttonText}>Register</Text>
         </Pressable>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const screenStyles = StyleSheet.create({
-  root: {
-    backgroundColor: "#FFFFFF",
-    height: "100%",
-    alignItems: "center",
-    padding: 20,
-    paddingTop: 150,
-  },
   button: {
-    backgroundColor: "black",
-    width: "45%",
-    alignSelf: "center",
-    padding: 20,
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: 'black',
     borderRadius: 100,
-    alignItems: "center",
+    padding: 20,
+    width: '45%'
   },
   buttonText: {
-    color: "white",
-    fontWeight: "500",
+    color: 'white',
     fontSize: 16,
+    fontWeight: '500'
   },
-});
+  root: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    height: '100%',
+    padding: 20,
+    paddingTop: 150
+  }
+})
 
-export default LoginScreen;
+export default LoginScreen

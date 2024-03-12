@@ -4,19 +4,19 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View,
-} from "react-native";
-import React, { useState } from "react";
-import stores from "../data/stores";
-import DiscountItem from "../components/DiscountItem";
-import styles from "../config/styles";
+  View
+} from 'react-native'
+import React, { useState } from 'react'
+import stores from '../data/stores'
+import DiscountItem from '../components/DiscountItem'
+import styles from '../config/styles'
 
 const DiscountScreen = () => {
-  const products = stores[0].products;
+  const products = stores[0].products
 
-  const [discount, setDiscount] = useState(0);
+  const [discount, setDiscount] = useState(0)
 
-  const handleDiscount = () => {};
+  const handleDiscount = () => {}
 
   return (
     <SafeAreaView style={screenStyles.discount}>
@@ -33,18 +33,22 @@ const DiscountScreen = () => {
 
       <ScrollView>
         {products.map((product) => (
-          <DiscountItem key={product.id} product={product} discount={"20"} />
+          <DiscountItem
+            key={product.id}
+            product={product}
+            discount={'20'}
+          />
         ))}
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default DiscountScreen;
+export default DiscountScreen
 
 const screenStyles = StyleSheet.create({
   discount: {
-    padding: 10,
-    height: "100%",
-  },
-});
+    height: '100%',
+    padding: 10
+  }
+})

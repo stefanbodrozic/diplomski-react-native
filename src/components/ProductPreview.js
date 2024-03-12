@@ -1,15 +1,15 @@
-import { useNavigation } from "@react-navigation/native";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useNavigation } from '@react-navigation/native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 const ProductPreview = ({ product, store }) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   const handleProduct = () => {
-    navigation.navigate("Product Details", {
+    navigation.navigate('Product Details', {
       product,
-      store,
-    });
-  };
+      store
+    })
+  }
 
   return (
     <TouchableOpacity onPress={handleProduct}>
@@ -18,9 +18,12 @@ const ProductPreview = ({ product, store }) => {
         <View style={styles.imageContainer}>
           <Image
             source={{
-              uri: product.images[0],
+              uri: product.images[0]
             }}
-            style={{ width: 100, height: 100 }}
+            style={{
+              width: 100,
+              height: 100
+            }}
           />
         </View>
         <View style={styles.informations}>
@@ -28,34 +31,34 @@ const ProductPreview = ({ product, store }) => {
         </View>
       </View>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
-export default ProductPreview;
+export default ProductPreview
 
 const styles = StyleSheet.create({
-  root: {
-    backgroundColor: "white",
-    padding: 15,
-    margin: 15,
-    borderRadius: 30,
-  },
   imageContainer: {
-    marginTop: 10,
     borderRadius: 10,
-    width: 100,
     height: 100,
+    marginTop: 10,
+    width: 100
+  },
+  price: {
+    color: 'red'
   },
 
   price: {
-    color: "red",
+    color: 'red',
+    marginTop: 50
   },
   product: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold'
   },
-  price: {
-    color: "red",
-    marginTop: 50,
-  },
-});
+  root: {
+    backgroundColor: 'white',
+    borderRadius: 30,
+    margin: 15,
+    padding: 15
+  }
+})

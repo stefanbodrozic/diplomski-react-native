@@ -1,13 +1,13 @@
-import { StyleSheet, TextInput, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet, TextInput, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 
 const Search = ({ handleSearch }) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('')
 
   const onChangeText = (text) => {
-    setText(text);
-    handleSearch(text);
-  };
+    setText(text)
+    handleSearch(text)
+  }
 
   return (
     <View style={styles.container}>
@@ -18,22 +18,22 @@ const Search = ({ handleSearch }) => {
         autoCapitalize="none"
       />
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
+    paddingTop: 10
   },
   input: {
-    backgroundColor: "#70E2FF",
-    height: 40,
-    width: "90%",
-    margin: 10,
-    paddingLeft: 20,
+    alignItems: 'center',
+    backgroundColor: '#70E2FF',
     borderRadius: 20,
     borderWidth: 1,
-    alignItems: "center",
-  },
-});
-export default Search;
+    height: 40,
+    margin: 10,
+    paddingLeft: 20,
+    width: '90%'
+  }
+})
+export default Search

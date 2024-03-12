@@ -1,104 +1,104 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 
-import styles from "../config/styles";
+import styles from '../config/styles'
 
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigation } from "@react-navigation/native";
-import { useForm } from "react-hook-form";
-import TextInputField from "../components/form/TextInputField";
-import { registerSchema } from "../config/schema";
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useNavigation } from '@react-navigation/native'
+import { useForm } from 'react-hook-form'
+import TextInputField from '../components/form/TextInputField'
+import { registerSchema } from '../config/schema'
 
-import Dropdown from "../components/form/Dropdown";
-import roles from "../helpers/roles";
+import Dropdown from '../components/form/Dropdown'
+import roles from '../helpers/roles'
 
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
-import uuid from "react-native-uuid";
-import { auth, db } from "../config/firebase";
-import { Status, getFirebaseUserError } from "../util";
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { addDoc, collection } from 'firebase/firestore'
+import uuid from 'react-native-uuid'
+import { auth, db } from '../config/firebase'
+import { Status, getFirebaseUserError } from '../util'
 
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchCategories,
   getCategories,
-  getCategoriesStatus,
-} from "../store/slices/categories";
+  getCategoriesStatus
+} from '../store/slices/categories'
 
 const RegisterScreen = () => {
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
+  const navigation = useNavigation()
+  const dispatch = useDispatch()
 
-  const categories = useSelector(getCategories);
-  const fetchCategoriesStatus = useSelector(getCategoriesStatus);
+  const categories = useSelector(getCategories)
+  const fetchCategoriesStatus = useSelector(getCategoriesStatus)
 
-  let categoriesDropdown = [];
+  let categoriesDropdown = []
   categories.forEach((category) =>
     categoriesDropdown.push({
       key: category.id,
-      value: category.name,
+      value: category.name
     })
-  );
+  )
 
   useEffect(() => {
     if (fetchCategoriesStatus === Status.IDLE) {
-      dispatch(fetchCategories());
+      dispatch(fetchCategories())
     }
-  }, [fetchCategoriesStatus, categories, dispatch]);
+  }, [fetchCategoriesStatus, categories, dispatch])
 
   const { control, handleSubmit, register, watch, getValues } = useForm({
-    resolver: yupResolver(registerSchema),
-  });
+    resolver: yupResolver(registerSchema)
+  })
 
-  const role = watch("role");
+  const role = watch('role')
 
   const handleRegister = async () => {
     try {
       const response = await createUserWithEmailAndPassword(
         auth,
-        getValues("email"),
-        getValues("password")
-      );
+        getValues('email'),
+        getValues('password')
+      )
 
       if (response.user) {
         const user = {
           id: uuid.v4(),
           uid: response.user.uid,
-          firstname: getValues("firstname"),
-          lastname: getValues("lastname"),
-          username: `${getValues("firstname")}.${getValues("lastname")}`,
-          email: getValues("email"),
-          role: getValues("role"),
-          address: getValues("address"),
-          timestamp: new Date().toLocaleString(),
-        };
+          firstname: getValues('firstname'),
+          lastname: getValues('lastname'),
+          username: `${getValues('firstname')}.${getValues('lastname')}`,
+          email: getValues('email'),
+          role: getValues('role'),
+          address: getValues('address'),
+          timestamp: new Date().toLocaleString()
+        }
 
-        if (user.role === "Seller") {
-          const storeName = getValues("storeName");
-          const category = getValues("category");
-          user.storeName = storeName;
+        if (user.role === 'Seller') {
+          const storeName = getValues('storeName')
+          const category = getValues('category')
+          user.storeName = storeName
 
-          const docRef = await addDoc(collection(db, "stores"), {
+          const docRef = await addDoc(collection(db, 'stores'), {
             id: uuid.v4(),
             category,
             userId: user.id,
             storeName: user.storeName,
             address: user.address,
-            timestamp: new Date().toLocaleString(),
-          });
+            timestamp: new Date().toLocaleString()
+          })
 
-          user.storeRefId = docRef.id;
+          user.storeRefId = docRef.id
         }
 
-        await addDoc(collection(db, "users"), user);
-        navigation.navigate("Main");
+        await addDoc(collection(db, 'users'), user)
+        navigation.navigate('Main')
       }
     } catch (error) {
-      const errorMessage = getFirebaseUserError(error);
-      console.log("error: ", errorMessage);
+      const errorMessage = getFirebaseUserError(error)
+      console.log('error: ', errorMessage)
     }
-  };
-  const onInvalid = (errors) => console.error(errors);
+  }
+  const onInvalid = (errors) => console.error(errors)
 
   return (
     <View style={screenStyles.root}>
@@ -133,11 +133,19 @@ const RegisterScreen = () => {
         isPassword={true}
       />
 
-      <TextInputField name="address" placeholder="Address" control={control} />
+      <TextInputField
+        name="address"
+        placeholder="Address"
+        control={control}
+      />
 
-      <Dropdown name="role" control={control} data={roles} />
+      <Dropdown
+        name="role"
+        control={control}
+        data={roles}
+      />
 
-      {role === "Seller" && categories.length > 0 && (
+      {role === 'Seller' && categories.length > 0 && (
         <>
           <TextInputField
             name="storeName"
@@ -162,16 +170,16 @@ const RegisterScreen = () => {
         </Pressable>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const screenStyles = StyleSheet.create({
   root: {
-    backgroundColor: "#FFFFFF",
-    height: "100%",
-    alignItems: "center",
-    padding: 20,
-  },
-});
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    height: '100%',
+    padding: 20
+  }
+})
 
-export default RegisterScreen;
+export default RegisterScreen

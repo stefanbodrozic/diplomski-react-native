@@ -1,40 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import ScrollItem from "../components/ScrollItem";
-import SingleStoreContainer from "../components/StoreContainer";
-import { fetchCategories, getCategories } from "../store/slices/categories";
+import React, { useEffect, useState } from 'react'
+import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import ScrollItem from '../components/ScrollItem'
+import SingleStoreContainer from '../components/StoreContainer'
+import { fetchCategories, getCategories } from '../store/slices/categories'
 import {
   fetchStores,
   getAllStores,
-  getAllStoresStatus,
-} from "../store/slices/stores";
-import { Status } from "../util";
+  getAllStoresStatus
+} from '../store/slices/stores'
+import { Status } from '../util'
 
 const HomeScreen = () => {
-  const [filteredStores, setFilteredStores] = useState([]);
-  const dispatch = useDispatch();
+  const [filteredStores, setFilteredStores] = useState([])
+  const dispatch = useDispatch()
 
-  const categories = useSelector(getCategories);
-  const stores = useSelector(getAllStores);
+  const categories = useSelector(getCategories)
+  const stores = useSelector(getAllStores)
 
-  const storesStatus = useSelector(getAllStoresStatus);
+  const storesStatus = useSelector(getAllStoresStatus)
 
   useEffect(() => {
     if (storesStatus === Status.IDLE) {
-      dispatch(fetchStores());
+      dispatch(fetchStores())
     } else if (storesStatus === Status.FULLFILED) {
-      setFilteredStores(stores);
+      setFilteredStores(stores)
     }
 
-    dispatch(fetchCategories());
-  }, [dispatch, storesStatus]);
+    dispatch(fetchCategories())
+  }, [dispatch, storesStatus])
 
   const handleCategoryFilter = (category) => {
-    const filter = stores.filter((store) => store.category === category);
-    if (filter.length < 1) setFilteredStores(stores);
-    else setFilteredStores(filter);
-  };
+    const filter = stores.filter((store) => store.category === category)
+    if (filter.length < 1) setFilteredStores(stores)
+    else setFilteredStores(filter)
+  }
 
   return (
     <SafeAreaView style={screenStyles.root}>
@@ -42,7 +42,10 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <ScrollView horizontal={true} style={screenStyles.scrollView}>
+        <ScrollView
+          horizontal={true}
+          style={screenStyles.scrollView}
+        >
           {categories.map((category) => (
             <ScrollItem
               key={category.id}
@@ -57,21 +60,24 @@ const HomeScreen = () => {
 
         {filteredStores?.length >= 1 &&
           filteredStores.map((store) => (
-            <SingleStoreContainer key={store.id} store={store} />
+            <SingleStoreContainer
+              key={store.id}
+              store={store}
+            />
           ))}
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const screenStyles = StyleSheet.create({
   root: {
-    backgroundColor: "#EBFBFF",
+    backgroundColor: '#EBFBFF'
     // height: "100%",
   },
   scrollView: {
-    margin: 20,
-  },
-});
+    margin: 20
+  }
+})
 
-export default HomeScreen;
+export default HomeScreen

@@ -7,38 +7,38 @@ import {
   Text,
   View,
   useWindowDimensions,
-  FlatList,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
-import { addProductToCart } from "../store/slices/cart";
-import { getUserData } from "../store/slices/user";
+  FlatList
+} from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+import { addProductToCart } from '../store/slices/cart'
+import { getUserData } from '../store/slices/user'
 
 const ProductDetailsScreen = ({ route }) => {
-  const { width } = useWindowDimensions();
-  const navigation = useNavigation();
+  const { width } = useWindowDimensions()
+  const navigation = useNavigation()
 
-  const { product, store } = route.params;
+  const { product, store } = route.params
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const user = useSelector(getUserData);
+  const user = useSelector(getUserData)
 
-  let isOwner = false;
+  let isOwner = false
 
-  if (user?.role === "Seller") {
-    isOwner = true;
+  if (user?.role === 'Seller') {
+    isOwner = true
   } else if (
     user?.storeName !== undefined &&
     store?.storeName === user?.storeName
   ) {
-    isOwner = true;
+    isOwner = true
   }
 
   const handleAddToCart = () => {
-    dispatch(addProductToCart({ product, store, user }));
-    navigation.navigate("Cart");
-  };
+    dispatch(addProductToCart({ product, store, user }))
+    navigation.navigate('Cart')
+  }
 
   return (
     <View>
@@ -46,7 +46,13 @@ const ProductDetailsScreen = ({ route }) => {
         <FlatList
           data={product.images}
           renderItem={({ item }) => (
-            <Image source={{ uri: item }} style={{ width, aspectRatio: 1 }} />
+            <Image
+              source={{ uri: item }}
+              style={{
+                width,
+                aspectRatio: 1
+              }}
+            />
           )}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -61,45 +67,48 @@ const ProductDetailsScreen = ({ route }) => {
         </View>
 
         {!isOwner && (
-          <Pressable onPress={handleAddToCart} style={screenStyles.button}>
+          <Pressable
+            onPress={handleAddToCart}
+            style={screenStyles.button}
+          >
             <Text style={screenStyles.buttonText}>Add to cart</Text>
           </Pressable>
         )}
       </ScrollView>
     </View>
-  );
-};
+  )
+}
 
 const screenStyles = StyleSheet.create({
-  title: {
-    fontSize: 34,
-    fontWeight: "500",
-    marginVertical: 10,
-  },
-  price: {
-    fontWeight: "500",
-    fontSize: 16,
-  },
-  description: {
-    marginVertical: 10,
-    fontSize: 18,
-    lineHeight: 30,
-    fontWeight: "300",
-  },
   button: {
-    backgroundColor: "black",
-    width: "90%",
-    alignSelf: "center",
-    padding: 20,
-    marginBottom: 20,
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: 'black',
     borderRadius: 100,
-    alignItems: "center",
+    marginBottom: 20,
+    padding: 20,
+    width: '90%'
   },
   buttonText: {
-    color: "white",
-    fontWeight: "500",
+    color: 'white',
     fontSize: 16,
+    fontWeight: '500'
   },
-});
+  description: {
+    fontSize: 18,
+    fontWeight: '300',
+    lineHeight: 30,
+    marginVertical: 10
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: '500'
+  },
+  title: {
+    fontSize: 34,
+    fontWeight: '500',
+    marginVertical: 10
+  }
+})
 
-export default ProductDetailsScreen;
+export default ProductDetailsScreen

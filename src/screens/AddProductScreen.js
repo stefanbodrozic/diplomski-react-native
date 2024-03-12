@@ -1,11 +1,11 @@
-import { FontAwesome5 } from "@expo/vector-icons";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as FileSystem from "expo-file-system";
-import * as ImagePicker from "expo-image-picker";
-import { addDoc, collection, doc } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FontAwesome5 } from '@expo/vector-icons'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as FileSystem from 'expo-file-system'
+import * as ImagePicker from 'expo-image-picker'
+import { addDoc, collection, doc } from 'firebase/firestore'
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import {
   FlatList,
   Image,
@@ -14,155 +14,162 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View,
-} from "react-native";
-import uuid from "react-native-uuid";
-import { useSelector } from "react-redux";
-import TextInputField from "../components/form/TextInputField";
-import { db } from "../config/firebase";
-import { newProductSchema } from "../config/schema";
-import styles from "../config/styles";
-import { getUserData } from "../store/slices/user";
-import { useNavigation } from "@react-navigation/native";
+  View
+} from 'react-native'
+import uuid from 'react-native-uuid'
+import { useSelector } from 'react-redux'
+import TextInputField from '../components/form/TextInputField'
+import { db } from '../config/firebase'
+import { newProductSchema } from '../config/schema'
+import styles from '../config/styles'
+import { getUserData } from '../store/slices/user'
+import { useNavigation } from '@react-navigation/native'
 
 const AddProductScreen = () => {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([])
 
   const { control, handleSubmit, getValues } = useForm({
-    resolver: yupResolver(newProductSchema),
-  });
+    resolver: yupResolver(newProductSchema)
+  })
 
-  const onInvalid = (errors) => console.error(errors);
+  const onInvalid = (errors) => console.error(errors)
 
-  const user = useSelector(getUserData);
+  const user = useSelector(getUserData)
 
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
-  const imgDirectory = FileSystem.documentDirectory + "images/";
+  const imgDirectory = FileSystem.documentDirectory + 'images/'
 
   const validateImgDirectory = async () => {
-    const directory = await FileSystem.getInfoAsync(imgDirectory);
+    const directory = await FileSystem.getInfoAsync(imgDirectory)
     if (!directory.exists) {
       await FileSystem.makeDirectoryAsync(imgDirectory, {
-        intermediates: true,
-      });
+        intermediates: true
+      })
     }
-  };
+  }
 
   const selectImage = async (useLibrary) => {
-    let image;
+    let image
 
     if (useLibrary) {
       image = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      });
+        mediaTypes: ImagePicker.MediaTypeOptions.Images
+      })
     } else {
-      await ImagePicker.requestCameraPermissionsAsync();
+      await ImagePicker.requestCameraPermissionsAsync()
 
       image = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      });
+        mediaTypes: ImagePicker.MediaTypeOptions.Images
+      })
     }
 
     if (!image.canceled) {
-      saveImage(image.assets[0].uri);
+      saveImage(image.assets[0].uri)
     }
-  };
+  }
 
   const saveImage = async (uri) => {
-    await validateImgDirectory();
+    await validateImgDirectory()
 
-    const filename = new Date().getTime() + "-product.jpg";
-    const destination = imgDirectory + filename;
+    const filename = new Date().getTime() + '-product.jpg'
+    const destination = imgDirectory + filename
 
     await FileSystem.copyAsync({
       from: uri,
-      to: destination,
-    });
+      to: destination
+    })
 
-    setImages([...images, destination]);
-  };
+    setImages([...images, destination])
+  }
 
   const deleteImage = async (uri) => {
-    await FileSystem.deleteAsync(uri);
-    setImages(images.filter((image) => image !== uri));
-  };
+    await FileSystem.deleteAsync(uri)
+    setImages(images.filter((image) => image !== uri))
+  }
 
   const saveProduct = async () => {
     try {
-      const urls = await uploadImages();
+      const urls = await uploadImages()
 
       const product = {
         id: uuid.v4(),
-        name: getValues("productName"),
-        description: getValues("description"),
-        price: getValues("price"),
-        numberOfProductsInStore: parseInt(getValues("quantity")),
+        name: getValues('productName'),
+        description: getValues('description'),
+        price: getValues('price'),
+        numberOfProductsInStore: parseInt(getValues('quantity')),
         images: urls,
-        createdAt: new Date().toLocaleString(),
-      };
+        createdAt: new Date().toLocaleString()
+      }
 
-      const storeRef = doc(db, "stores", user.storeRefId);
-      const productsRef = collection(storeRef, "products");
+      const storeRef = doc(db, 'stores', user.storeRefId)
+      const productsRef = collection(storeRef, 'products')
 
-      const docRef = await addDoc(productsRef, product);
+      const docRef = await addDoc(productsRef, product)
       if (docRef.id) {
-        navigation.goBack();
+        navigation.goBack()
       }
     } catch (error) {
-      console.log("error while saving product data", error);
+      console.log('error while saving product data', error)
     }
-  };
+  }
 
   const uploadImages = async () => {
     try {
-      let links = [];
+      let links = []
 
-      const storage = getStorage();
+      const storage = getStorage()
 
-      const productName = getValues("productName");
+      const productName = getValues('productName')
 
       await Promise.all(
         images.map(async (image) => {
-          const response = await fetch(image);
-          const blob = await response.blob();
+          const response = await fetch(image)
+          const blob = await response.blob()
 
           const imageRef = ref(
             storage,
             `images/${user.storeName}/${productName}/${uuid.v4()}`
-          );
+          )
 
-          const upload = await uploadBytes(imageRef, blob);
+          const upload = await uploadBytes(imageRef, blob)
 
           if (upload) {
-            const url = await getDownloadURL(imageRef);
-            links.push(url);
+            const url = await getDownloadURL(imageRef)
+            links.push(url)
           }
         })
-      );
+      )
 
-      return links;
+      return links
     } catch (error) {
-      console.log("error while trying to upload images..", error.message);
+      console.log('error while trying to upload images..', error.message)
     }
-  };
+  }
 
   const renderItem = (item) => {
     return (
       <View style={screenStyles.renderImageContainer}>
         <Image
           source={{ uri: item.item }}
-          style={{ width: 150, height: 150 }}
+          style={{
+            width: 150,
+            height: 150
+          }}
         />
         <View style={screenStyles.deleteImageContainer}>
           <Text>Delete image</Text>
           <Pressable onPress={() => deleteImage(item.item)}>
-            <FontAwesome5 name="trash-alt" size={18} color="red" />
+            <FontAwesome5
+              name="trash-alt"
+              size={18}
+              color="red"
+            />
           </Pressable>
         </View>
       </View>
-    );
-  };
+    )
+  }
 
   return (
     <SafeAreaView style={screenStyles.root}>
@@ -205,10 +212,16 @@ const AddProductScreen = () => {
       )}
 
       <View style={screenStyles.buttons}>
-        <Pressable style={styles.button} onPress={() => selectImage(true)}>
+        <Pressable
+          style={styles.button}
+          onPress={() => selectImage(true)}
+        >
           <Text style={styles.buttonText}>Choose from phone</Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={() => selectImage(false)}>
+        <Pressable
+          style={styles.button}
+          onPress={() => selectImage(false)}
+        >
           <Text style={styles.buttonText}>Capture image</Text>
         </Pressable>
       </View>
@@ -222,31 +235,31 @@ const AddProductScreen = () => {
         </Pressable>
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default AddProductScreen;
+export default AddProductScreen
 
 const screenStyles = StyleSheet.create({
-  root: {
-    backgroundColor: "#FFFFFF",
-    height: "100%",
-    alignItems: "center",
-    padding: 20,
-  },
-  renderImageContainer: {
-    padding: 10,
+  buttons: {
+    flexDirection: 'row'
   },
   deleteImageContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingTop: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 2
   },
-  buttons: {
-    flexDirection: "row",
+  renderImageContainer: {
+    padding: 10
+  },
+  root: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    height: '100%',
+    padding: 20
   },
   saveButton: {
     flexGrow: 1,
-    marginTop: 20,
-  },
-});
+    marginTop: 20
+  }
+})

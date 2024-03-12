@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
-import { Controller } from "react-hook-form";
-import { SelectList } from "react-native-dropdown-select-list";
+import { StyleSheet, Text, View } from 'react-native'
+import { Controller } from 'react-hook-form'
+import { SelectList } from 'react-native-dropdown-select-list'
 
 const Dropdown = ({ control, name, data }) => {
   return (
@@ -9,10 +9,10 @@ const Dropdown = ({ control, name, data }) => {
       name={name}
       render={({
         field: { value, onChange, onBlur },
-        fieldState: { error },
+        fieldState: { error }
       }) => (
         <>
-          <View style={[styles.inputContainer]}>
+          <View style={styles.inputContainer}>
             <SelectList
               value={value}
               setSelected={onChange}
@@ -20,8 +20,8 @@ const Dropdown = ({ control, name, data }) => {
               save="value"
               defaultOption={data[0]}
               boxStyles={{
-                borderColor: error ? "#ff0000" : "#e8e8e8",
-                width: 275,
+                borderColor: error ? '#ff0000' : '#e8e8e8',
+                width: 275
               }}
               search={false}
             />
@@ -30,20 +30,20 @@ const Dropdown = ({ control, name, data }) => {
         </>
       )}
     />
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    paddingHorizontal: 10,
-    marginVertical: 10,
-    width: "90%",
-  },
   errorMessage: {
-    marginLeft: 20,
-    color: "red",
-    alignSelf: "stretch",
+    alignSelf: 'stretch',
+    color: 'red',
+    marginLeft: 20
   },
-});
+  inputContainer: {
+    marginVertical: 10,
+    paddingHorizontal: 10,
+    width: '90%'
+  }
+})
 
-export default Dropdown;
+export default Dropdown
