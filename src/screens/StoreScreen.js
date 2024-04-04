@@ -64,9 +64,14 @@ const StoreScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.root}>
+      <Search
+        style={styles.search}
+        handleSearch={searchProducts}
+      />
+
       {filteredProducts?.length === 0 ? (
         <>
-          <Text>no products have been added to the store </Text>
+          <Text>no products</Text>
           <Pressable
             onPress={() => navigation.navigate('AddProduct')}
             style={styles.button}
@@ -76,11 +81,6 @@ const StoreScreen = ({ route }) => {
         </>
       ) : (
         <>
-          <Search
-            style={styles.search}
-            handleSearch={searchProducts}
-          />
-
           <FlatList
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{ justifyContent: 'space-between' }}
@@ -100,9 +100,6 @@ const StoreScreen = ({ route }) => {
 }
 
 const styles = StyleSheet.create({
-  root: {
-    padding: 20
-  },
   // scrollView: {
   //   paddingTop: 20
   // },
@@ -114,9 +111,6 @@ const styles = StyleSheet.create({
   //   fontSize: 20,
   //   fontWeight: 'bold'
   // },
-  search: {
-    width: 'auto'
-  },
   button: {
     alignItems: 'center',
     alignSelf: 'center',
@@ -131,6 +125,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '500'
+  },
+  root: {
+    padding: 20
+  },
+  search: {
+    width: 'auto'
   }
 })
 
