@@ -1,4 +1,10 @@
-import { FlatList, SafeAreaView, StyleSheet, Text } from 'react-native'
+import {
+  FlatList,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text
+} from 'react-native'
 import ProductPreview from '../components/ProductPreview'
 import Search from '../components/Search'
 import { useEffect, useState } from 'react'
@@ -10,8 +16,11 @@ import {
 } from '../store/slices/stores'
 import { Status } from '../util'
 import { getUserData } from '../store/slices/user'
+import { useNavigation } from '@react-navigation/native'
 
 const StoreScreen = ({ route }) => {
+  const navigation = useNavigation()
+
   const [products, setProducts] = useState()
 
   const [searchItem, setSearchItem] = useState('')
@@ -55,23 +64,37 @@ const StoreScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.root}>
-      <Search
-        style={styles.search}
-        handleSearch={searchProducts}
-      />
-
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        columnWrapperStyle={{ justifyContent: 'space-between' }}
-        data={filteredProducts}
-        numColumns={2}
-        renderItem={({ item }) => (
-          <ProductPreview
-            product={item}
-            store={params || store}
+      {filteredProducts?.length === 0 ? (
+        <>
+          <Text>no products have been added to the store </Text>
+          <Pressable
+            onPress={() => navigation.navigate('AddProduct')}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Add Product</Text>
+          </Pressable>
+        </>
+      ) : (
+        <>
+          <Search
+            style={styles.search}
+            handleSearch={searchProducts}
           />
-        )}
-      />
+
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{ justifyContent: 'space-between' }}
+            data={filteredProducts}
+            numColumns={2}
+            renderItem={({ item }) => (
+              <ProductPreview
+                product={item}
+                store={params || store}
+              />
+            )}
+          />
+        </>
+      )}
     </SafeAreaView>
   )
 }
@@ -93,6 +116,21 @@ const styles = StyleSheet.create({
   // },
   search: {
     width: 'auto'
+  },
+  button: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: 'black',
+    borderRadius: 100,
+    margin: 10,
+    marginBottom: 20,
+    padding: 20,
+    width: '45%'
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '500'
   }
 })
 
