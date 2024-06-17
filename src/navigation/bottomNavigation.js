@@ -3,7 +3,7 @@ import ChatScreen from '../screens/ChatScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import Ionicons from '@expo/vector-icons/Ionicons'
 import StoreScreen from '../screens/StoreScreen'
 import { useSelector } from 'react-redux'
 import { getUserData } from '../store/slices/user'
@@ -38,11 +38,11 @@ const BottomNavigation = () => {
           let iconName
 
           if (route.name === 'Home') {
-            iconName = focused ? 'ios-home' : 'ios-home-outline'
+            iconName = focused ? 'home' : 'home-outline'
           } else if (route.name === 'Chat') {
-            iconName = focused ? 'ios-chatbubbles' : 'ios-chatbubbles-outline'
+            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline'
           } else if (route.name === 'Profile') {
-            iconName = focused ? 'ios-person' : 'ios-person-outline'
+            iconName = focused ? 'person' : 'person-outline'
           }
 
           return (
