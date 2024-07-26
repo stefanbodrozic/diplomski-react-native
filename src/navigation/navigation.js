@@ -16,6 +16,8 @@ import DeliveriesScreen from '../screens/DeliveriesScreen'
 import AddProductIcon from '../components/AddProductIcon'
 import ProfileScreen from '../screens/ProfileScreen'
 import OrderHistory from '../screens/OrderHistory'
+import StartChatIcon from '../components/StartChatIcon'
+import ChatScreen from '../screens/ChatScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -116,7 +118,9 @@ const Navigation = () => {
               } else {
                 return route.params.showAddProductIcon ? (
                   <AddProductIcon />
-                ) : null
+                ) : (
+                  <StartChatIcon storeName={route.params.store.name} />
+                )
               }
             }
           })}
@@ -130,6 +134,10 @@ const Navigation = () => {
               backgroundColor: '#EBFBFF'
             }
           })}
+        />
+        <Stack.Screen
+          name="Chat"
+          component={ChatScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

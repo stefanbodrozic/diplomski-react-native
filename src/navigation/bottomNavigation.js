@@ -1,5 +1,4 @@
 import HomeScreen from '../screens/HomeScreen'
-import ChatScreen from '../screens/ChatScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -39,8 +38,6 @@ const BottomNavigation = () => {
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline'
-          } else if (route.name === 'Chat') {
-            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline'
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline'
           }
@@ -80,11 +77,6 @@ const BottomNavigation = () => {
         />
       )}
 
-      <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{ headerShown: false }}
-      />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
