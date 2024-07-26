@@ -17,16 +17,18 @@ import {
   View
 } from 'react-native'
 import uuid from 'react-native-uuid'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import TextInputField from '../components/form/TextInputField'
 import { db } from '../config/firebase'
 import { newProductSchema } from '../config/schema'
 import styles from '../config/styles'
 import { getUserData } from '../store/slices/user'
 import { useNavigation } from '@react-navigation/native'
+import { fetchSingleStore } from '../store/slices/stores'
 
 const AddProductScreen = () => {
   const [images, setImages] = useState([])
+  const [isNoImageMessageVisible, setNoImageMessageVisible] = useState(false)
 
   const { control, handleSubmit, getValues } = useForm({
     resolver: yupResolver(newProductSchema)
@@ -37,6 +39,8 @@ const AddProductScreen = () => {
   const user = useSelector(getUserData)
 
   const navigation = useNavigation()
+
+  const dispatch = useDispatch()
 
   const imgDirectory = FileSystem.documentDirectory + 'images/'
 
@@ -92,6 +96,11 @@ const AddProductScreen = () => {
     try {
       const urls = await uploadImages()
 
+      if (!urls?.length) {
+        setNoImageMessageVisible(true)
+        return
+      }
+
       const product = {
         id: uuid.v4(),
         name: getValues('productName'),
@@ -106,6 +115,8 @@ const AddProductScreen = () => {
       const productsRef = collection(storeRef, 'products')
 
       const docRef = await addDoc(productsRef, product)
+
+      await dispatch(fetchSingleStore(user))
       if (docRef.id) {
         navigation.goBack()
       }
@@ -198,6 +209,10 @@ const AddProductScreen = () => {
         control={control}
         keyboardType="number-pad"
       />
+
+      {isNoImageMessageVisible && !images.length && (
+        <Text>Please add at least one image!</Text>
+      )}
 
       {images && (
         <ScrollView>
