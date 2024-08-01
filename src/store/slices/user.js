@@ -1,19 +1,28 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import {
+  doc,
+  collection,
+  getDocs,
+  query,
+  updateDoc,
+  where
+} from 'firebase/firestore'
 import { db } from '../../config/firebase'
 import { Status } from '../../util'
 
 export const fetchUserDetails = createAsyncThunk(
   'users/userDetails',
-  async (email) => {
+  async (data) => {
     try {
+      const { email, expoPushToken } = data
+
       let user = null
 
       const q = query(collection(db, 'users'), where('email', '==', email))
 
       const querySnapshot = await getDocs(q)
 
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(async (document) => {
         const {
           id,
           username,
@@ -23,24 +32,34 @@ export const fetchUserDetails = createAsyncThunk(
           role,
           address,
           storeName,
-          storeRefId
-        } = doc.data()
+          storeRefId,
+          expoPushToken
+        } = document.data()
 
         user = {
-          docId: doc.id,
+          docId: document.id,
           id,
           username,
           firstname,
           lastname,
           email,
           role,
-          address
+          address,
+		  expoPushToken
         }
 
         if (storeName) {
           user.storeName = storeName
           user.storeRefId = storeRefId
         }
+
+        // sync expo token
+
+        const userDocRef = doc(db, 'users', document.id)
+
+        await updateDoc(userDocRef, {
+          expoPushToken
+        })
       })
 
       return user

@@ -16,8 +16,11 @@ import { fetchUserDetails, getUserData } from '../store/slices/user'
 import { fetchSingleStore, fetchStores } from '../store/slices/stores'
 import { fetchCategories } from '../store/slices/categories'
 import { useEffect } from 'react'
+import { usePushNotifications } from '../util/usePushNotification'
 
 const LoginScreen = () => {
+  const { expoPushToken } = usePushNotifications()
+
   const navigation = useNavigation()
   const userDetails = useSelector(getUserData)
   const dispatch = useDispatch()
@@ -27,8 +30,8 @@ const LoginScreen = () => {
     defaultValues: {
       // email: "admin@mail.com",
       // email: "customer@mail.com",
-      email: 'seller5@mail.com',
-      // email: "deliverer@mail.com",
+      // email: 'seller5@mail.com',
+      email: 'deliverer@mail.com',
       password: 'password12345'
     }
   })
@@ -54,8 +57,13 @@ const LoginScreen = () => {
         getValues('password')
       )
 
-      if (response) {
-        dispatch(fetchUserDetails(getValues('email')))
+      if (response && expoPushToken) {
+        const data = {
+          email: getValues('email'),
+          expoPushToken: expoPushToken?.data
+        }
+
+        dispatch(fetchUserDetails(data))
       }
     } catch (error) {
       const errorMessage = getFirebaseUserError(error)

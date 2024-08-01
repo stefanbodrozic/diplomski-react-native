@@ -14,8 +14,11 @@ import {
   getStore,
   getStoreStatus
 } from '../store/slices/stores'
+import { usePushNotifications } from '../util/usePushNotification'
 
 const SplashScreen = () => {
+  const { expoPushToken } = usePushNotifications()
+
   const navigation = useNavigation()
 
   const dispatch = useDispatch()
@@ -41,9 +44,14 @@ const SplashScreen = () => {
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      if (fetchUserDetailsStatus === Status.IDLE)
-        dispatch(fetchUserDetails(user.email))
-      else if (fetchUserDetailsStatus === Status.FULLFILED) {
+      if (fetchUserDetailsStatus === Status.IDLE && expoPushToken) {
+        const data = {
+          email: user.email,
+          expoPushToken: expoPushToken?.data
+        }
+
+        dispatch(fetchUserDetails(data))
+      } else if (fetchUserDetailsStatus === Status.FULLFILED) {
         if (fetchStoreStatus === Status.IDLE)
           dispatch(fetchSingleStore(userDetails))
 
