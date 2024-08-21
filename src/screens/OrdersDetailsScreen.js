@@ -32,10 +32,10 @@ const OrdersDetailsScreen = ({ route }) => {
 
   useEffect(() => {
     if (order.isDelivered) {
-      setStatus('Delivered')
+      setStatus('Completed')
     } else if (!order.isDelivered && order.delivererId === '')
       setStatus('In Store')
-    else setStatus('In Progress')
+    else setStatus('Delivery in progress')
   }, [])
 
   return (
