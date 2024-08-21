@@ -72,7 +72,8 @@ export const fetchAvailableOrders = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating
+          rating,
+          order
         } = doc.data()
 
         orders.push({
@@ -84,7 +85,8 @@ export const fetchAvailableOrders = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating
+          rating,
+          order
         })
       })
 
@@ -118,7 +120,8 @@ export const fetchDeliveriesInProgress = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating
+          rating,
+          order
         } = doc.data()
 
         deliveries.push({
@@ -130,7 +133,8 @@ export const fetchDeliveriesInProgress = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating
+          rating,
+          order
         })
       })
 
@@ -163,7 +167,8 @@ export const fetchCustomerOrders = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating
+          rating,
+          order
         } = doc.data()
 
         orders.push({
@@ -175,7 +180,8 @@ export const fetchCustomerOrders = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating
+          rating,
+          order
         })
       })
 

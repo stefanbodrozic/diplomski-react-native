@@ -18,6 +18,7 @@ import ProfileScreen from '../screens/ProfileScreen'
 import OrderHistory from '../screens/OrderHistory'
 import StartChatIcon from '../components/StartChatIcon'
 import ChatScreen from '../screens/ChatScreen'
+import OrdersDetailsScreen from '../screens/OrdersDetailsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -138,6 +139,10 @@ const Navigation = () => {
         <Stack.Screen
           name="Chat"
           component={ChatScreen}
+        />
+        <Stack.Screen
+          name="Order Details"
+          component={OrdersDetailsScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

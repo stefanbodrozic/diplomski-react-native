@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { db } from '../config/firebase'
 import { getUserData } from '../store/slices/user'
 import { refetchData } from '../store/slices/deliveries'
+import { useNavigation } from '@react-navigation/native'
 
 const DeliveryItem = ({ item, isCustomer }) => {
+  const navigation = useNavigation()
   const dispatch = useDispatch()
   const user = useSelector(getUserData)
 
@@ -47,6 +49,15 @@ const DeliveryItem = ({ item, isCustomer }) => {
         <Text style={styles.text}>{item.orderDetails?.address}</Text>
 
         <Text style={styles.info}>{item?.createdAt}</Text>
+        <Pressable
+          onPress={() =>
+            navigation.navigate('Order Details', {
+              order: item
+            })
+          }
+        >
+          <Text style={{ color: 'black' }}>View order</Text>
+        </Pressable>
 
         {!item.isDelivered && item.delivererId === '' && !isCustomer && (
           <Pressable
