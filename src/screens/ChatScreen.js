@@ -19,26 +19,11 @@ import { getUserData } from '../store/slices/user'
 const ChatScreen = ({ route }) => {
   const userDetails = useSelector(getUserData)
   const [messages, setMessages] = useState([])
-  const [chatReferenceExist, setChatReferenceExist] = useState(false)
 
   let storeName
   if (route.params?.storeName) storeName = route.params.storeName
 
-  const checkChatReference = async () => {
-    const chatName = `chat-${storeName}-${userDetails.email}`
-
-    const chatReferences = collection(db, 'chat-references')
-    const q = query(chatReferences, where('chatName', '==', chatName))
-
-    const countSnapshot = await getCountFromServer(q)
-
-    if (countSnapshot.data().count > 0) setChatReferenceExist(true)
-  }
-
   useLayoutEffect(() => {
-    // check if chat reference exist
-    checkChatReference()
-
     // reference collection of data from firebase. This will run before anything is visible to the user
     const collectionRef = collection(
       db,
@@ -77,15 +62,12 @@ const ChatScreen = ({ route }) => {
         user
       })
 
-      // create a new chat reference if it doesn’t already exist
-      if (!chatReferenceExist) {
-        await setDoc(doc(db, 'chat-references', chatName), {
-          chatName,
-          userEmails: [userDetails.email, route.params.storeOwnerEmail]
-        })
-
-        setChatReferenceExist(true)
-      }
+      await setDoc(doc(db, 'chat-references', chatName), {
+        chatName,
+        userEmails: [userDetails.email, route.params.storeOwnerEmail],
+        lastMessage: text,
+        timestamp: new Date().toLocaleString()
+      })
     },
     [storeName, userDetails.email]
   )

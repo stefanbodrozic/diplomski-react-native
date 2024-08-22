@@ -1,5 +1,6 @@
 import HomeScreen from '../screens/HomeScreen'
 import ProfileScreen from '../screens/ProfileScreen'
+import InboxScreen from '../screens/InboxScreen'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -38,6 +39,8 @@ const BottomNavigation = () => {
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline'
+          } else if (route.name === 'Inbox') {
+            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline'
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline'
           }
@@ -76,6 +79,12 @@ const BottomNavigation = () => {
           options={{ headerShown: false }}
         />
       )}
+
+      <Tab.Screen
+        name="Inbox"
+        component={InboxScreen}
+        options={{ headerShown: false }}
+      />
 
       <Tab.Screen
         name="Profile"
