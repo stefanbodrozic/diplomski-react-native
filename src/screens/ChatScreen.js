@@ -4,9 +4,13 @@ import { GiftedChat } from 'react-native-gifted-chat'
 import {
   addDoc,
   collection,
+  doc,
+  getCountFromServer,
   onSnapshot,
   orderBy,
-  query
+  query,
+  setDoc,
+  where
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { useSelector } from 'react-redux'
@@ -15,11 +19,26 @@ import { getUserData } from '../store/slices/user'
 const ChatScreen = ({ route }) => {
   const userDetails = useSelector(getUserData)
   const [messages, setMessages] = useState([])
+  const [chatReferenceExist, setChatReferenceExist] = useState(false)
 
   let storeName
   if (route.params?.storeName) storeName = route.params.storeName
 
+  const checkChatReference = async () => {
+    const chatName = `chat-${storeName}-${userDetails.email}`
+
+    const chatReferences = collection(db, 'chat-references')
+    const q = query(chatReferences, where('chatName', '==', chatName))
+
+    const countSnapshot = await getCountFromServer(q)
+
+    if (countSnapshot.data().count > 0) setChatReferenceExist(true)
+  }
+
   useLayoutEffect(() => {
+    // check if chat reference exist
+    checkChatReference()
+
     // reference collection of data from firebase. This will run before anything is visible to the user
     const collectionRef = collection(
       db,
@@ -49,12 +68,24 @@ const ChatScreen = ({ route }) => {
 
       const { _id, createdAt, text, user } = messages[0]
 
-      await addDoc(collection(db, `chat-${storeName}-${userDetails.email}`), {
+      const chatName = `chat-${storeName}-${userDetails.email}`
+
+      await addDoc(collection(db, chatName), {
         _id,
         createdAt,
         text,
         user
       })
+
+      // create a new chat reference if it doesn’t already exist
+      if (!chatReferenceExist) {
+        await setDoc(doc(db, 'chat-references', chatName), {
+          chatName,
+          userEmails: [userDetails.email, route.params.storeOwnerEmail]
+        })
+
+        setChatReferenceExist(true)
+      }
     },
     [storeName, userDetails.email]
   )

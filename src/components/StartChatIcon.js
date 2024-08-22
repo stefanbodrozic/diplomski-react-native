@@ -1,15 +1,36 @@
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { Pressable, StyleSheet, Text } from 'react-native'
+import { collection, getDocs, query, where } from 'firebase/firestore'
+import { db } from '../config/firebase'
+import { useEffect, useState } from 'react'
 
 const StartChatIcon = ({ storeName }) => {
   const navigation = useNavigation()
+  const [storeOwnerEmail, setStoreOwnerEmail] = useState()
+
+  useEffect(() => {
+    const getStoreOwnerEmail = async () => {
+      const usersReferences = collection(db, 'users')
+      const q = query(usersReferences, where('storeName', '==', storeName))
+
+      const userQuerySnapshot = await getDocs(q)
+
+      userQuerySnapshot.forEach((doc) => {
+        const { email } = doc.data()
+        setStoreOwnerEmail(email)
+      })
+    }
+
+    getStoreOwnerEmail()
+  }, [])
 
   return (
     <Pressable
       onPress={() =>
         navigation.navigate('Chat', {
-          storeName
+          storeName,
+          storeOwnerEmail
         })
       }
       style={styles.button}
