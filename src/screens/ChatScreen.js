@@ -5,12 +5,10 @@ import {
   addDoc,
   collection,
   doc,
-  getCountFromServer,
   onSnapshot,
   orderBy,
   query,
-  setDoc,
-  where
+  setDoc
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { useSelector } from 'react-redux'
@@ -24,11 +22,14 @@ const ChatScreen = ({ route }) => {
   if (route.params?.storeName) storeName = route.params.storeName
 
   useLayoutEffect(() => {
+    let chatName
+
+    if (route.params.chatName)
+      chatName = route.params.chatName // redirected from InboxScreen
+    else chatName = `chat-${storeName}-${userDetails.email}` // redirected from StoreScreen
+
     // reference collection of data from firebase. This will run before anything is visible to the user
-    const collectionRef = collection(
-      db,
-      `chat-${storeName}-${userDetails.email}`
-    )
+    const collectionRef = collection(db, chatName)
     const q = query(collectionRef, orderBy('createdAt', 'desc'))
 
     const unsubscribe = onSnapshot(q, (snapshot) => {

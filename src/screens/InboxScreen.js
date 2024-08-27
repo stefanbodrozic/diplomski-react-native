@@ -15,7 +15,8 @@ const ChatItem = ({ item }) => {
       onPress={() => {
         navigation.navigate('Chat', {
           storeName: item.storeName,
-          storeOwnerEmail: item.storeOwnerEmail
+          storeOwnerEmail: item.storeOwnerEmail,
+          chatName: item.chatName
         })
       }}
     >
@@ -64,15 +65,17 @@ const InboxScreen = () => {
         storeOwnerEmail = userEmails.filter(
           (email) => email != userDetails.email
         )
-      } else if (userDetails.role === 'Seller')
+      } else if (userDetails.role === 'Seller') {
         storeOwnerEmail = userDetails.email
+      }
 
       chats.push({
         storeName, // because of navigation.navigate params
         storeOwnerEmail, // because of navigation.navigate params
         lastMessage,
         timestamp,
-        receiver: userDetails.role === 'Customer' ? storeName : sender
+        receiver: userDetails.role === 'Customer' ? storeName : sender,
+        chatName
       })
     })
 
