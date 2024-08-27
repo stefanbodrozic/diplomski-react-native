@@ -12,7 +12,8 @@ const initialState = {
     address: '',
     email: '',
     price: 0,
-    deliveryFee: 50
+    deliveryFee: 50,
+    userExpoPushToken: ''
   },
   delivererId: '',
   isDelivered: false,
@@ -47,6 +48,7 @@ const cartSlice = createSlice({
         state.orderDetails.lastname = user.lastname
         state.orderDetails.address = user.address
         state.orderDetails.email = user.email
+        state.orderDetails.userExpoPushToken = user.expoPushToken
       }
     },
     removeProductFromCart: (state, action) => {
@@ -95,7 +97,8 @@ const cartSlice = createSlice({
         address: '',
         email: '',
         price: 0,
-        deliveryFee: 50
+        deliveryFee: 50,
+        userExpoPushToken: ''
       }
       state.delivererId = ''
       state.isDelivered = false

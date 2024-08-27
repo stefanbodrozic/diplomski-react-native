@@ -5,6 +5,7 @@ import { db } from '../config/firebase'
 import { getUserData } from '../store/slices/user'
 import { refetchData } from '../store/slices/deliveries'
 import { useNavigation } from '@react-navigation/native'
+import { sendPushNotification } from '../util'
 
 const DeliveryItem = ({ item, isCustomer }) => {
   const navigation = useNavigation()
@@ -12,6 +13,15 @@ const DeliveryItem = ({ item, isCustomer }) => {
   const user = useSelector(getUserData)
 
   const assignDelivery = async () => {
+    const customerExpoPushToken = item.orderDetails.userExpoPushToken
+    if (!customerExpoPushToken) return
+
+    await sendPushNotification(
+      customerExpoPushToken,
+      'Delivery information',
+      'The delivery is on the way!'
+    )
+
     const orderRef = doc(db, 'orders', item.docId)
 
     updateDoc(orderRef, {
@@ -22,8 +32,16 @@ const DeliveryItem = ({ item, isCustomer }) => {
   }
 
   const completeDelivery = async () => {
-    const orderRef = doc(db, 'orders', item.docId)
+    const customerExpoPushToken = item.orderDetails.userExpoPushToken
+    if (!customerExpoPushToken) return
 
+    await sendPushNotification(
+      customerExpoPushToken,
+      'Delivery information',
+      'The delivery has arrived!'
+    )
+
+    const orderRef = doc(db, 'orders', item.docId)
     await updateDoc(orderRef, {
       isDelivered: true,
       deliveredAt: new Date().toLocaleString()
@@ -31,6 +49,7 @@ const DeliveryItem = ({ item, isCustomer }) => {
 
     dispatch(refetchData())
   }
+
   return (
     <View style={styles.container}>
       {item.isDelivered ? (

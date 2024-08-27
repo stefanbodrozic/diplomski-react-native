@@ -47,7 +47,7 @@ const SplashScreen = () => {
       if (fetchUserDetailsStatus === Status.IDLE && expoPushToken) {
         const data = {
           email: user.email,
-          expoPushToken: expoPushToken?.data
+          newExpoPushToken: expoPushToken?.data
         }
 
         dispatch(fetchUserDetails(data))

@@ -14,7 +14,7 @@ export const fetchUserDetails = createAsyncThunk(
   'users/userDetails',
   async (data) => {
     try {
-      const { email, expoPushToken } = data
+      const { email, newExpoPushToken } = data
 
       let user = null
 
@@ -45,7 +45,7 @@ export const fetchUserDetails = createAsyncThunk(
           email,
           role,
           address,
-		  expoPushToken
+          expoPushToken: newExpoPushToken
         }
 
         if (storeName) {
@@ -53,12 +53,11 @@ export const fetchUserDetails = createAsyncThunk(
           user.storeRefId = storeRefId
         }
 
-        // sync expo token
-
+        // update user document with expo push token
         const userDocRef = doc(db, 'users', document.id)
 
         await updateDoc(userDocRef, {
-          expoPushToken
+          expoPushToken: newExpoPushToken
         })
       })
 

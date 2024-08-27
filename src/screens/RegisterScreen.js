@@ -26,6 +26,8 @@ import {
 } from '../store/slices/categories'
 
 const RegisterScreen = () => {
+  const { expoPushToken } = usePushNotifications()
+
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
@@ -70,7 +72,8 @@ const RegisterScreen = () => {
           email: getValues('email'),
           role: getValues('role'),
           address: getValues('address'),
-          timestamp: new Date().toLocaleString()
+          timestamp: new Date().toLocaleString(),
+          expoPushToken: expoPushToken?.data
         }
 
         if (user.role === 'Seller') {
