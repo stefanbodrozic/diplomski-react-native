@@ -7,6 +7,7 @@ const getFirebaseUserError = (error) => {
   else if (errorCode === 'auth/user-disabled') return 'User is blocked!'
   else if (errorCode === 'auth/email-already-in-use)')
     return 'Email already in use!'
+  else return 'Undefined error!'
 }
 
 const Status = {

@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 
 import styles from '../config/styles'
 
@@ -24,6 +24,8 @@ import {
   getCategories,
   getCategoriesStatus
 } from '../store/slices/categories'
+import { usePushNotifications } from '../util/usePushNotification'
+import { ScrollView } from 'react-native'
 
 const RegisterScreen = () => {
   const { expoPushToken } = usePushNotifications()
@@ -104,84 +106,105 @@ const RegisterScreen = () => {
   const onInvalid = (errors) => console.error(errors)
 
   return (
-    <View style={screenStyles.root}>
-      <View>
-        <Text style={styles.text}>Please register: </Text>
-      </View>
+    <SafeAreaView style={screenStyles.root}>
+      <ScrollView style={screenStyles.scrollView}>
+        <TextInputField
+          name="firstname"
+          placeholder="Firstname"
+          control={control}
+        />
 
-      <TextInputField
-        name="firstname"
-        placeholder="Firstname"
-        control={control}
-      />
+        <TextInputField
+          name="lastname"
+          placeholder="Lastname"
+          control={control}
+        />
 
-      <TextInputField
-        name="lastname"
-        placeholder="Lastname"
-        control={control}
-      />
+        <TextInputField
+          name="email"
+          placeholder="Email"
+          control={control}
+          autoCapitalize="none"
+        />
 
-      <TextInputField
-        name="email"
-        placeholder="Email"
-        control={control}
-        autoCapitalize="none"
-      />
+        <TextInputField
+          name="password"
+          placeholder="Password"
+          control={control}
+          autoCapitalize="none"
+          isPassword={true}
+        />
 
-      <TextInputField
-        name="password"
-        placeholder="Password"
-        control={control}
-        autoCapitalize="none"
-        isPassword={true}
-      />
+        <TextInputField
+          name="address"
+          placeholder="Address"
+          control={control}
+        />
 
-      <TextInputField
-        name="address"
-        placeholder="Address"
-        control={control}
-      />
+        <Dropdown
+          name="role"
+          control={control}
+          data={roles}
+        />
 
-      <Dropdown
-        name="role"
-        control={control}
-        data={roles}
-      />
+        {role === 'Seller' && categories.length > 0 && (
+          <>
+            <TextInputField
+              name="storeName"
+              placeholder="Store name"
+              control={control}
+            />
 
-      {role === 'Seller' && categories.length > 0 && (
-        <>
-          <TextInputField
-            name="storeName"
-            placeholder="Store name"
-            control={control}
-          />
+            <Dropdown
+              name="category"
+              control={control}
+              data={categoriesDropdown}
+            />
+          </>
+        )}
 
-          <Dropdown
-            name="category"
-            control={control}
-            data={categoriesDropdown}
-          />
-        </>
-      )}
-
-      <View style={styles.buttonContainer}>
-        <Pressable
-          onPress={handleSubmit(handleRegister, onInvalid)}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Register</Text>
-        </Pressable>
-      </View>
-    </View>
+        <View style={screenStyles.buttonContainer}>
+          <Pressable
+            onPress={handleSubmit(handleRegister, onInvalid)}
+            style={screenStyles.button}
+          >
+            <Text style={screenStyles.buttonText}>Register</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
 const screenStyles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: 'black',
+    borderRadius: 100,
+    marginBottom: 10,
+    marginTop: 10,
+    padding: 20,
+    width: '90%'
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 50
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '500'
+  },
   root: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     height: '100%',
-    padding: 20
+    width: '100%'
+  },
+  scrollView: {
+    margin: 20
   }
 })
 

@@ -13,8 +13,7 @@ export default StyleSheet.create({
 
   buttonContainer: {
     alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 50
+    flexDirection: 'row'
   },
 
   buttonText: {

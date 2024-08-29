@@ -50,12 +50,16 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     borderColor: '#e8e8e8',
-    borderRadius: 5,
+    borderRadius: 10,
     borderWidth: 1,
+    justifyContent: 'center',
+    marginLeft: 10,
     marginVertical: 10,
-    margin: 20,
     paddingHorizontal: 10,
-    width: '90%'
+    width: '95%'
+  },
+  textInput: {
+    padding: 7
   }
 })
 
