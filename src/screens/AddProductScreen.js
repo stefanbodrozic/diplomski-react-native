@@ -184,71 +184,75 @@ const AddProductScreen = () => {
 
   return (
     <SafeAreaView style={screenStyles.root}>
-      <TextInputField
-        name="productName"
-        placeholder="Product name"
-        control={control}
-      />
+      <ScrollView style={screenStyles.scrollView}>
+        <TextInputField
+          name="productName"
+          placeholder="Product name"
+          control={control}
+        />
 
-      <TextInputField
-        name="description"
-        placeholder="Description"
-        control={control}
-      />
+        <TextInputField
+          name="description"
+          placeholder="Description"
+          control={control}
+        />
 
-      <TextInputField
-        name="price"
-        placeholder="Price"
-        control={control}
-        keyboardType="number-pad"
-      />
+        <TextInputField
+          name="price"
+          placeholder="Price"
+          control={control}
+          keyboardType="number-pad"
+        />
 
-      <TextInputField
-        name="quantity"
-        placeholder="Quantity"
-        control={control}
-        keyboardType="number-pad"
-      />
+        <TextInputField
+          name="quantity"
+          placeholder="Quantity"
+          control={control}
+          keyboardType="number-pad"
+        />
 
-      {isNoImageMessageVisible && !images.length && (
-        <Text>Please add at least one image!</Text>
-      )}
+        <View>
+          {isNoImageMessageVisible && !images.length && (
+            <Text>Please add at least one image!</Text>
+          )}
 
-      {images && (
-        <ScrollView>
-          <FlatList
-            data={images}
-            renderItem={renderItem}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled
-          />
-        </ScrollView>
-      )}
+          {images && (
+            <ScrollView>
+              <FlatList
+                data={images}
+                renderItem={renderItem}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                pagingEnabled
+              />
+            </ScrollView>
+          )}
+        </View>
 
-      <View style={screenStyles.buttons}>
-        <Pressable
-          style={styles.button}
-          onPress={() => selectImage(true)}
-        >
-          <Text style={styles.buttonText}>Choose from phone</Text>
-        </Pressable>
-        <Pressable
-          style={styles.button}
-          onPress={() => selectImage(false)}
-        >
-          <Text style={styles.buttonText}>Capture image</Text>
-        </Pressable>
-      </View>
+        <View style={screenStyles.buttons}>
+          <Pressable
+            style={styles.button}
+            onPress={() => selectImage(true)}
+          >
+            <Text style={styles.buttonText}>Choose from phone</Text>
+          </Pressable>
+          <Pressable
+            style={styles.button}
+            onPress={() => selectImage(false)}
+          >
+            <Text style={styles.buttonText}>Capture image</Text>
+          </Pressable>
+        </View>
 
-      <View style={screenStyles.saveButton}>
-        <Pressable
-          style={styles.button}
-          onPress={handleSubmit(saveProduct, onInvalid)}
-        >
-          <Text style={styles.buttonText}>Save product</Text>
-        </Pressable>
-      </View>
+        <View style={screenStyles.saveButton}>
+          <Pressable
+            style={styles.button}
+            onPress={handleSubmit(saveProduct, onInvalid)}
+          >
+            <Text style={styles.buttonText}>Save product</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -271,10 +275,14 @@ const screenStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     height: '100%',
-    padding: 20
+    width: '100%'
   },
   saveButton: {
     flexGrow: 1,
     marginTop: 20
+  },
+  scrollView: {
+    margin: 20,
+    paddingRight: 10
   }
 })
