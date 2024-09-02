@@ -12,6 +12,7 @@ import ScrollItem from './ScrollItem'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { getUserData } from '../store/slices/user'
+import { SCREENS } from '../helpers/screens'
 
 const SingleStoreContainer = ({ store }) => {
   const navigation = useNavigation()
@@ -27,7 +28,7 @@ const SingleStoreContainer = ({ store }) => {
   }
 
   const handleShowMore = () => {
-    navigation.navigate('Store', { store, showAddProductIcon: isOwner })
+    navigation.navigate(SCREENS.STORE, { store, showAddProductIcon: isOwner })
   }
 
   return (

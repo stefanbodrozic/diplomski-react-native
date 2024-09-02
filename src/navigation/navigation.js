@@ -19,6 +19,7 @@ import OrderHistory from '../screens/OrderHistory'
 import StartChatIcon from '../components/StartChatIcon'
 import ChatScreen from '../screens/ChatScreen'
 import OrdersDetailsScreen from '../screens/OrdersDetailsScreen'
+import { SCREENS } from '../helpers/screens'
 
 const Stack = createNativeStackNavigator()
 
@@ -27,14 +28,37 @@ const Navigation = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Splash"
+          name={SCREENS.SPLASH}
           component={SplashScreen}
           options={{
             headerShown: false
           }}
         />
+
         <Stack.Screen
-          name="Main"
+          name={SCREENS.REGISTER}
+          component={RegisterScreen}
+          options={() => ({
+            headerTitle: 'Register',
+            headerStyle: {
+              backgroundColor: '#EBFBFF'
+            }
+          })}
+        />
+
+        <Stack.Screen
+          name={SCREENS.LOGIN}
+          component={LoginScreen}
+          options={() => ({
+            headerTitle: 'Shopping App',
+            headerStyle: {
+              backgroundColor: '#EBFBFF'
+            }
+          })}
+        />
+
+        <Stack.Screen
+          name={SCREENS.MAIN}
           component={BottomNavigation}
           options={() => ({
             headerRight: () => <CartIcon />,
@@ -47,19 +71,30 @@ const Navigation = () => {
         />
 
         <Stack.Screen
-          name="Order History"
+          name={SCREENS.HOME}
+          component={HomeScreen}
+          options={() => ({
+            headerRight: () => <CartIcon />,
+            headerBackVisible: false
+          })}
+        />
+
+        <Stack.Screen
+          name={SCREENS.ORDER_HISTORY}
           component={OrderHistory}
         />
+
         <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
+          name={SCREENS.ORDER_DETAILS}
+          component={OrdersDetailsScreen}
         />
+
         <Stack.Screen
-          name="AddProduct"
+          name={SCREENS.ADD_PRODUCT}
           component={AddProductScreen}
         />
         <Stack.Screen
-          name="Deliveries"
+          name={SCREENS.DELIVERIES}
           component={DeliveriesScreen}
           options={() => ({
             headerTitle: 'Shopping App',
@@ -69,46 +104,14 @@ const Navigation = () => {
             headerBackVisible: false
           })}
         />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={() => ({
-            headerTitle: 'Shopping App',
-            headerStyle: {
-              backgroundColor: '#EBFBFF'
-            }
-          })}
-        />
 
         <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={() => ({
-            headerTitle: 'Register',
-            headerStyle: {
-              backgroundColor: '#EBFBFF'
-            }
-          })}
-        />
-
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={() => ({
-            headerRight: () => <CartIcon />,
-            headerBackVisible: false
-          })}
-        />
-        <Stack.Screen
-          name="Cart"
+          name={SCREENS.CART}
           component={CartScreen}
         />
+
         <Stack.Screen
-          name="Discount"
-          component={DiscountScreen}
-        />
-        <Stack.Screen
-          name="Store"
+          name={SCREENS.STORE}
           component={StoreScreen}
           options={({ route }) => ({
             headerTitle:
@@ -127,7 +130,7 @@ const Navigation = () => {
           })}
         />
         <Stack.Screen
-          name="Product Details"
+          name={SCREENS.PRODUCT_DETAILS}
           component={ProductDetailsScreen}
           options={() => ({
             headerTitle: 'Shopping App',
@@ -137,12 +140,8 @@ const Navigation = () => {
           })}
         />
         <Stack.Screen
-          name="Chat"
+          name={SCREENS.CHAT}
           component={ChatScreen}
-        />
-        <Stack.Screen
-          name="Order Details"
-          component={OrdersDetailsScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

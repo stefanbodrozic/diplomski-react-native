@@ -9,12 +9,9 @@ import {
   getUserStatus
 } from '../store/slices/user'
 import { Status } from '../util'
-import {
-  fetchSingleStore,
-  getStore,
-  getStoreStatus
-} from '../store/slices/stores'
+import { fetchSingleStore, getStoreStatus } from '../store/slices/stores'
 import { usePushNotifications } from '../util/usePushNotification'
+import { SCREENS } from '../helpers/screens'
 
 const SplashScreen = () => {
   const { expoPushToken } = usePushNotifications()
@@ -30,15 +27,17 @@ const SplashScreen = () => {
 
   const handleNavigation = () => {
     if (!userDetails.role) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Login' }]
-      })
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: 'Login' }]
+      // })
+      navigation.navigate(SCREENS.LOGIN)
     } else {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Main' }]
-      })
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: 'Main' }]
+      // })
+      navigation.navigate(SCREENS.MAIN)
     }
   }
 
@@ -58,7 +57,7 @@ const SplashScreen = () => {
         handleNavigation()
       }
     } else {
-      handleNavigation('Login')
+      navigation.navigate(SCREENS.LOGIN)
     }
   })
 

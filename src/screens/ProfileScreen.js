@@ -12,6 +12,7 @@ import { getUserData, logout } from '../store/slices/user'
 import { doc, updateDoc } from 'firebase/firestore'
 import { resetCart } from '../store/slices/cart'
 import { resetStores } from '../store/slices/stores'
+import { SCREENS } from '../helpers/screens'
 
 const ProfileScreen = () => {
   const navigation = useNavigation()
@@ -46,19 +47,12 @@ const ProfileScreen = () => {
 
   const handleLogout = () => {
     try {
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'Login'
-          }
-        ]
-      })
-
       dispatch(logout())
       dispatch(resetCart())
       dispatch(resetCart())
       dispatch(resetStores())
+
+      navigation.navigate(SCREENS.SPLASH)
 
       signOut(auth)
     } catch (error) {
@@ -125,7 +119,7 @@ const ProfileScreen = () => {
       <View style={styles.buttonContainer}>
         {user.role === 'Customer' && (
           <Pressable
-            onPress={() => navigation.navigate('Order History')}
+            onPress={() => navigation.navigate(SCREENS.ORDER_HISTORY)}
             style={screenStyles.button}
           >
             <Text style={screenStyles.buttonText}>Order history</Text>
@@ -134,7 +128,7 @@ const ProfileScreen = () => {
 
         {user.role === 'Seller' && (
           <Pressable
-            onPress={() => navigation.navigate('AddProduct')}
+            onPress={() => navigation.navigate(SCREENS.ADD_PRODUCT)}
             style={screenStyles.button}
           >
             <Text style={screenStyles.buttonText}>Add Product</Text>

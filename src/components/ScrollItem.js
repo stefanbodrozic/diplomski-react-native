@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { SCREENS } from '../helpers/screens'
 
 const ScrollItem = ({ item, store, isCategory, handleCategoryFilter }) => {
   const navigation = useNavigation()
@@ -9,7 +10,7 @@ const ScrollItem = ({ item, store, isCategory, handleCategoryFilter }) => {
     if (isCategory) {
       handleCategoryFilter(item.name)
     } else {
-      navigation.navigate('Product Details', {
+      navigation.navigate(SCREENS.PRODUCT_DETAILS, {
         product: item,
         store
       })

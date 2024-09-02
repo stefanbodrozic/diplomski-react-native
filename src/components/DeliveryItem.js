@@ -6,6 +6,7 @@ import { getUserData } from '../store/slices/user'
 import { refetchData } from '../store/slices/deliveries'
 import { useNavigation } from '@react-navigation/native'
 import { sendPushNotification } from '../util'
+import { SCREENS } from '../helpers/screens'
 
 const DeliveryItem = ({ item, isCustomer }) => {
   const navigation = useNavigation()
@@ -70,7 +71,7 @@ const DeliveryItem = ({ item, isCustomer }) => {
         <Text style={styles.info}>{item?.createdAt}</Text>
         <Pressable
           onPress={() =>
-            navigation.navigate('Order Details', {
+            navigation.navigate(SCREENS.ORDER_DETAILS, {
               order: item
             })
           }

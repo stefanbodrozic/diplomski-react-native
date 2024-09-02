@@ -1,11 +1,12 @@
 import { useNavigation } from '@react-navigation/native'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SCREENS } from '../helpers/screens'
 
 const ProductPreview = ({ product, store }) => {
   const navigation = useNavigation()
 
   const handleProduct = () => {
-    navigation.navigate('Product Details', {
+    navigation.navigate(SCREENS.PRODUCT_DETAILS, {
       product,
       store
     })

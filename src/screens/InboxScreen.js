@@ -6,6 +6,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { SCREENS } from '../helpers/screens'
 
 const ChatItem = ({ item }) => {
   const navigation = useNavigation()
@@ -13,7 +14,7 @@ const ChatItem = ({ item }) => {
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate('Chat', {
+        navigation.navigate(SCREENS.CHAT, {
           storeName: item.storeName,
           storeOwnerEmail: item.storeOwnerEmail,
           chatName: item.chatName

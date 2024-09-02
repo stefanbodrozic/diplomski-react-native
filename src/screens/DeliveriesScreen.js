@@ -41,7 +41,13 @@ const DeliveriesScreen = () => {
     } else if (fetchDeliveriesInProgressStatus === Status.IDLE) {
       dispatch(fetchDeliveriesInProgress(user.id))
     }
-  }, [fetchAvailableOrdersStatus, fetchCompletedDeliveriesStatus, dispatch])
+  }, [
+    fetchAvailableOrdersStatus,
+    fetchCompletedDeliveriesStatus,
+    dispatch,
+    fetchDeliveriesInProgressStatus,
+    user.id
+  ])
 
   const [index, setIndex] = useState(0)
   const [routes] = useState([

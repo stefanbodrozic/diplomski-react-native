@@ -6,7 +6,6 @@ import {
   addDoc,
   collection,
   doc,
-  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -15,6 +14,7 @@ import {
 import { db } from '../config/firebase'
 import uuid from 'react-native-uuid'
 import { useNavigation } from '@react-navigation/native'
+import { SCREENS } from '../helpers/screens'
 
 const CartPriceDetailsContainer = () => {
   const details = useSelector(getCartDetails)
@@ -76,7 +76,7 @@ const CartPriceDetailsContainer = () => {
 
       dispatch(resetCart())
 
-      navigation.navigate('Order History')
+      navigation.navigate(SCREENS.ORDER_HISTORY)
     } catch (error) {
       console.log('Error: ', error)
     }

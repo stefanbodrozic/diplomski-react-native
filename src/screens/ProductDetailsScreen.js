@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { addProductToCart } from '../store/slices/cart'
 import { getUserData } from '../store/slices/user'
+import { SCREENS } from '../helpers/screens'
 
 const ProductDetailsScreen = ({ route }) => {
   const { width } = useWindowDimensions()
@@ -37,7 +38,7 @@ const ProductDetailsScreen = ({ route }) => {
 
   const handleAddToCart = () => {
     dispatch(addProductToCart({ product, store, user }))
-    navigation.navigate('Cart')
+    navigation.navigate(SCREENS.CART)
   }
 
   return (

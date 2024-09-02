@@ -11,6 +11,7 @@ import DeliveriesScreen from '../screens/DeliveriesScreen'
 import { useNavigation } from '@react-navigation/native'
 import { useEffect } from 'react'
 import { Text } from 'react-native'
+import { SCREENS } from '../helpers/screens'
 
 const BottomNavigation = () => {
   const Tab = createBottomTabNavigator()
@@ -20,16 +21,20 @@ const BottomNavigation = () => {
 
   useEffect(() => {
     if (!userDetails.role) {
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'Login'
-          }
-        ]
-      })
+      console.log(
+        'No user data! Redirect to Login Screen from bottom navigation!'
+      )
+      // navigation.navigate(SCREENS.LOGIN)
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [
+      //     {
+      //       name: 'Login'
+      //     }
+      //   ]
+      // })
     }
-  }, [userDetails])
+  }, [userDetails, navigation])
 
   return (
     <Tab.Navigator
@@ -60,34 +65,34 @@ const BottomNavigation = () => {
 
       {userDetails.role === 'Customer' && (
         <Tab.Screen
-          name="Home"
+          name={SCREENS.HOME}
           component={HomeScreen}
           options={{ headerShown: false }}
         />
       )}
       {userDetails.role === 'Seller' && (
         <Tab.Screen
-          name="Home"
+          name={SCREENS.HOME}
           component={StoreScreen}
           options={{ headerShown: false }}
         />
       )}
       {userDetails.role === 'Deliverer' && (
         <Tab.Screen
-          name="Home"
+          name={SCREENS.HOME}
           component={DeliveriesScreen}
           options={{ headerShown: false }}
         />
       )}
 
       <Tab.Screen
-        name="Inbox"
+        name={SCREENS.INBOX}
         component={InboxScreen}
         options={{ headerShown: false }}
       />
 
       <Tab.Screen
-        name="Profile"
+        name={SCREENS.PROFILE}
         component={ProfileScreen}
         options={{ headerShown: false }}
       />

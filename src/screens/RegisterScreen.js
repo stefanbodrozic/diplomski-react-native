@@ -26,6 +26,7 @@ import {
 } from '../store/slices/categories'
 import { usePushNotifications } from '../util/usePushNotification'
 import { ScrollView } from 'react-native'
+import { SCREENS } from '../helpers/screens'
 
 const RegisterScreen = () => {
   const { expoPushToken } = usePushNotifications()
@@ -96,7 +97,7 @@ const RegisterScreen = () => {
         }
 
         await addDoc(collection(db, 'users'), user)
-        navigation.navigate('Main')
+        navigation.navigate(SCREENS.MAIN)
       }
     } catch (error) {
       const errorMessage = getFirebaseUserError(error)

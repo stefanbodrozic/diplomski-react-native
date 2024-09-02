@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text } from 'react-native'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { useEffect, useState } from 'react'
+import { SCREENS } from '../helpers/screens'
 
 const StartChatIcon = ({ storeName }) => {
   const navigation = useNavigation()
@@ -28,7 +29,7 @@ const StartChatIcon = ({ storeName }) => {
   return (
     <Pressable
       onPress={() =>
-        navigation.navigate('Chat', {
+        navigation.navigate(SCREENS.CHAT, {
           storeName,
           storeOwnerEmail
         })

@@ -17,6 +17,7 @@ import { fetchSingleStore, fetchStores } from '../store/slices/stores'
 import { fetchCategories } from '../store/slices/categories'
 import { useEffect } from 'react'
 import { usePushNotifications } from '../util/usePushNotification'
+import { SCREENS } from '../helpers/screens'
 
 const LoginScreen = () => {
   const { expoPushToken } = usePushNotifications()
@@ -29,9 +30,10 @@ const LoginScreen = () => {
     resolver: yupResolver(loginSchema),
     defaultValues: {
       // email: "admin@mail.com",
-      // email: "customer@mail.com",
-      // email: 'seller5@mail.com',
-      email: 'deliverer@mail.com',
+      // email: 'customer@mail.com',
+      // email: 'kupac@mail.com',
+      email: 'books@mail.com',
+      // email: 'deliverer@mail.com',
       password: 'password12345'
     }
   })
@@ -42,10 +44,7 @@ const LoginScreen = () => {
       dispatch(fetchCategories())
       dispatch(fetchSingleStore(userDetails))
 
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Main' }]
-      })
+      navigation.navigate(SCREENS.MAIN)
     }
   }, [dispatch, userDetails])
 
@@ -60,7 +59,7 @@ const LoginScreen = () => {
       if (response && expoPushToken) {
         const data = {
           email: getValues('email'),
-          expoPushToken: expoPushToken?.data
+          newExpoPushToken: expoPushToken?.data
         }
 
         dispatch(fetchUserDetails(data))
@@ -72,7 +71,7 @@ const LoginScreen = () => {
   }
 
   const handleRegister = () => {
-    navigation.navigate('Register')
+    navigation.navigate(SCREENS.REGISTER)
   }
 
   return (

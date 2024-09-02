@@ -17,6 +17,7 @@ import {
 import { Status } from '../util'
 import { getUserData } from '../store/slices/user'
 import { useNavigation } from '@react-navigation/native'
+import { SCREENS } from '../navigation/navigation'
 
 const StoreScreen = ({ route }) => {
   const navigation = useNavigation()
@@ -73,7 +74,7 @@ const StoreScreen = ({ route }) => {
         <>
           <Text>no products</Text>
           <Pressable
-            onPress={() => navigation.navigate('AddProduct')}
+            onPress={() => navigation.navigate(SCREENS.ADD_PRODUCT)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Add Product</Text>

@@ -1,14 +1,14 @@
 import { useNavigation } from '@react-navigation/native'
 import { Pressable, Text, StyleSheet } from 'react-native'
 import { FontAwesome5 } from '@expo/vector-icons'
-
+import { SCREENS } from '../helpers/screens'
 const AddProductIcon = () => {
   const navigation = useNavigation()
 
   return (
     <Pressable
-      onPress={() => navigation.navigate('AddProduct')}
-      style={{ flexDirection: 'row' }}
+      onPress={() => navigation.navigate(SCREENS.ADD_PRODUCT)}
+      style={styles.button}
     >
       <FontAwesome5
         name="plus"
@@ -21,6 +21,9 @@ const AddProductIcon = () => {
 }
 
 const styles = StyleSheet.create({
+  button: {
+    flexDirection: 'row'
+  },
   text: {
     fontWeight: '500',
     marginLeft: 5
