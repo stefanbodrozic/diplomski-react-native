@@ -54,7 +54,11 @@ const ChatScreen = ({ route }) => {
 
       const { _id, createdAt, text, user } = messages[0]
 
-      const chatName = `chat-${storeName}-${userDetails.email}`
+      let chatName
+
+      if (route.params.chatName)
+        chatName = route.params.chatName // redirected from InboxScreen
+      else chatName = `chat-${storeName}-${userDetails.email}` // redirected from StoreScreen
 
       await addDoc(collection(db, chatName), {
         _id,

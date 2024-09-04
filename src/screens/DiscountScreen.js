@@ -7,7 +7,7 @@ import {
   View
 } from 'react-native'
 import React, { useState } from 'react'
-import stores from '../data/stores'
+// import stores from '../data/stores'
 import DiscountItem from '../components/DiscountItem'
 import styles from '../config/styles'
 
