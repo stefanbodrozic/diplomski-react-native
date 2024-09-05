@@ -13,8 +13,13 @@ import {
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import uuid from 'react-native-uuid'
-import { useNavigation } from '@react-navigation/native'
+import { CommonActions, useNavigation } from '@react-navigation/native'
 import { SCREENS } from '../helpers/screens'
+import {
+  initPaymentSheet,
+  presentPaymentSheet
+} from '@stripe/stripe-react-native'
+import { SERVER } from '@env'
 
 const CartPriceDetailsContainer = () => {
   const details = useSelector(getCartDetails)
@@ -24,6 +29,57 @@ const CartPriceDetailsContainer = () => {
   const dispatch = useDispatch()
 
   const navigation = useNavigation()
+
+  const onCheckout = async () => {
+    try {
+      const tempCart = { ...cart }
+
+      const price =
+        tempCart.orderDetails.deliveryFee + tempCart.orderDetails.price
+
+      const intentResponse = await fetch(SERVER, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Accept-encoding': 'gzip, deflate',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          price: Math.floor(price * 100)
+        })
+      })
+
+      if (!intentResponse.ok) {
+        console.log('Intent request failed')
+        return
+      }
+
+      const { clientSecret } = await intentResponse.json()
+
+      // initialize payment sheet
+      const initPayment = await initPaymentSheet({
+        merchantDisplayName: 'Store App',
+        paymentIntentClientSecret: clientSecret
+      })
+
+      if (initPayment.error) {
+        console.log(initPayment.error)
+        return
+      }
+
+      // show stripe payment sheet
+      const paymentResponse = await presentPaymentSheet()
+
+      if (paymentResponse.error) {
+        console.log('Error: ', paymentResponse.error)
+        return
+      }
+
+      await handleCheckout()
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
 
   const handleCheckout = async () => {
     try {
@@ -76,7 +132,17 @@ const CartPriceDetailsContainer = () => {
 
       dispatch(resetCart())
 
-      navigation.navigate(SCREENS.ORDER_HISTORY)
+      // replace navigation stack and redirect to order history screen
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 2,
+          routes: [
+            { name: SCREENS.HOME },
+            { name: SCREENS.MAIN },
+            { name: SCREENS.ORDER_HISTORY }
+          ]
+        })
+      )
     } catch (error) {
       console.log('Error: ', error)
     }
@@ -101,7 +167,7 @@ const CartPriceDetailsContainer = () => {
 
       {user.role !== 'Seller' && cart.order.length >= 1 && (
         <Pressable
-          onPress={handleCheckout}
+          onPress={onCheckout}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Checkout</Text>
