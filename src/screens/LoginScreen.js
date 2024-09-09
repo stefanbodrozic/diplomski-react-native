@@ -1,4 +1,11 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  BackHandler,
+  Alert
+} from 'react-native'
 
 import styles from '../config/styles'
 
@@ -20,6 +27,19 @@ import { usePushNotifications } from '../util/usePushNotification'
 import { SCREENS } from '../helpers/screens'
 
 const LoginScreen = () => {
+  useEffect(() => {
+    const backAction = () => {
+      BackHandler.exitApp()
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    )
+
+    return () => backHandler.remove()
+  }, [])
+
   const { expoPushToken } = usePushNotifications()
 
   const navigation = useNavigation()

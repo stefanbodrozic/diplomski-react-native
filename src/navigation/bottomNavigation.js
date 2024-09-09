@@ -10,7 +10,7 @@ import { getUserData } from '../store/slices/user'
 import DeliveriesScreen from '../screens/DeliveriesScreen'
 import { useNavigation } from '@react-navigation/native'
 import { useEffect } from 'react'
-import { Text } from 'react-native'
+import { Text, BackHandler, Alert } from 'react-native'
 import { SCREENS } from '../helpers/screens'
 
 const BottomNavigation = () => {
@@ -35,6 +35,27 @@ const BottomNavigation = () => {
       // })
     }
   }, [userDetails, navigation])
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Confirm', 'Are you sure you want to exit the application?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel'
+        },
+        { text: 'YES', onPress: () => BackHandler.exitApp() }
+      ])
+      return true
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    )
+
+    return () => backHandler.remove()
+  }, [])
 
   return (
     <Tab.Navigator
@@ -85,11 +106,13 @@ const BottomNavigation = () => {
         />
       )}
 
-      <Tab.Screen
-        name={SCREENS.INBOX}
-        component={InboxScreen}
-        options={{ headerShown: false }}
-      />
+      {userDetails.role !== 'Deliverer' && (
+        <Tab.Screen
+          name={SCREENS.INBOX}
+          component={InboxScreen}
+          options={{ headerShown: false }}
+        />
+      )}
 
       <Tab.Screen
         name={SCREENS.PROFILE}

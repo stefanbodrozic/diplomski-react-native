@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native'
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  BackHandler,
+  Alert
+} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import ScrollItem from '../components/ScrollItem'
 import SingleStoreContainer from '../components/StoreContainer'
@@ -12,6 +19,27 @@ import {
 import { Status } from '../util'
 
 const HomeScreen = () => {
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Confirm', 'Are you sure you want to exit the application?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel'
+        },
+        { text: 'YES', onPress: () => BackHandler.exitApp() }
+      ])
+      return true
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    )
+
+    return () => backHandler.remove()
+  }, [])
+
   const [filteredStores, setFilteredStores] = useState([])
   const dispatch = useDispatch()
 
