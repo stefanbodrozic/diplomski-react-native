@@ -3,6 +3,40 @@ import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '../../config/firebase'
 import { Status } from '../../util'
 
+export const fetchUnpreparedOrdersFromWarehouse = createAsyncThunk(
+  'deliveries/fetchUnpreparedOrdersFromWarehouse',
+  async () => {
+    try {
+      const orders = []
+
+      const q = query(
+        collection(db, 'orders'),
+        where('isReadyInWarehouse', '==', false),
+        where('isDelivered', '==', false)
+      )
+
+      const querySnapshot = await getDocs(q)
+
+      querySnapshot.forEach((doc) => {
+        const { id, comment, createdAt, orderDetails, order } = doc.data()
+
+        orders.push({
+          docId: doc.id,
+          id,
+          comment,
+          createdAt,
+          orderDetails,
+          order
+        })
+      })
+
+      return orders
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+)
+
 export const fetchCompletedDeliveries = createAsyncThunk(
   'deliveries/fetchCompletedDeliveries',
   async (delivererId) => {
@@ -12,7 +46,8 @@ export const fetchCompletedDeliveries = createAsyncThunk(
       const q = query(
         collection(db, 'orders'),
         where('delivererId', '==', delivererId),
-        where('isDelivered', '==', true)
+        where('isDelivered', '==', true),
+        where('isReadyInWarehouse', '==', true)
       )
 
       const querySnapshot = await getDocs(q)
@@ -26,7 +61,8 @@ export const fetchCompletedDeliveries = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating
+          rating,
+          isReadyInWarehouse
         } = doc.data()
 
         completedDeliveries.push({
@@ -38,7 +74,8 @@ export const fetchCompletedDeliveries = createAsyncThunk(
           delivererId,
           isDelivered,
           orderDetails,
-          rating
+          rating,
+          isReadyInWarehouse
         })
       })
 
@@ -58,7 +95,8 @@ export const fetchAvailableOrders = createAsyncThunk(
       const q = query(
         collection(db, 'orders'),
         where('delivererId', '==', ''),
-        where('isDelivered', '==', false)
+        where('isDelivered', '==', false),
+        where('isReadyInWarehouse', '==', true)
       )
 
       const querySnapshot = await getDocs(q)
@@ -73,7 +111,8 @@ export const fetchAvailableOrders = createAsyncThunk(
           isDelivered,
           orderDetails,
           rating,
-          order
+          order,
+          isReadyInWarehouse
         } = doc.data()
 
         orders.push({
@@ -86,7 +125,8 @@ export const fetchAvailableOrders = createAsyncThunk(
           isDelivered,
           orderDetails,
           rating,
-          order
+          order,
+          isReadyInWarehouse
         })
       })
 
@@ -106,7 +146,8 @@ export const fetchDeliveriesInProgress = createAsyncThunk(
       const q = query(
         collection(db, 'orders'),
         where('delivererId', '==', delivererId),
-        where('isDelivered', '==', false)
+        where('isDelivered', '==', false),
+        where('isReadyInWarehouse', '==', true)
       )
 
       const querySnapshot = await getDocs(q)
@@ -121,7 +162,8 @@ export const fetchDeliveriesInProgress = createAsyncThunk(
           isDelivered,
           orderDetails,
           rating,
-          order
+          order,
+          isReadyInWarehouse
         } = doc.data()
 
         deliveries.push({
@@ -134,7 +176,8 @@ export const fetchDeliveriesInProgress = createAsyncThunk(
           isDelivered,
           orderDetails,
           rating,
-          order
+          order,
+          isReadyInWarehouse
         })
       })
 
@@ -193,11 +236,12 @@ export const fetchCustomerOrders = createAsyncThunk(
 )
 
 export const initialState = {
+  unpreparedOrdersFromWarehouse: [],
   completedDeliveries: [],
   deliveriesInProgress: [],
   availableOrders: [],
   customerOrders: [],
-
+  unpreparedOrdersFromWarehouseStatus: Status.IDLE,
   availableOrdersStatus: Status.IDLE,
   deliveriesInProgressStatus: Status.IDLE,
   completedDeliveriesStatus: Status.IDLE,
@@ -214,6 +258,7 @@ const deliveriesSlice = createSlice({
       state.completedDeliveriesStatus = Status.IDLE
     },
     resetDeliveries: (state, _action) => {
+      state.unpreparedOrdersFromWarehouse = []
       state.completedDeliveries = []
       state.deliveriesInProgress = []
       state.availableOrders = []
@@ -227,6 +272,20 @@ const deliveriesSlice = createSlice({
   },
   extraReducers(builder) {
     builder
+      .addCase(fetchUnpreparedOrdersFromWarehouse.pending, (state, _action) => {
+        state.unpreparedOrdersFromWarehouseStatus = Status.PENDING
+      })
+      .addCase(
+        fetchUnpreparedOrdersFromWarehouse.fulfilled,
+        (state, action) => {
+          state.unpreparedOrdersFromWarehouseStatus = Status.FULLFILED
+          state.unpreparedOrdersFromWarehouse = action.payload
+        }
+      )
+      .addCase(fetchUnpreparedOrdersFromWarehouse.rejected, (state, action) => {
+        state.unpreparedOrdersFromWarehouseStatus = Status.FAILED
+      })
+
       .addCase(fetchCompletedDeliveries.pending, (state, _action) => {
         state.completedDeliveriesStatus = Status.PENDING
       })
@@ -269,6 +328,12 @@ const deliveriesSlice = createSlice({
       })
   }
 })
+
+export const getUnpreparedOrdersFromWarehouse = (state) =>
+  state.deliveries.unpreparedOrdersFromWarehouse
+
+export const getUnpreparedOrdersFromWarehouseStatus = (state) =>
+  state.deliveries.unpreparedOrdersFromWarehouseStatus
 
 export const getCompletedDeliveries = (state) =>
   state.deliveries.completedDeliveries

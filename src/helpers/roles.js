@@ -10,5 +10,9 @@ export default roles = [
   {
     key: 3,
     value: 'Deliverer'
+  },
+  {
+    key: 4,
+    value: 'Warehouseman'
   }
 ]

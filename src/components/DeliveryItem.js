@@ -36,32 +36,54 @@ const DeliveryItem = ({ item, isCustomer }) => {
     const customerExpoPushToken = item.orderDetails.userExpoPushToken
     if (!customerExpoPushToken) return
 
+    const orderRef = doc(db, 'orders', item.docId)
+    let notificationMessage
+
+    if (user.role === 'Warehouseman') {
+      notificationMessage = 'The order is ready to be delivered'
+
+      await updateDoc(orderRef, {
+        isReadyInWarehouse: true,
+        isDelivered: false
+      })
+    } else {
+      notificationMessage = 'The delivery has arrived!'
+
+      await updateDoc(orderRef, {
+        isDelivered: true,
+        deliveredAt: new Date().toLocaleString()
+      })
+    }
+
     await sendPushNotification(
       customerExpoPushToken,
       'Delivery information',
-      'The delivery has arrived!'
+      notificationMessage
     )
-
-    const orderRef = doc(db, 'orders', item.docId)
-    await updateDoc(orderRef, {
-      isDelivered: true,
-      deliveredAt: new Date().toLocaleString()
-    })
 
     dispatch(refetchData())
   }
 
   return (
     <View style={styles.container}>
-      {item.isDelivered ? (
+      {!item.isDelivered && !item.isReadyInWarehouse && (
         <Image
           style={styles.image}
-          source={require('../../assets/completed.png')}
+          source={require('../../assets/warehouse.jpg')}
         />
-      ) : (
+      )}
+
+      {!item.isDelivered && item.isReadyInWarehouse && (
         <Image
           style={styles.image}
           source={require('../../assets/delivery-truck.webp')}
+        />
+      )}
+
+      {item.isDelivered && item.isReadyInWarehouse && (
+        <Image
+          style={styles.image}
+          source={require('../../assets/completed.png')}
         />
       )}
 

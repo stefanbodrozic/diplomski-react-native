@@ -16,6 +16,7 @@ const initialState = {
     userExpoPushToken: ''
   },
   delivererId: '',
+  isReadyInWarehouse: false,
   isDelivered: false,
   rating: 0,
   comment: '',
@@ -101,6 +102,7 @@ const cartSlice = createSlice({
         userExpoPushToken: ''
       }
       state.delivererId = ''
+      state.isReadyInWarehouse = false
       state.isDelivered = false
       state.rating = 0
       state.comment = ''

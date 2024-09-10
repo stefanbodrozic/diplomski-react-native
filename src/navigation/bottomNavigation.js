@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useEffect } from 'react'
 import { Text, BackHandler, Alert } from 'react-native'
 import { SCREENS } from '../helpers/screens'
+import WarehouseScreen from '../screens/WarehouseScreen'
 
 const BottomNavigation = () => {
   const Tab = createBottomTabNavigator()
@@ -105,8 +106,15 @@ const BottomNavigation = () => {
           options={{ headerShown: false }}
         />
       )}
+      {userDetails.role === 'Warehouseman' && (
+        <Tab.Screen
+          name={SCREENS.HOME}
+          component={WarehouseScreen}
+          options={{ headerShown: false }}
+        />
+      )}
 
-      {userDetails.role !== 'Deliverer' && (
+      {!['Deliverer', 'Warehouseman'].includes(userDetails.role) && (
         <Tab.Screen
           name={SCREENS.INBOX}
           component={InboxScreen}
