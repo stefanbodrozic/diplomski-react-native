@@ -6,26 +6,24 @@ import LoginScreen from '../screens/LoginScreen'
 import StoreScreen from '../screens/StoreScreen'
 import ProductDetailsScreen from '../screens/ProductDetailsScreen'
 import CartScreen from '../screens/CartScreen'
-
 import CartIcon from '../components/CartIcon'
 import HomeScreen from '../screens/HomeScreen'
 import AddProductScreen from '../screens/AddProductScreen'
-import DiscountScreen from '../screens/DiscountScreen'
 import SplashScreen from '../screens/SplashScreen'
 import DeliveriesScreen from '../screens/DeliveriesScreen'
 import AddProductIcon from '../components/AddProductIcon'
-import ProfileScreen from '../screens/ProfileScreen'
 import OrderHistory from '../screens/OrderHistory'
 import StartChatIcon from '../components/StartChatIcon'
 import ChatScreen from '../screens/ChatScreen'
 import OrdersDetailsScreen from '../screens/OrdersDetailsScreen'
 import { SCREENS } from '../helpers/screens'
+import { forwardRef } from 'react'
 
 const Stack = createNativeStackNavigator()
 
-const Navigation = () => {
+const Navigation = forwardRef((_props, ref) => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={ref}>
       <Stack.Navigator>
         <Stack.Screen
           name={SCREENS.SPLASH}
@@ -146,6 +144,6 @@ const Navigation = () => {
       </Stack.Navigator>
     </NavigationContainer>
   )
-}
+})
 
 export default Navigation

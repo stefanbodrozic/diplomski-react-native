@@ -17,17 +17,28 @@ const DeliveryItem = ({ item, isCustomer }) => {
     const customerExpoPushToken = item.orderDetails.userExpoPushToken
     if (!customerExpoPushToken) return
 
-    await sendPushNotification(
-      customerExpoPushToken,
-      'Delivery information',
-      'The delivery is on the way!'
-    )
-
     const orderRef = doc(db, 'orders', item.docId)
 
     updateDoc(orderRef, {
       delivererId: user.id
     })
+
+    let updatedOrder = { ...item }
+    updatedOrder.delivererId = user.id
+
+    const data = {
+      screen: 'Order Details',
+      params: {
+        order: updatedOrder
+      }
+    }
+
+    await sendPushNotification(
+      customerExpoPushToken,
+      'Delivery information',
+      'The delivery is on the way!',
+      data
+    )
 
     dispatch(refetchData())
   }
@@ -54,6 +65,7 @@ const DeliveryItem = ({ item, isCustomer }) => {
         deliveredAt: new Date().toLocaleString()
       })
     }
+
 
     await sendPushNotification(
       customerExpoPushToken,

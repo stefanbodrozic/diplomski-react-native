@@ -22,15 +22,15 @@ const ActionType = {
   DECREASE: 'decrease'
 }
 
-async function sendPushNotification(expoPushToken, title, messageBody) {
+async function sendPushNotification(expoPushToken, title, messageBody, data) {
   if (!expoPushToken || !title || !messageBody) return
 
   const message = {
     to: expoPushToken,
     sound: 'default',
     title,
-    body: messageBody
-    // data: { customData: '' }
+    body: messageBody,
+    data
   }
 
   await fetch('https://exp.host/--/api/v2/push/send', {
