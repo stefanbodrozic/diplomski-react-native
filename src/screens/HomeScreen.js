@@ -40,6 +40,7 @@ const HomeScreen = () => {
     return () => backHandler.remove()
   }, [])
 
+  const [selectedCategory, setSelectedCategory] = useState()
   const [filteredStores, setFilteredStores] = useState([])
   const dispatch = useDispatch()
 
@@ -59,9 +60,16 @@ const HomeScreen = () => {
   }, [dispatch, storesStatus])
 
   const handleCategoryFilter = (category) => {
-    const filter = stores.filter((store) => store.category === category)
-    if (filter.length < 1) setFilteredStores(stores)
-    else setFilteredStores(filter)
+    if (category === selectedCategory) {
+      setFilteredStores(stores)
+      setSelectedCategory('')
+    } else {
+      setSelectedCategory(category)
+
+      const filter = stores.filter((store) => store.category === category)
+      if (filter.length < 1) setFilteredStores(stores)
+      else setFilteredStores(filter)
+    }
   }
 
   return (
@@ -100,8 +108,8 @@ const HomeScreen = () => {
 
 const screenStyles = StyleSheet.create({
   root: {
-    backgroundColor: '#EBFBFF'
-    // height: "100%",
+    backgroundColor: '#EBFBFF',
+    height: '100%'
   },
   scrollView: {
     margin: 20
