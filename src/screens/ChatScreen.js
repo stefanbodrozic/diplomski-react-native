@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import React, { useCallback, useLayoutEffect, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 import {
   addDoc,
@@ -8,26 +8,23 @@ import {
   onSnapshot,
   orderBy,
   query,
-  setDoc
+  updateDoc
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { useSelector } from 'react-redux'
 import { getUserData } from '../store/slices/user'
+import { sendPushNotification } from '../util'
 
 const ChatScreen = ({ route }) => {
   const userDetails = useSelector(getUserData)
   const [messages, setMessages] = useState([])
 
-  let storeName
-  if (route.params?.storeName) storeName = route.params.storeName
+  const chatName = route.params.chatName
+  const storeEmail = route.params.store
+  const customerEmail = route.params.customer
+  const { receiverPushToken, senderPushToken } = route.params.tokens
 
   useLayoutEffect(() => {
-    let chatName
-
-    if (route.params.chatName)
-      chatName = route.params.chatName // redirected from InboxScreen
-    else chatName = `chat-${storeName}-${userDetails.email}` // redirected from StoreScreen
-
     // reference collection of data from firebase. This will run before anything is visible to the user
     const collectionRef = collection(db, chatName)
     const q = query(collectionRef, orderBy('createdAt', 'desc'))
@@ -44,7 +41,7 @@ const ChatScreen = ({ route }) => {
     })
 
     return () => unsubscribe()
-  }, [storeName, userDetails.email, userDetails.username])
+  }, [chatName, userDetails.email, userDetails.username])
 
   const onSend = useCallback(
     async (messages = []) => {
@@ -54,12 +51,6 @@ const ChatScreen = ({ route }) => {
 
       const { _id, createdAt, text, user } = messages[0]
 
-      let chatName
-
-      if (route.params.chatName)
-        chatName = route.params.chatName // redirected from InboxScreen
-      else chatName = `chat-${storeName}-${userDetails.email}` // redirected from StoreScreen
-
       await addDoc(collection(db, chatName), {
         _id,
         createdAt,
@@ -67,14 +58,28 @@ const ChatScreen = ({ route }) => {
         user
       })
 
-      await setDoc(doc(db, 'chat-references', chatName), {
-        chatName,
-        userEmails: [userDetails.email, route.params.storeOwnerEmail],
+      const chatRef = doc(db, 'chat-references', chatName)
+      await updateDoc(chatRef, {
         lastMessage: text,
         timestamp: new Date().toLocaleString()
       })
+
+      const data = {
+        screen: 'Chat',
+        params: {
+          chatName,
+          store: storeEmail,
+          customer: customerEmail,
+          tokens: {
+            receiverPushToken: senderPushToken,
+            senderPushToken: receiverPushToken
+          }
+        }
+      }
+
+      await sendPushNotification(receiverPushToken, 'New message', text, data)
     },
-    [storeName, userDetails.email]
+    [chatName, customerEmail, storeEmail, userDetails.email]
   )
 
   return (
