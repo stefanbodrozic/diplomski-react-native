@@ -10,17 +10,57 @@ import { SCREENS } from '../helpers/screens'
 
 const ChatItem = ({ item }) => {
   const navigation = useNavigation()
+  const userDetails = useSelector(getUserData)
+
+  const handleNavigation = async () => {
+    try {
+      // find receiver token
+      let storeEmail = ''
+      let customerEmail = ''
+
+      let findTokenForThisEmail = ''
+      let tokens = {
+        receiverPushToken: '',
+        senderPushToken: userDetails.expoPushToken
+      }
+
+      if (item.users.store === userDetails.email) {
+        storeEmail = userDetails.email
+        customerEmail = item.users.customer
+
+        findTokenForThisEmail = item.users.customer
+      } else {
+        storeEmail = item.users.store
+        customerEmail = userDetails.email
+
+        findTokenForThisEmail = item.users.store
+      }
+
+      const q = query(
+        collection(db, 'users'),
+        where('email', '==', findTokenForThisEmail)
+      )
+
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((document) => {
+        const { expoPushToken } = document.data()
+
+        tokens.receiverPushToken = expoPushToken
+      })
+
+      navigation.navigate(SCREENS.CHAT, {
+        customer: customerEmail,
+        store: storeEmail,
+        chatName: item.chatName,
+        tokens
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
-    <Pressable
-      onPress={() => {
-        navigation.navigate(SCREENS.CHAT, {
-          storeName: item.storeName,
-          storeOwnerEmail: item.storeOwnerEmail,
-          chatName: item.chatName
-        })
-      }}
-    >
+    <Pressable onPress={handleNavigation}>
       <View style={screenStyles.chatContainer}>
         <Image
           source={{
@@ -48,7 +88,7 @@ const InboxScreen = () => {
     const chatsReferences = collection(db, 'chat-references')
     const q = query(
       chatsReferences,
-      where('userEmails', 'array-contains', userDetails.email)
+      where('emails', 'array-contains', userDetails.email)
     )
 
     const chatsSnapshot = await getDocs(q)
@@ -56,27 +96,14 @@ const InboxScreen = () => {
     let chats = []
 
     chatsSnapshot.forEach((doc) => {
-      const { chatName, lastMessage, timestamp, userEmails } = doc.data()
-      const cname = chatName.split('-')
-      const storeName = cname[1]
-      const sender = cname[2]
-
-      let storeOwnerEmail = ''
-      if (userDetails.role === 'Customer') {
-        storeOwnerEmail = userEmails.filter(
-          (email) => email != userDetails.email
-        )
-      } else if (userDetails.role === 'Seller') {
-        storeOwnerEmail = userDetails.email
-      }
+      const { chatName, lastMessage, timestamp, users, emails } = doc.data()
 
       chats.push({
-        storeName, // because of navigation.navigate params
-        storeOwnerEmail, // because of navigation.navigate params
+        chatName,
         lastMessage,
         timestamp,
-        receiver: userDetails.role === 'Customer' ? storeName : sender,
-        chatName
+        users,
+        emails
       })
     })
 

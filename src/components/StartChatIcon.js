@@ -21,7 +21,6 @@ const StartChatIcon = ({ storeName }) => {
   const navigation = useNavigation()
   const [storeOwnerEmail, setStoreOwnerEmail] = useState()
   const [chatName, setChatName] = useState()
-  const [receiverExpoPushToken, setReceiverExpoPushToken] = useState()
 
   const userDetails = useSelector(getUserData)
 
@@ -50,13 +49,13 @@ const StartChatIcon = ({ storeName }) => {
 
       if (snapshot.data().count === 0) {
         // generate empty collection so it can be referenced inside chat screen
-
         await setDoc(doc(db, 'chat-references', chatName), {
           chatName,
-          userEmails: {
+          users: {
             customer: userDetails.email,
             store: storeOwnerEmail
           },
+          emails: [userDetails.email, storeOwnerEmail],
           lastMessage: '',
           timestamp: new Date().toLocaleString()
         })
