@@ -17,7 +17,7 @@ import {
 import { Status } from '../util'
 import { getUserData } from '../store/slices/user'
 import { useNavigation } from '@react-navigation/native'
-import { SCREENS } from '../navigation/navigation'
+import { SCREENS } from '../helpers/screens'
 
 const StoreScreen = ({ route }) => {
   const navigation = useNavigation()
@@ -65,14 +65,11 @@ const StoreScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.root}>
-      <Search
-        style={styles.search}
-        handleSearch={searchProducts}
-      />
+     
 
       {filteredProducts?.length === 0 ? (
         <>
-          <Text>no products</Text>
+          <Text>No products available</Text>
           <Pressable
             onPress={() => navigation.navigate(SCREENS.ADD_PRODUCT)}
             style={styles.button}
@@ -82,6 +79,10 @@ const StoreScreen = ({ route }) => {
         </>
       ) : (
         <>
+         <Search
+            style={styles.search}
+            handleSearch={searchProducts}
+          />
           <FlatList
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{ justifyContent: 'space-between' }}

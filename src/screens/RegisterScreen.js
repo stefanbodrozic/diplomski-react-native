@@ -79,7 +79,7 @@ const RegisterScreen = () => {
           expoPushToken: expoPushToken?.data
         }
 
-        if (user.role === 'Seller') {
+        if (user && user?.role === 'Seller') {
           const storeName = getValues('storeName')
           const category = getValues('category')
           user.storeName = storeName
@@ -97,7 +97,7 @@ const RegisterScreen = () => {
         }
 
         await addDoc(collection(db, 'users'), user)
-        navigation.navigate(SCREENS.MAIN)
+        navigation.navigate(SCREENS.LOGIN)
       }
     } catch (error) {
       const errorMessage = getFirebaseUserError(error)

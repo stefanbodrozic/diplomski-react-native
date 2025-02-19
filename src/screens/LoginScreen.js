@@ -4,7 +4,6 @@ import {
   Text,
   View,
   BackHandler,
-  Alert
 } from 'react-native'
 
 import styles from '../config/styles'
@@ -52,14 +51,16 @@ const LoginScreen = () => {
       // email: "admin@mail.com",
       // email: 'customer@mail.com',
       // email: 'kupac@mail.com',
-      email: 'books@mail.com',
+      // email: 'books@mail.com',
       // email: 'deliverer@mail.com',
-      password: 'password12345'
+      // password: 'password12345'
+      email: '',
+      password: ''
     }
   })
 
   useEffect(() => {
-    if (userDetails.role) {
+    if (userDetails && userDetails?.role) {
       dispatch(fetchStores())
       dispatch(fetchCategories())
       dispatch(fetchSingleStore(userDetails))
@@ -112,6 +113,7 @@ const LoginScreen = () => {
         placeholder="Password"
         control={control}
         isPassword={true}
+        autoCapitalize="none"
       />
 
       <View style={styles.buttonsContainer}>

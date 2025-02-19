@@ -51,7 +51,8 @@ const Navigation = forwardRef((_props, ref) => {
             headerTitle: 'Shopping App',
             headerStyle: {
               backgroundColor: '#EBFBFF'
-            }
+            },
+            headerBackVisible: false
           })}
         />
 

@@ -25,6 +25,7 @@ import styles from '../config/styles'
 import { getUserData } from '../store/slices/user'
 import { useNavigation } from '@react-navigation/native'
 import { fetchSingleStore } from '../store/slices/stores'
+import { SCREENS } from '../helpers/screens'
 
 const AddProductScreen = () => {
   const [images, setImages] = useState([])
@@ -118,7 +119,9 @@ const AddProductScreen = () => {
 
       await dispatch(fetchSingleStore(user))
       if (docRef.id) {
-        navigation.goBack()
+        navigation.navigate(SCREENS.PRODUCT_DETAILS, {
+          product
+        })
       }
     } catch (error) {
       console.log('error while saving product data', error)

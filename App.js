@@ -12,6 +12,8 @@ import {
 } from 'expo-notifications'
 import { useEffect, useRef } from 'react'
 
+import { LogBox } from 'react-native'
+
 export default function App() {
   const navigationRef = useRef(null)
 
@@ -40,6 +42,8 @@ export default function App() {
       subscription.remove()
     }
   }, [])
+
+  LogBox.ignoreAllLogs(true)
 
   return (
     <Provider store={store}>

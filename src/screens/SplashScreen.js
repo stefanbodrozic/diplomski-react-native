@@ -26,22 +26,23 @@ const SplashScreen = () => {
   const fetchStoreStatus = useSelector(getStoreStatus)
 
   const handleNavigation = () => {
-    if (!userDetails.role) {
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{ name: 'Login' }]
-      // })
-      navigation.navigate(SCREENS.LOGIN)
-    } else {
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{ name: 'Main' }]
-      // })
-      navigation.navigate(SCREENS.MAIN)
-    }
+    // if (!userDetails.role) {
+    //   // navigation.reset({
+    //   //   index: 0,
+    //   //   routes: [{ name: 'Login' }]
+    //   // })
+    //   navigation.navigate(SCREENS.LOGIN)
+    // } else {
+    //   // navigation.reset({
+    //   //   index: 0,
+    //   //   routes: [{ name: 'Main' }]
+    //   // })
+    //   navigation.navigate(SCREENS.MAIN)
+    // }
   }
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
+    console.log('on auth state change', user)
     if (user) {
       if (fetchUserDetailsStatus === Status.IDLE && expoPushToken) {
         const data = {
@@ -51,13 +52,15 @@ const SplashScreen = () => {
 
         dispatch(fetchUserDetails(data))
       } else if (fetchUserDetailsStatus === Status.FULLFILED) {
-        if (fetchStoreStatus === Status.IDLE)
-          dispatch(fetchSingleStore(userDetails))
+        if (fetchStoreStatus === Status.IDLE) await dispatch(fetchSingleStore(userDetails))
 
-        handleNavigation()
+        // handleNavigation()
+        navigation.navigate(SCREENS.MAIN)
+
       }
     } else {
       navigation.navigate(SCREENS.LOGIN)
+
     }
   })
 
